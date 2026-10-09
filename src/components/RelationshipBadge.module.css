@@ -1,0 +1,23 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-control);
+  font-size: var(--text-label);
+  font-weight: 600;
+  line-height: 1.6;
+  background: var(--color-surface-sunken);
+}
+
+[data-relationship='friend'].badge {
+  color: var(--color-friend);
+}
+
+[data-relationship='enemy'].badge {
+  color: var(--color-enemy);
+}
+
+[data-relationship='stranger'].badge {
+  color: var(--color-stranger);
+}
