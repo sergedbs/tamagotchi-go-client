@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { test as base, expect, type Route } from '@playwright/test'
 
 export type ApiHandler = (route: Route, url: URL) => Promise<void> | void
@@ -7,6 +8,13 @@ export type ApiHandler = (route: Route, url: URL) => Promise<void> | void
  * test, so a fixture run can never reach the real Gateway by accident.
  */
 export const test = base.extend<{ api: Map<string, ApiHandler>; unexpectedApiCalls: string[] }>({
+  // The committed configuration, whatever CLIENT_CONFIG the dev server uses. Set up
+  // with the page, so routes added later by hooks or tests take precedence.
+  page: async ({ page }, use) => {
+    const committedConfig = readFileSync('public/client-config.json', 'utf8')
+    await page.route('**/client-config.json', (route) => route.fulfill({ contentType: 'application/json', body: committedConfig }))
+    await use(page)
+  },
   unexpectedApiCalls: async ({}, use) => {
     await use([])
   },

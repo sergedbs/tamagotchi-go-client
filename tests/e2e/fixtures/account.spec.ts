@@ -1,4 +1,4 @@
-import type { Request } from '@playwright/test'
+import type { Page, Request } from '@playwright/test'
 import { expect, json, test, type ApiHandler } from './network.ts'
 import { assetsFor, creature, GROVE, ME, problem, signIn } from './session.ts'
 
@@ -107,5 +107,140 @@ test.describe('fixture: account', () => {
     await expect(page.getByRole('link', { name: 'Ripple' })).toBeVisible({ timeout: 10_000 })
     await expect(page.getByRole('region', { name: 'Packages' }).getByRole('listitem')).toHaveText(['Grove Companions', 'Tidewater Companions'])
     await expect(page.getByRole('region', { name: 'Wallets' }).getByRole('listitem').filter({ hasText: 'Tidewater Companions' })).toContainText('0')
+  })
+})
+
+const OWNER_KEY = 'tamagotchi-go.push-owner'
+const OTHER_USER = '01a11e00-0000-7000-8000-000000000099'
+/** Placeholder public values; nothing in these tests may reach Google. */
+const PUSH = { firebase: { apiKey: 'fixture-api-key', projectId: 'fixture-project', messagingSenderId: '000000000000', appId: '1:000000000000:web:fixture' }, vapid_key: 'B'.padEnd(87, 'x') }
+const webDevice = { id: DEVICE, user_id: ME.user_id, platform: 'WEB', package_id: GROVE, locale: 'en-US', registered_at: '2026-10-09T10:00:00.000Z' }
+
+async function withPush(page: Page) {
+  const providerCalls: string[] = []
+  await page.route('**/client-config.json', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ push: PUSH }) }))
+  await page.route(/googleapis\.com|gstatic\.com/, (route) => {
+    providerCalls.push(new URL(route.request().url()).host)
+    return route.abort()
+  })
+  return providerCalls
+}
+
+const ownedBy = (page: Page, userId: string, deviceId: string | null) =>
+  page.addInitScript((entry) => localStorage.setItem(entry.key, entry.value), { key: OWNER_KEY, value: JSON.stringify({ user_id: userId, device_id: deviceId }) })
+const storedOwner = (page: Page) => page.evaluate((key) => localStorage.getItem(key), OWNER_KEY)
+
+test.describe('fixture: browser push', () => {
+  test('without configuration push stays off and never asks for permission', async ({ page, api }) => {
+    accountReads(api)
+    await signIn(page, api, '/account')
+    const devices = page.getByRole('region', { name: 'Push devices' })
+    await expect(devices.getByText(/Push is not configured for this web client/)).toBeVisible()
+    await expect(devices.getByRole('button', { name: /Turn on push/ })).toHaveCount(0)
+  })
+
+  test('permission is asked only from the Turn on click; a refusal registers nothing', async ({ page, api }) => {
+    const providerCalls = await withPush(page)
+    await page.addInitScript(() => {
+      const counter = window as unknown as { __asked: number }
+      counter.__asked = 0
+      Notification.requestPermission = async () => {
+        counter.__asked += 1
+        return 'denied'
+      }
+    })
+    accountReads(api)
+    await signIn(page, api, '/account')
+    const devices = page.getByRole('region', { name: 'Push devices' })
+    const turnOn = devices.getByRole('button', { name: 'Turn on push for this browser' })
+    await expect(turnOn).toBeVisible()
+    expect(await page.evaluate(() => (window as unknown as { __asked: number }).__asked)).toBe(0)
+    await turnOn.click()
+    await expect(devices.getByRole('alert')).toContainText('Push was not turned on.')
+    await expect(devices.getByRole('alert')).toContainText('Notifications are blocked for this site.')
+    expect(await page.evaluate(() => (window as unknown as { __asked: number }).__asked)).toBe(1)
+    await expect(turnOn).toHaveCount(0)
+    expect(await storedOwner(page)).toBeNull()
+    expect(providerCalls).toEqual([])
+  })
+
+  for (const [name, script, text] of [
+    ['blocked notifications', () => Object.defineProperty(Notification, 'permission', { get: () => 'denied' }), 'Notifications are blocked for this site.'],
+    ['a browser without push', () => Reflect.deleteProperty(window, 'PushManager'), 'This browser cannot receive push notifications here.'],
+  ] as const) {
+    test(`${name} explains why push is unavailable`, async ({ page, api }) => {
+      const providerCalls = await withPush(page)
+      await page.addInitScript(script)
+      accountReads(api)
+      await signIn(page, api, '/account')
+      const devices = page.getByRole('region', { name: 'Push devices' })
+      await expect(devices.getByText(text)).toBeVisible()
+      await expect(devices.getByRole('button', { name: /Turn on push/ })).toHaveCount(0)
+      expect(providerCalls).toEqual([])
+    })
+  }
+
+  test('this browser is marked, and turning push off removes its device', async ({ page, api }) => {
+    const providerCalls = await withPush(page)
+    await ownedBy(page, ME.user_id, DEVICE)
+    let removed = false
+    accountReads(api)
+    api.set('GET /notification/v1/devices', (route) => json(route, 200, { items: removed ? [] : [webDevice], next_cursor: null }))
+    api.set(`DELETE /notification/v1/devices/${DEVICE}`, (route) => {
+      removed = true
+      return route.fulfill({ status: 204 })
+    })
+    await signIn(page, api, '/account')
+    const devices = page.getByRole('region', { name: 'Push devices' })
+    await expect(devices.getByText('Web browser · This browser')).toBeVisible()
+    await expect(devices.getByText('Push is on for this browser.')).toBeVisible()
+    await devices.getByRole('button', { name: 'Turn off push' }).click()
+    await expect(devices.getByRole('status')).toHaveText('Push is off for this browser.')
+    await expect(devices.getByText('No devices are registered.')).toBeVisible()
+    expect(removed).toBe(true)
+    expect(await storedOwner(page)).toBeNull()
+    expect(providerCalls).toEqual([])
+  })
+
+  test('signing out removes this browser’s device before ending the session', async ({ page, api }) => {
+    await withPush(page)
+    await ownedBy(page, ME.user_id, DEVICE)
+    const order: string[] = []
+    accountReads(api)
+    api.set('GET /notification/v1/devices', (route) => json(route, 200, { items: [webDevice], next_cursor: null }))
+    api.set(`DELETE /notification/v1/devices/${DEVICE}`, (route) => {
+      order.push('device')
+      return route.fulfill({ status: 204 })
+    })
+    api.set('POST /users/v1/auth/logout', (route) => {
+      order.push('logout')
+      return route.fulfill({ status: 204 })
+    })
+    await signIn(page, api, '/account')
+    await page.getByRole('button', { name: 'Sign out' }).click()
+    await expect(page.getByText('You are signed out.')).toBeVisible()
+    expect(order).toEqual(['device', 'logout'])
+    expect(await storedOwner(page)).toBeNull()
+  })
+
+  test('a subscription left by another player is released at sign-in', async ({ page, api }) => {
+    await withPush(page)
+    await ownedBy(page, OTHER_USER, DEVICE)
+    accountReads(api)
+    await signIn(page, api, '/account')
+    await expect(page.getByRole('region', { name: 'Push devices' }).getByRole('button', { name: 'Turn on push for this browser' })).toBeVisible()
+    await expect.poll(() => storedOwner(page)).toBeNull()
+  })
+
+  test('a notification click opens in-app paths only', async ({ page, api }) => {
+    accountReads(api)
+    await signIn(page, api, '/account')
+    await expect(page.getByRole('heading', { name: ME.username })).toBeVisible()
+    const open = (href: string) =>
+      page.evaluate((target) => navigator.serviceWorker.dispatchEvent(new MessageEvent('message', { data: { type: 'tamagotchi-go/push-open', href: target }, origin: location.origin })), href)
+    await open('/credits')
+    await expect(page).toHaveURL(/\/credits$/)
+    await open('https://evil.example.test/')
+    await expect(page).toHaveURL(/\/notifications$/)
   })
 })
