@@ -1,23 +1,23 @@
+import type { ReactNode } from 'react'
 import { Link, Outlet, useLocation } from 'react-router'
 import { BrandMark } from '../components/BrandMark.tsx'
+import { UnreadBadge } from '../features/notifications/UnreadBadge.tsx'
 import { DESTINATIONS, UTILITIES, isActive, type NavItem } from './navigation.ts'
 import styles from './AppShell.module.css'
 
 const LINK_CLASS = { rail: styles.railLink, bar: styles.barLink, utility: styles.utilityLink }
 
-function NavEntry({ item, pathname, variant }: { item: NavItem; pathname: string; variant: 'rail' | 'bar' | 'utility' }) {
+function NavEntry({ item, pathname, variant, badge, labelSuffix }: { item: NavItem; pathname: string; variant: 'rail' | 'bar' | 'utility'; badge?: ReactNode; labelSuffix?: ReactNode }) {
   const active = isActive(item, pathname)
   const Icon = item.icon
   return (
-    <Link
-      to={item.to}
-      className={LINK_CLASS[variant]}
-      aria-current={active ? 'page' : undefined}
-      aria-label={variant === 'utility' ? item.label : undefined}
-      title={variant === 'utility' ? item.label : undefined}
-    >
+    <Link to={item.to} className={LINK_CLASS[variant]} aria-current={active ? 'page' : undefined} title={variant === 'utility' ? item.label : undefined}>
       <Icon size={variant === 'bar' ? 24 : 20} strokeWidth={active ? 2.25 : 2} aria-hidden="true" />
-      {variant !== 'utility' && <span>{item.label}</span>}
+      <span className={variant === 'utility' ? 'visually-hidden' : undefined}>
+        {item.label}
+        {labelSuffix}
+      </span>
+      {badge}
     </Link>
   )
 }
@@ -41,7 +41,14 @@ export function AppShell() {
           </nav>
           <nav className={styles.utilities} aria-label="Utilities">
             {UTILITIES.map((item) => (
-              <NavEntry key={item.to} item={item} pathname={pathname} variant="utility" />
+              <NavEntry
+                key={item.to}
+                item={item}
+                pathname={pathname}
+                variant="utility"
+                badge={item.to === '/notifications' ? <UnreadBadge /> : undefined}
+                labelSuffix={item.to === '/notifications' ? <UnreadBadge part="label" /> : undefined}
+              />
             ))}
           </nav>
         </div>

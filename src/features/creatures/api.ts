@@ -56,7 +56,7 @@ export interface WithEtag<T> {
   etag: string | null
 }
 
-function withEtag<T>(response: ApiResponse<T>): WithEtag<T> {
+export function withEtag<T>(response: ApiResponse<T>): WithEtag<T> {
   return { value: response.data, etag: response.etag }
 }
 

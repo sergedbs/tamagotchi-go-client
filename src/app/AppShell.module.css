@@ -66,6 +66,7 @@
 }
 
 .utilityLink {
+  position: relative;
   display: inline-grid;
   place-items: center;
   width: var(--touch-target);

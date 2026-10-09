@@ -1,0 +1,120 @@
+@import '../social/Social.module.css';
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.muted {
+  color: var(--color-ink-muted);
+}
+
+.empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-4);
+  border-radius: var(--radius-sheet);
+  border: var(--line) dashed var(--color-line);
+  color: var(--color-ink-muted);
+  text-align: center;
+}
+
+.empty p {
+  max-width: 44ch;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-radius: var(--radius-sheet);
+  background: var(--color-surface);
+  border: var(--line) solid var(--color-line);
+  overflow: hidden;
+}
+
+.item {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
+}
+
+.item + .item {
+  border-top: var(--line) solid var(--color-line);
+}
+
+.item[data-unread] {
+  background: var(--color-primary-soft);
+}
+
+.item[data-unread]::before {
+  content: '';
+  position: absolute;
+  inset-block: var(--space-3);
+  inset-inline-start: 0;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: var(--color-primary);
+}
+
+.icon {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-control);
+  background: var(--color-bg);
+  color: var(--color-primary);
+}
+
+.body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title {
+  overflow-wrap: anywhere;
+}
+
+.item[data-unread] .title {
+  font-weight: 700;
+}
+
+.meta {
+  font-size: var(--text-label);
+  color: var(--color-ink-muted);
+}
+
+.actions {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+}
+
+.open {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  font-weight: 600;
+}
+
+@media (min-width: 720px) {
+  .item {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .actions {
+    grid-column: auto;
+    justify-content: flex-end;
+  }
+}

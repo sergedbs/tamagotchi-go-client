@@ -32,6 +32,8 @@ export async function signIn(page: Page, api: Map<string, ApiHandler>, next = '/
   if (!api.has('GET /registry/v1/packages')) api.set('GET /registry/v1/packages', packagesPage)
   api.set('POST /users/v1/users/login', (route) => json(route, 200, { access_token: token(), refresh_token: 'r1', token_type: 'Bearer', expires_in: 900 }))
   api.set('GET /users/v1/users/me', (route) => json(route, 200, ME))
+  // The bell badge reads the inbox on every signed-in screen; Account reads wallets and settings.
+  accountDefaults(api)
   await page.goto(`/login?next=${encodeURIComponent(next)}`)
   await page.getByLabel('Package').selectOption(GROVE)
   await page.getByLabel('Email').fill(ME.email)
@@ -61,3 +63,17 @@ export function creature(id: string, overrides: Record<string, unknown> = {}) {
 
 export const assetsFor = (route: Route) =>
   json(route, 200, { package_id: GROVE, config_version: 1, items: [{ sprite_ref: 'lythbound/wolfren/green', url: '/assets/creatures/lythbound/wolfren/green.png' }] })
+
+/** Quiet defaults for the bell and the Account sections (empty inbox, zero wallets). */
+export function accountDefaults(api: Map<string, ApiHandler>, user: { user_id: string; package_ids: string[] } = ME) {
+  const set = (key: string, handler: ApiHandler) => {
+    if (!api.has(key)) api.set(key, handler)
+  }
+  set(`GET /notification/v1/users/${user.user_id}/notifications`, (route) => json(route, 200, { items: [], next_cursor: null }))
+  set(`GET /users/v1/users/${user.user_id}/currency/global`, (route) => json(route, 200, { user_id: user.user_id, package_id: null, amount: 0 }))
+  for (const packageId of user.package_ids) {
+    set(`GET /users/v1/users/${user.user_id}/currency/local/${packageId}`, (route) => json(route, 200, { user_id: user.user_id, package_id: packageId, amount: 0 }))
+  }
+  set(`GET /notification/v1/users/${user.user_id}/preferences`, (route) => json(route, 200, { muted_categories: [], version: 1 }, { etag: '"1"' }))
+  set('GET /notification/v1/devices', (route) => json(route, 200, { items: [], next_cursor: null }))
+}

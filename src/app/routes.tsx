@@ -5,7 +5,6 @@ import LoginPage from '../features/auth/LoginPage.tsx'
 import { RequireSession } from '../features/auth/RequireSession.tsx'
 import { AppShell } from './AppShell.tsx'
 import { NotFound } from './NotFound.tsx'
-import { NotInThisBuild } from './NotInThisBuild.tsx'
 import { ShellOrPublic } from './PublicFrame.tsx'
 
 const RegisterPage = lazy(() => import('../features/auth/RegisterPage.tsx'))
@@ -22,6 +21,7 @@ const BattlesPage = lazy(() => import('../features/combat/battles/BattlesPage.ts
 const BattlePage = lazy(() => import('../features/combat/battles/BattlePage.tsx'))
 const RaidsPage = lazy(() => import('../features/combat/raids/RaidsPage.tsx'))
 const RaidPage = lazy(() => import('../features/combat/raids/RaidPage.tsx'))
+const NotificationsPage = lazy(() => import('../features/notifications/NotificationsPage.tsx'))
 const CreditsPage = lazy(() => import('../features/credits/CreditsPage.tsx'))
 
 // Design preview: compiled into development builds only.
@@ -51,7 +51,7 @@ export function AppRoutes() {
             <Route path="combat/battles/:id" element={<BattlePage />} />
             <Route path="combat/raids" element={<RaidsPage />} />
             <Route path="combat/raids/:id" element={<RaidPage />} />
-            <Route path="notifications" element={<NotInThisBuild title="Notifications" />} />
+            <Route path="notifications" element={<NotificationsPage />} />
             <Route path="account" element={<AccountPage />} />
           </Route>
         </Route>

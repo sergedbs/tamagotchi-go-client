@@ -1,5 +1,6 @@
 import type { Request, Route } from '@playwright/test'
 import { expect, json, test } from './network.ts'
+import { accountDefaults } from './session.ts'
 
 const READY = '01a11d09-508b-7095-80e3-cb2c2db6eca5'
 const UNCONFIGURED = '01a11d09-50b2-7413-ab6e-d6b6c25038df'
@@ -37,6 +38,7 @@ test.describe('fixture: authentication', () => {
       seen.push(route.request())
       return json(route, 200, USER)
     })
+    accountDefaults(api, USER)
     await page.goto('/login?next=%2Faccount')
     await page.getByLabel('Package').selectOption(READY)
     await page.getByLabel('Email').fill(USER.email)
@@ -129,6 +131,7 @@ test.describe('fixture: authentication', () => {
       logoutRequest = route.request()
       return route.fulfill({ status: 204 })
     })
+    accountDefaults(api, USER)
     await page.goto('/login?next=%2Faccount')
     await page.getByLabel('Package').selectOption(READY)
     await page.getByLabel('Email').fill(USER.email)
