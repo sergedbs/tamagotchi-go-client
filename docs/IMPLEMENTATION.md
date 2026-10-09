@@ -264,7 +264,41 @@ detail and battles list, real raid detail for a non-member (403, now explained),
 fixture raid detail (active, cancelled, timed out). Real raid start was not run:
 every active occurrence's window is closed, and creating one needs admin writes.
 
-Next: slice 9 (notifications inbox and wallets).
+### Slice 9 - notifications and account (complete)
+
+Commits 7a1dd36 (inbox, templates, read, read-all, unread badge), cc06c5c
+(wallets, preferences, devices), 7cfde8f (review polish), plus the real test.
+
+- Inbox at /notifications: paged by `id`, refreshed every 15 s only while the screen
+  and document are visible. The six documented templates come from one module
+  that validates every parameter; invalid IDs fall back to the owning list and an
+  unknown future type gets neutral wording without a link. Names are bounded
+  display text. Opening a linked item or "Mark read" sends `PATCH {read:true}`.
+  "Mark all as read" fixes `created_before` at click time; an uncertain reply
+  offers "Retry same request" with the same timestamp and key.
+- Delivery status stays distinct as a quiet label (provider acceptance is not
+  shown as device receipt); `NO_DEVICE` is not an error and is not shown.
+- The bell shows the unread count of the loaded inbox page from the same query;
+  it refreshes on focus, and the count is part of the link's accessible name.
+- Account: global coins and each joined package's wallet (server balances only;
+  care invalidates wallets), category preferences saved with the exact ETag (412
+  discards the draft, reloads and asks for review), push devices with confirmed
+  removal. Push stays disabled: no permission prompt and no device registration.
+- Removed the "not in this build" placeholder; every navigation entry is real.
+
+Checks: lint, typecheck, `npm run test` (146 unit tests incl. templates and
+fallbacks), build, `npm run test:e2e` (63 fixture tests: templates and link
+validation, mark read and bell, read-all replay after a 504, 15 s refresh with a
+fake clock, inbox failure and retry; wallets, preferences If-Match and 412
+reload, device removal, join-package starter wait), real
+`tests/e2e/real/notifications.spec.ts`: B's inbox shows A's real friend request
+("... wants to be friends", expires in 7 days, `NO_DEVICE` hidden), mark read
+clears the bell, wallets read 0/0, a preference round trip saves twice with
+If-Match, no devices. Rendered review at 390x844 and 1440x900 (real inbox and
+account, fixture inbox with all templates).
+
+Next: slice 10 (admin workspace). Admin writes against the acceptance stack wait
+for explicit authorization; reads and denied-action checks do not.
 
 ## Definition of done
 
