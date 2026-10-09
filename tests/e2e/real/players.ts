@@ -1,5 +1,8 @@
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
+import { join } from 'node:path'
 import { expect, type Browser, type Page } from '@playwright/test'
 import { bootstrapPackageId, newSyntheticUser, runId, type SyntheticUser } from './ledger.ts'
+import { requireRealTarget } from './target.ts'
 
 export interface Player {
   user: SyntheticUser
@@ -8,10 +11,10 @@ export interface Player {
 }
 
 /** Registers a synthetic player in its own browser context (separate identity). */
-export async function registerPlayer(browser: Browser, label: string, geolocation?: { latitude: number; longitude: number }): Promise<Player> {
+export async function registerPlayer(browser: Browser, label: string, geolocation?: { latitude: number; longitude: number }, packageId = bootstrapPackageId()): Promise<Player> {
   const context = await browser.newContext(geolocation ? { geolocation: { ...geolocation, accuracy: 5 }, permissions: ['geolocation'] } : {})
   const page = await context.newPage()
-  const user = newSyntheticUser(runId(), label, bootstrapPackageId())
+  const user = newSyntheticUser(runId(), label, packageId)
   await page.goto('/register')
   await page.getByLabel('Package').selectOption(user.packageId)
   await page.getByLabel('Username').fill(user.username)
@@ -22,6 +25,18 @@ export async function registerPlayer(browser: Browser, label: string, geolocatio
   const { user_id: userId } = (await (await me).json()) as { user_id: string }
   await expect(page).toHaveURL(/\/creatures$/)
   return { user, page, userId }
+}
+
+/** Package IDs from the latest provisioned fixture run's redacted manifest, if any. */
+export function provisionedPackages(): Record<string, { package_id: string; config_version: number }> | null {
+  const dir = join(process.cwd(), '.local', 'fixtures', requireRealTarget())
+  if (!existsSync(dir)) return null
+  const latest = readdirSync(dir)
+    .filter((file) => file.endsWith('.manifest.json'))
+    .map((file) => ({ file, at: statSync(join(dir, file)).mtimeMs }))
+    .sort((a, b) => b.at - a.at)[0]
+  if (!latest) return null
+  return (JSON.parse(readFileSync(join(dir, latest.file), 'utf8')) as { packages: Record<string, { package_id: string; config_version: number }> }).packages
 }
 
 /** Client-side navigation through the app shell; a reload would end the in-memory session. */
