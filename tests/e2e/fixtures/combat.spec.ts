@@ -203,9 +203,14 @@ test.describe('fixture: battles', () => {
     await page.clock.runFor(4_100)
     await expect.poll(() => detail.reads).toBeGreaterThan(first)
 
+    const beforeWindowEnd = detail.reads
     await page.clock.runFor(61_000)
+    // Let the last in-window poll land before measuring that polling stopped.
+    await expect.poll(() => detail.reads).toBeGreaterThan(beforeWindowEnd)
+    await page.waitForTimeout(500)
     const settled = detail.reads
     await page.clock.runFor(10_000)
+    await page.waitForTimeout(500)
     expect(detail.reads).toBe(settled)
 
     await page.getByRole('button', { name: 'Check status' }).click()
