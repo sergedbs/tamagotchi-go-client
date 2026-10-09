@@ -36,6 +36,16 @@ function localInput(ms: number): string {
   return date.toISOString().slice(0, 16)
 }
 
+const windowFormat = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+
+/** "Oct 9, 2026, 6:27 – 6:58 AM" in the viewer's zone. */
+function formatWindow(from: string, until: string): string {
+  const start = Date.parse(from)
+  const end = Date.parse(until)
+  if (Number.isNaN(start) || Number.isNaN(end) || end < start) return `${from} to ${until}`
+  return windowFormat.formatRange(start, end)
+}
+
 function availabilityLabel(occurrence: Occurrence, availability: ReturnType<typeof occurrenceAvailability>, now: number): string {
   if (availability === 'available') return 'Open now'
   if (availability === 'upcoming') return 'Opens later'
@@ -124,18 +134,16 @@ function OccurrenceRow({ userId, occurrence, bossName, now }: { userId: string; 
       <th scope="row">
         {bossName} <span className={styles.muted}>v{occurrence.boss_version}</span>
       </th>
-      <td>
-        <span title={formatAbsolute(occurrence.available_from)}>{new Date(occurrence.available_from).toLocaleString()}</span>
-        {' – '}
-        <span title={formatAbsolute(occurrence.available_until)}>{new Date(occurrence.available_until).toLocaleString()}</span>
+      <td data-label="Window" title={`${formatAbsolute(occurrence.available_from)} to ${formatAbsolute(occurrence.available_until)}`}>
+        {formatWindow(occurrence.available_from, occurrence.available_until)}
       </td>
-      <td>
+      <td data-label="Status">
         <span className={styles.status} data-status={occurrence.status}>
           {occurrence.status}
         </span>
       </td>
-      <td>{availabilityLabel(occurrence, availability, now)}</td>
-      <td>
+      <td data-label="Players">{availabilityLabel(occurrence, availability, now)}</td>
+      <td className={styles.actionsCell}>
         <div className={styles.rowActions}>
           {TRANSITIONS[occurrence.status].map((action) => (
             <Button key={action} variant={action === 'cancel' ? 'quiet' : 'secondary'} busy={transition.pending && transition.command?.path.endsWith(`/${action}`)} disabled={transition.pending} onClick={() => (action === 'cancel' ? setConfirming(true) : run(action))}>

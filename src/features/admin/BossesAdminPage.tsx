@@ -80,13 +80,21 @@ function BossRow({ boss }: { boss: Boss }) {
       <th scope="row">
         <Link to={`/admin/bosses/${boss.boss_id}`}>{definition.name}</Link>
       </th>
-      <td>
+      <td data-label="Type">
         <TypeBadge type={definition.combat_type} compact />
       </td>
-      <td className="tabular">{formatInteger(definition.max_hp)}</td>
-      <td className="tabular">{Math.round(definition.duration_seconds / 60) || 1} min</td>
-      <td className="tabular">{definition.max_participants}</td>
-      <td className="tabular">v{boss.config_version}</td>
+      <td data-label="HP" className="tabular">
+        {formatInteger(definition.max_hp)}
+      </td>
+      <td data-label="Duration" className="tabular">
+        {Math.round(definition.duration_seconds / 60) || 1} min
+      </td>
+      <td data-label="Raiders" className="tabular">
+        {definition.max_participants}
+      </td>
+      <td data-label="Version" className="tabular">
+        v{boss.config_version}
+      </td>
     </tr>
   )
 }

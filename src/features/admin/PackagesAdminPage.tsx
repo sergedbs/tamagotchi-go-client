@@ -56,15 +56,19 @@ export default function PackagesAdminPage() {
                   <th scope="row">
                     <Link to={`/admin/packages/${pkg.package_id}`}>{pkg.name}</Link>
                   </th>
-                  <td>{pkg.version}</td>
-                  <td>
+                  <td data-label="Version">{pkg.version}</td>
+                  <td data-label="Status">
                     <span className={styles.status} data-status={pkg.status}>
                       {pkg.status}
                     </span>
                   </td>
-                  <td className="tabular">{pkg.config_version === null ? 'None yet' : `v${pkg.config_version}`}</td>
-                  <td className="tabular">{pkg.revision}</td>
-                  <td>{roleOf(pkg)}</td>
+                  <td data-label="Configuration" className="tabular">
+                    {pkg.config_version === null ? 'None yet' : `v${pkg.config_version}`}
+                  </td>
+                  <td data-label="Revision" className="tabular">
+                    {pkg.revision}
+                  </td>
+                  <td data-label="Your access">{roleOf(pkg)}</td>
                 </tr>
               ))}
             </tbody>
