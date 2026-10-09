@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => {
       coverage: {
         provider: 'v8',
         include: ['src/api/**', 'src/app/config.ts', 'src/packages/**/*.ts'],
-        exclude: ['**/*.test.*'],
+        exclude: ['**/*.test.*', 'src/api/testing.ts'],
         thresholds: { lines: 80 },
       },
     },
