@@ -147,7 +147,7 @@ Limitation: existing acceptance packages have no client presentation, so real ca
 stays disabled for them by design; labelled real care needs the authored packages
 from slice 5 to be provisioned (requires explicit authorization).
 
-### Slice 5 - fixture CLI (built; mutating runs await authorization)
+### Slice 5 - fixture CLI (complete; provision run once, authorized)
 
 Commit 65a4218. `npm run fixtures -- preflight --target local-acceptance` performs
 the ENVIRONMENT.md readiness checks read-only (health, ready, public packages and
@@ -167,8 +167,12 @@ Targets live in `fixtures/targets.json`; unknown or non-test targets are refused
 `scenario` and `refresh-locations` refuse to run until implemented.
 
 Checks: 26 CLI unit tests (argument refusals, ledger resume without re-keying, lost
-reply, no credentials in output or manifest). Provision has not been run against
-the real target: it needs explicit authorization.
+reply, no credentials in output or manifest). With the user's authorization,
+provision ran once on 2026-10-09 (run `c10090613`): both packages at
+config_version 1 and four personas with starters (Mossling x3, Ripple). The mapping
+is committed in `public/client-config.json`; the private ledger and redacted
+manifest are in `.local/fixtures/local-acceptance/`. `scenario` and
+`refresh-locations` remain unimplemented (dataset expansion is a separate task).
 
 ### Slice 6 - Explore (complete)
 
@@ -261,8 +265,8 @@ package, A challenges B from the profile, B accepts (202, status already
 forfeits, both see the result; settlement `DELIVERED` and access grant `GRANTED`
 arrived within one poll. Rendered review at 390x844 and 1440x900: real battle
 detail and battles list, real raid detail for a non-member (403, now explained),
-fixture raid detail (active, cancelled, timed out). Real raid start was not run:
-every active occurrence's window is closed, and creating one needs admin writes.
+fixture raid detail (active, cancelled, timed out). The real raid run was added in
+slice 10, once admin writes were authorized.
 
 ### Slice 9 - notifications and account (complete)
 
@@ -297,8 +301,54 @@ clears the bell, wallets read 0/0, a preference round trip saves twice with
 If-Match, no devices. Rendered review at 390x844 and 1440x900 (real inbox and
 account, fixture inbox with all templates).
 
-Next: slice 10 (admin workspace). Admin writes against the acceptance stack wait
-for explicit authorization; reads and denied-action checks do not.
+Labelled real care (after the authorized provision, commits d4779e6, c0e0d29): a
+synthetic player in the provisioned Grove package gets Mossling with the authored
+Lythbound art; Feed changes Energy 50 to 60; a second Feed inside the cooldown is
+refused by the server ("Try again shortly", no Retry-After header); the package
+wallet is credited 1 asynchronously.
+
+### Slice 10 - administration (complete)
+
+Commits 4f8411d (workspace), 4609386 (fixture tests), ab01391 (idempotency keys),
+82ed00b (mobile tables), 71c2439 and 2f09bdb (real admin and raid run), fe68c25
+(API.md gap).
+
+- `/admin/packages`, `/admin/packages/:id`, `/admin/bosses`, `/admin/bosses/:id`,
+  `/admin/occurrences`, reached from a shield entry shown only when the token's
+  role claim includes `admin` or the user moderates a package. Route visibility is
+  a hint; refusals (403) are explained without a retry.
+- Packages: create (admin), metadata edit with the exact ETag (412 offers "Load
+  latest version" and discards local edits for review), full configuration drafts
+  from this browser's saved copy, a JSON import or a bundled authored package,
+  validated against contract bounds and cross-references (deltas, bonuses, starter
+  values, assets), artwork preview, export as JSON, publish with
+  `expected_package_revision`. Publishing explains that existing creatures keep
+  their config_version.
+- Bosses: full BossInput form with bounds, catalog artwork preview, create and
+  versioned replace with If-Match. Occurrences: schedule in local time sent as
+  UTC, activate, deactivate and confirmed cancel, `runtime_propagation` shown.
+- Backend incompatibility: the live Registry requires an Idempotency-Key on
+  package PATCH and boss PUT although the contract lists only If-Match. The client
+  sends both (recorded in API.md). Preferences PUT works with If-Match alone.
+
+Checks: lint, typecheck, `npm run test` (150 unit tests incl. draft validation),
+build, `npm run test:e2e` (69 fixture tests incl. admin hint, If-Match and 412,
+draft check and publish body, boss validation and versioning, non-admin refusal,
+occurrence UTC window, keyed transitions and confirmed cancel),
+`npm run test:e2e:real` (12 tests). Real admin and raid run (admin password typed
+into the client with traces, screenshots and video off): the admin creates a
+run-named boss, saves version 2, schedules a 30-minute occurrence (created as
+`scheduled`, activated explicitly), edits the provisioned package's metadata; two
+synthetic Grove players become friends and form a guild; the leader starts the raid
+from the guild's Raids link, the member joins by attacking first, the leader's hit
+defeats the boss (a later attack is refused with 409), the outcome reads "Boss
+defeated", rewards "Being delivered", 5 XP and 3 coins per raider, the member's
+coins wallet is then credited, and the admin cancels the run's occurrence.
+Rendered review of the admin screens with real data at 390x844 and 1440x900
+(tables stack as labelled cards below 640 px).
+
+Next: slice 11 (diagnostics), then slice 12 (packaging; Docker build and a local
+run are authorized).
 
 ## Definition of done
 
