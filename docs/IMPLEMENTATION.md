@@ -170,6 +170,32 @@ Checks: 26 CLI unit tests (argument refusals, ledger resume without re-keying, l
 reply, no credentials in output or manifest). Provision has not been run against
 the real target: it needs explicit authorization.
 
+### Slice 6 - Explore (complete)
+
+Commits b1e15f7 (location and nearby queries), 7fd33e1 (map, consent, sheet),
+c9d62f4 (tests).
+
+- MapLibre 6.13 with OpenFreeMap Liberty; attribution always visible; the worker
+  is set explicitly from an emitted asset (`setWorkerUrl`), so dev and build agree.
+- One-shot `getCurrentPosition` only from the Share/Update button, then a preview
+  (coordinates, accuracy) before `POST /map/v1/location` with a new UUIDv7 key and
+  the device timestamp. `accepted=false` receipts (DUPLICATE/STALE/OUT_OF_ORDER) are
+  explained, not treated as success. Stop sharing deletes the observation.
+- Nearby: limit 100, cursor walked unchanged, at most 20 pages per refresh with a
+  visible Load more, one automatic restart on `cursor_stale`, markers keyed and
+  de-duplicated by user_id and replaced as a complete set. No background polling.
+- Distinct states: not shared, expired (pins hidden; checked on render and timed),
+  `viewer_location_unavailable`, partial (close strangers only), empty, provider or
+  WebGL failure (list fallback with the same players). Names come from on-demand
+  profile reads; relationship is shown by icon, label and colour.
+
+Checks: `npm run test` (127 unit tests), `npm run test:e2e` (36 fixture tests incl.
+101 markers over two pages, provider failure list, expiry, partial, denied
+permission, DUPLICATE receipt), `npm run test:e2e:real` explore test: two synthetic
+players ~2 m apart share one-shot locations and see each other as strangers.
+Rendered review of the real populated map at 390x844 and 1440x900 (stop-sharing
+moved into the HUD action row). Observed real TTL of an observation: about 1 minute.
+
 ## Definition of done
 
 - A clean checkout runs with npm ci and supplied public configuration; no source
