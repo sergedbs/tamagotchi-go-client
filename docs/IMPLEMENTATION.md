@@ -147,7 +147,28 @@ Limitation: existing acceptance packages have no client presentation, so real ca
 stays disabled for them by design; labelled real care needs the authored packages
 from slice 5 to be provisioned (requires explicit authorization).
 
-Next: slice 5 fixture CLI (preflight read-only; provisioning awaits authorization).
+### Slice 5 - fixture CLI (built; mutating runs await authorization)
+
+Commit 65a4218. `npm run fixtures -- preflight --target local-acceptance` performs
+the ENVIRONMENT.md readiness checks read-only (health, ready, public packages and
+types, admin sign-in and `/users/me`, collection, nearby, admin registry read) and
+writes a redacted report to `.local/reports/`. Result on 2026-10-09: all 8 checks
+passed; nearby answered `viewer_location_unavailable` as expected without a write.
+
+`provision --target <name> --run-id <id> --confirm-test-target <name>
+[--write-client-config]` creates the two authored packages (name suffixed with the
+run id), writes their full configuration with `expected_package_revision`, verifies
+artwork is served at `public_client_origin`, registers the personas in
+`fixtures/personas.json`, waits up to 30 s for starters and emits a redacted
+manifest plus the `package_presentations` mapping. Every mutation is saved with its
+body and UUIDv7 key before sending; an uncertain reply stays pending and a resume
+re-sends the identical command; completed package steps are re-read before reuse.
+Targets live in `fixtures/targets.json`; unknown or non-test targets are refused.
+`scenario` and `refresh-locations` refuse to run until implemented.
+
+Checks: 26 CLI unit tests (argument refusals, ledger resume without re-keying, lost
+reply, no credentials in output or manifest). Provision has not been run against
+the real target: it needs explicit authorization.
 
 ## Definition of done
 

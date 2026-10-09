@@ -20,6 +20,10 @@ need an explicit target name and confirmation:
 `E2E_REAL_TARGET=local-acceptance E2E_CONFIRM_TEST_TARGET=local-acceptance npm run test:e2e:real`.
 Runtime settings live in `public/client-config.json` (public values only).
 
+Fixture CLI (explicit, never on startup; credentials stay in ignored `.local/`):
+`npm run fixtures -- preflight --target local-acceptance` (read-only) and
+`npm run fixtures -- provision --target local-acceptance --run-id <id> --confirm-test-target local-acceptance`.
+
 ## Start here
 
 Read [AGENTS.md](AGENTS.md), then these documents in order:
