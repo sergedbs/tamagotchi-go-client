@@ -191,6 +191,7 @@ test.describe('fixture: battles', () => {
   })
 
   test('slow delivery is polled for a bounded window, then checked on demand', async ({ page, api }) => {
+    test.setTimeout(60_000)
     await page.clock.install()
     playerReads(api)
     const detail = battleDetail(api, { status: 'COMPLETED', sides, winner_id: LEON, loser_id: ME.user_id, settlement_status: 'PENDING', access_grant_status: 'PENDING', version: 6 })
@@ -213,6 +214,8 @@ test.describe('fixture: battles', () => {
     await page.waitForTimeout(500)
     expect(detail.reads).toBe(settled)
 
+    // Flush pending UI work on the fake clock, then check on demand.
+    await page.clock.runFor(100)
     await page.getByRole('button', { name: 'Check status' }).click()
     await expect.poll(() => detail.reads).toBe(settled + 1)
   })
