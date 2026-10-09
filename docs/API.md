@@ -240,13 +240,13 @@ produce neutral wording/list navigation, never a forged route or app crash.
 
 | Gap/status at snapshot | Client decision |
 |---|---|
-| UM 2.0.1 stranger Relationship version=0; target >=1 | Guild invitation can fail 502. Keep a real failure state and retest corrected server; do not weaken contract |
+| UM 2.0.1 stranger Relationship version=0; target >=1 | Fixed in UM 2.0.2 (rechecked 2026-10-09: a stranger invitation returns 201). The client keeps the real failure state for any 502 |
 | No user search, user-admin CRUD or role grants | Contextual discovery/UUID lookup and externally provisioned admin; no fake directory |
 | No browser full package config/stat/currency-rules read | Authored versioned presentation/config drafts; never embed service tokens |
 | No me/guild or membership query for current user | Select a guild and verify roster; last-selected guild is only a hint |
 | No raid join command | First attack admits participant; button labels explain this |
 | No asset upload API, boss-specific asset manifest or XP threshold API | Local licensed assets/catalog; XP number only |
-| Browser push needs genuine Firebase/provider configuration | Inbox works; push optional and disabled until configured |
+| Browser push needs genuine Firebase/provider configuration | Optional `push` block in runtime config enables per-browser opt-in; inbox always works. Live (2026-10-09): sends are recorded ACCEPTED_BY_PROVIDER but never reach the browser, a backend issue (BACKEND_HANDOFF.md 5.1) |
 | Gateway metrics and domain probes are infrastructure routes | Do not expose internal metrics/service hosts in ordinary player UI |
 | Gateway/Shared preparation PRs require review | Source specification is not proof those changes are published |
 | Live Registry (acceptance, 2026-10-09) refuses package PATCH and boss PUT without Idempotency-Key, though the table lists only If-Match | Client sends both; one key per logical edit, reused only by an explicit retry. Recheck when Registry is corrected |

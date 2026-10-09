@@ -1,22 +1,6 @@
 # Implementation handoff
 
-### After the final review (user feedback, 2026-10-09)
-
-- Player ID: Account, the Social lookup and profiles show a copyable player ID
-  (commit 6d736cb). The lookup hint pointed at an ID that was not shown anywhere.
-- Location "not updated": a client issue. Probing the live Map service showed
-  `STALE` means the reading's timestamp is older than 60 s (nothing is stored),
-  not that a newer location exists, and an observation expires 60 s after its own
-  timestamp. The client sent the device fix time, which macOS can report minutes
-  old, and showed a wrong message. It now stamps the observation when the player
-  presses Share, measures preview age from delivery, asks to locate again after
-  30 s, and explains STALE, OUT_OF_ORDER and `invalid_timestamp` correctly
-  (commit 069749a). Recorded in API.md.
-- The real raid test now deletes its synthetic guild; leftover synthetic guilds
-  (12) and occurrences were removed with private cleanup tools.
-- `LICENSE` (MIT) committed (f12a129).
-
-## Current state
+## Starting point
 
 Implementation started 2026-10-09 on branch `feat/client-app`, since merged into
 `develop` and `main`. Product, stack and art direction are settled. Progress, exact checks
@@ -303,7 +287,8 @@ Commits 7a1dd36 (inbox, templates, read, read-all, unread badge), cc06c5c
 - Account: global coins and each joined package's wallet (server balances only;
   care invalidates wallets), category preferences saved with the exact ETag (412
   discards the draft, reloads and asks for review), push devices with confirmed
-  removal. Push stays disabled: no permission prompt and no device registration.
+  removal. Push stayed disabled until a provider configuration existed (see
+  "Browser push and server fixes" below).
 - Removed the "not in this build" placeholder; every navigation entry is real.
 
 Checks: lint, typecheck, `npm run test` (146 unit tests incl. templates and
@@ -450,28 +435,91 @@ loading and error states and creature detail had no `main` landmark; the Explore
 list now clears the measured overlay instead of a fixed offset, so the map-failure
 notice no longer overlaps it.
 
+### After the final review (user feedback, 2026-10-09)
+
+- Player ID: Account, the Social lookup and profiles show a copyable player ID
+  (commit 6d736cb). The lookup hint pointed at an ID that was not shown anywhere.
+- Location "not updated": a client issue. Probing the live Map service showed
+  `STALE` means the reading's timestamp is older than 60 s (nothing is stored),
+  not that a newer location exists, and an observation expires 60 s after its own
+  timestamp. The client sent the device fix time, which macOS can report minutes
+  old, and showed a wrong message. It now stamps the observation when the player
+  presses Share, measures preview age from delivery, asks to locate again after
+  30 s, and explains STALE, OUT_OF_ORDER and `invalid_timestamp` correctly
+  (commit 069749a). Recorded in API.md.
+- The real raid test now deletes its synthetic guild; leftover synthetic guilds
+  (12) and occurrences were removed with private cleanup tools.
+- `LICENSE` (MIT) committed (f12a129).
+
+### Browser push and server fixes (2026-10-09)
+
+Push (commits 7c5bb68 to 7860941), built from the supplied Firebase Web
+configuration and the demo's FCM envelope:
+
+- `push` in the runtime config takes the Firebase Web app configuration and the
+  public VAPID key (strict: a service-account file is refused). The committed
+  config keeps `"push": null`; `CLIENT_CONFIG` serves an ignored deployment file
+  in dev and preview, like the compose mount. `client-config.example.json` holds
+  placeholders. Firebase 12.19.0 is pinned and loaded only on demand.
+- A service worker (`src/features/push/sw.ts`) is bundled by Vite as a classic
+  script with Firebase. Its scope is its own folder, so it never controls pages;
+  it gets the public config in its URL. Background pushes become system
+  notifications built from the inbox templates (`envelope.ts`: Zod-validated
+  `type`, `notification_id`, JSON `params`; unknown or invalid data stays
+  neutral). A click focuses an open tab and navigates in-app (keeping the
+  memory-only session) or opens a new tab; only same-app paths are opened.
+- Account > Push devices: not configured, unsupported, blocked, off ("Turn on push
+  for this browser", the only place permission is requested), on ("Turn off
+  push"); the list marks "This browser". The token goes only into
+  `POST /notification/v1/devices` (WEB, session package, locale). Foreground
+  pushes refresh the inbox. Sign-out deletes the device and the subscription; a
+  different player signing in releases a subscription left by another. The
+  owner's player and device ID are kept in localStorage (ARCHITECTURE.md).
+- Checks: lint, typecheck, 183 unit tests, build, 82 fixture tests (eight new push
+  states; fixture runs now always serve the committed config), real suite 12/12
+  on rerun (one transient Registry 5xx on the raid test's first run).
+- Real delivery is blocked on the backend: the device registers and the event is
+  recorded `ACCEPTED_BY_PROVIDER`, but no push reaches Chrome
+  (`chrome://gcm-internals` receives nothing). A raw Web Push with local VAPID
+  keys reaches the same browser in about 2 s, and FCM-format pushes given to the
+  worker render in both modes, so the client path works. Details and suggested
+  checks: [backend handoff](BACKEND_HANDOFF.md) 5.1. `tests/e2e/real/push.spec.ts`
+  (runs only when push is configured) fails at the delivery step until then.
+- Learned: Playwright's default contexts are incognito, which has no Push API, so
+  the real test uses a persistent profile with background networking enabled. A
+  fresh profile's first subscription takes Chrome about 30 s.
+
+Server fixes: user-management 2.0.2 and guild-service 2.0.3 fix the stranger
+relationship gap. A probe with synthetic players created a guild, invited a
+stranger (201), saw `GUILD_INVITATION` in the invitee's inbox, accepted, promoted
+to officer and deleted the guild. The client already invites by player ID, so no
+change was needed.
+
 ## Current state
 
 All twelve slices are complete and published on `main` and `develop` of
-[sergedbs/tamagotchi-go-client](https://github.com/sergedbs/tamagotchi-go-client). Checks at the end: lint, typecheck, 153 unit tests, build, 74 fixture
-tests, 12 real tests on the dev server (and on the packaged container before the
-last fixes), `python3 tools/check_spec.py`. Server-side observations for the
-backend owners are collected in [backend handoff](BACKEND_HANDOFF.md).
+[sergedbs/tamagotchi-go-client](https://github.com/sergedbs/tamagotchi-go-client).
+Browser push was added afterwards as local commits on `develop` (not pushed).
+Checks at the end: lint, typecheck, 183 unit tests, build, 82 fixture tests, 12
+real tests on the dev server, `python3 tools/check_spec.py`; the real push test
+fails at delivery (backend). Server-side observations for the backend owners are
+collected in [backend handoff](BACKEND_HANDOFF.md).
 
 Known limitations and backend gaps:
 
+- Push sends are recorded as accepted but never reach the browser (backend
+  handoff 5.1); the inbox is unaffected.
 - Live Registry requires Idempotency-Key on package PATCH and boss PUT (API.md).
-- Guild invitations worked between friends; the UM stranger relationship version
-  gap was not hit and remains documented.
 - Battle turn timers are short; an unanswered turn ends the battle server-side.
 - Map readings are accepted only within 60 s of their timestamp and expire 60 s
   after it, so a shared location is visible for at most a minute.
 - Package art published by the fixture CLI is bound to `public_client_origin`.
 - Scenario fixtures and the realistic demo dataset are not built (need their own
-  authorization). Browser push stays disabled (no provider configuration).
+  authorization).
 - Local development runs on Node 26; the image and CI use Node 24.
 
-Next: dataset expansion and backend follow-ups from the backend handoff, when approved.
+Next: rerun `tests/e2e/real/push.spec.ts` once the Notification service delivers;
+then dataset expansion and the other backend follow-ups, when approved.
 
 ## Definition of done
 

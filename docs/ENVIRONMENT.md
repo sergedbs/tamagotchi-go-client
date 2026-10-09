@@ -93,8 +93,8 @@ not the client seed command; they can mutate state and are not automatic setup.
 
 Readiness requires login, usable starters/care, expected social/map visibility,
 chat negotiation, admin operations and scenario prerequisites. Record unsupported
-flows separately. The current known UM stranger relationship `version=0` differs
-from the shared `>=1` contract and blocks Guild invitations; recheck the corrected
-owner candidate before calling the complete dataset ready. Do not weaken checks.
+flows separately. The UM stranger relationship `version=0` gap that blocked Guild
+invitations is fixed in user-management 2.0.2 (rechecked 2026-10-09). Do not
+weaken checks.
 
 No containers, keys or database contents were changed while writing this handoff.
