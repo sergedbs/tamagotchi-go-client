@@ -1,5 +1,6 @@
 import type { PushConfig } from '../../app/config.ts'
 import workerUrl from './sw.ts?worker&url'
+import { pushView } from './envelope.ts'
 
 /**
  * Browser side of Firebase Cloud Messaging. Firebase is loaded only here, on
@@ -108,10 +109,19 @@ export async function releasePush(config: PushConfig | null): Promise<void> {
   await registration.unregister().catch(() => false)
 }
 
-/** Foreground pushes for a visible app arrive here instead of as system notifications. */
+/** Refresh the inbox and display foreground pushes through the same worker as background pushes. */
 export async function listenForeground(config: PushConfig, onPush: () => void): Promise<() => void> {
   // Re-registering picks up a worker from a newer build.
-  await registerWorker(config)
+  const registration = await registerWorker(config)
   const { messaging, onMessage } = await loadMessaging(config)
-  return onMessage(messaging, () => onPush())
+  return onMessage(messaging, (payload) => {
+    onPush()
+    const view = pushView(payload.data, Date.now())
+    // Inbox refresh must still succeed if the OS refuses the banner.
+    void registration.showNotification(view.title, {
+      body: view.body,
+      tag: view.tag,
+      data: { href: view.href },
+    }).catch(() => undefined)
+  })
 }

@@ -60,24 +60,6 @@ async function receivePush(context: BrowserContext, browser: Browser, baseURL: s
   await expect(devices.getByText('Push is on for this browser.').first()).toBeVisible()
   await expect(devices.getByText('Web browser · This browser')).toBeVisible()
 
-  // Foreground: the visible app receives the push from its worker and refreshes the inbox.
-  await a.page.evaluate(() => {
-    const seen = window as unknown as { __pushes: number }
-    seen.__pushes = 0
-    navigator.serviceWorker.addEventListener('message', (event) => {
-      if ((event.data as { isFirebaseMessaging?: boolean } | null)?.isFirebaseMessaging) seen.__pushes += 1
-    })
-  })
-  const b = await registerPlayer(browser, 'push-b')
-  await sendFriendRequest(b.page, a.userId)
-  await expect.poll(() => a.page.evaluate(() => (window as unknown as { __pushes: number }).__pushes), { timeout: 45_000 }).toBeGreaterThan(0)
-  const bell = a.page.getByRole('navigation', { name: 'Utilities' }).getByRole('link', { name: /^Notifications/ })
-  await expect(bell).toHaveAccessibleName(/unread/, { timeout: 10_000 })
-
-  // Background: with no app page open, the worker shows a templated system notification.
-  await a.page.close()
-  const c = await registerPlayer(browser, 'push-c')
-  await sendFriendRequest(c.page, a.userId)
   const shown = async () => {
     for (const worker of context.serviceWorkers()) {
       try {
@@ -91,6 +73,26 @@ async function receivePush(context: BrowserContext, browser: Browser, baseURL: s
     }
     return []
   }
+
+  // Foreground: refresh the inbox and show a templated system notification.
+  await a.page.evaluate(() => {
+    const seen = window as unknown as { __pushes: number }
+    seen.__pushes = 0
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if ((event.data as { isFirebaseMessaging?: boolean } | null)?.isFirebaseMessaging) seen.__pushes += 1
+    })
+  })
+  const b = await registerPlayer(browser, 'push-b')
+  await sendFriendRequest(b.page, a.userId)
+  await expect.poll(() => a.page.evaluate(() => (window as unknown as { __pushes: number }).__pushes), { timeout: 45_000 }).toBeGreaterThan(0)
+  await expect.poll(shown, { timeout: 45_000 }).toContainEqual(expect.objectContaining({ title: `${b.user.username} wants to be friends`, href: '/social' }))
+  const bell = a.page.getByRole('navigation', { name: 'Utilities' }).getByRole('link', { name: /^Notifications/ })
+  await expect(bell).toHaveAccessibleName(/unread/, { timeout: 10_000 })
+
+  // Background: with no app page open, the worker shows a templated system notification.
+  await a.page.close()
+  const c = await registerPlayer(browser, 'push-c')
+  await sendFriendRequest(c.page, a.userId)
   await expect.poll(shown, { timeout: 60_000, intervals: [1_000] }).toContainEqual(expect.objectContaining({ title: `${c.user.username} wants to be friends`, href: '/social' }))
   const notification = (await shown()).find((item) => item.title === `${c.user.username} wants to be friends`)!
 

@@ -478,13 +478,11 @@ configuration and the demo's FCM envelope:
 - Checks: lint, typecheck, 183 unit tests, build, 82 fixture tests (eight new push
   states; fixture runs now always serve the committed config), real suite 12/12
   on rerun (one transient Registry 5xx on the raid test's first run).
-- Real delivery is blocked on the backend: the device registers and the event is
-  recorded `ACCEPTED_BY_PROVIDER`, but no push reaches Chrome
-  (`chrome://gcm-internals` receives nothing). A raw Web Push with local VAPID
-  keys reaches the same browser in about 2 s, and FCM-format pushes given to the
-  worker render in both modes, so the client path works. Details and suggested
-  checks: [backend handoff](BACKEND_HANDOFF.md) 5.1. `tests/e2e/real/push.spec.ts`
-  (runs only when push is configured) fails at the delivery step until then.
+- Real delivery now works after correcting private resolved Compose from
+  `PUSH_PROVIDER=stub` to `fcm`. Earlier claims of a backend sending defect are
+  superseded. Foreground receipt now also requests a system banner using the
+  existing worker/templates; inbox refresh survives a refused banner. Registration
+  is scoped to the signed-in user; browser and OS permission are required.
 - Learned: Playwright's default contexts are incognito, which has no Push API, so
   the real test uses a persistent profile with background networking enabled. A
   fresh profile's first subscription takes Chrome about 30 s.
@@ -578,3 +576,15 @@ Start with repository/dependency/bootstrap planning and the first visual proof.
 Do not ask me to choose a new stack or art direction unless a concrete blocker
 demonstrates that a documented decision cannot work.
 ```
+
+### Client push verification, 2026-10-09
+
+Client real push test passes against the existing acceptance images: foreground
+FCM receipt and templated system notification, background notification, same-user
+registration after sign-in and device/subscription cleanup on sign-out. Foreground
+previously refreshed only the inbox; now uses the existing worker and templates
+for banners too. Browser permission at localhost5173 was approved and enabled.
+185 unit tests, lint, typecheck and build pass. Coverage is76.15% against80%,
+identical on the untouched HEAD baseline (183 tests); no gate was weakened.
+Client docs correct the earlier backend diagnosis. This is a local client fix,
+not a new backend image. No pushes or remote merges performed.

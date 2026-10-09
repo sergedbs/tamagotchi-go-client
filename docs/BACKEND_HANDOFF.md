@@ -65,40 +65,29 @@ All writes went through the public API and are named so they can be found.
 | Battle | create, accept, attack, forfeit, settlement and access-grant status | Works; accept answers 202 with status already `ONGOING` |
 | Monster Raid | start, attack/admission, leaderboard, victory, cancel | Works; boss defeated, rewards `PENDING`, coins credited afterwards |
 | Guild | create, invite (friend and stranger), accept, role change, delete, chat negotiate and socket | Works on 2.0.3; invitations return 201 and `GUILD_INVITATION` reaches the invitee's inbox |
-| Notification | inbox, read, preferences with If-Match, device register/list/remove, FCM push | Inbox works with the documented params; device registration works; push never reaches the browser (5.1) |
+| Notification | inbox, read, preferences with If-Match, device register/list/remove, FCM push | Inbox and browser delivery work after the private provider correction (5.1) |
 
 Real client test suite: 12 tests passing against the dev server and the packaged
-container, plus the push test, which fails at the delivery step until 5.1 is fixed.
+container. The real push test now passes after the private provider correction.
 
 ## 5. Server-side issues and decisions needed
 
 Ordered by impact on players. Each item says what was observed, how to reproduce
 it, what the client does now and what we suggest.
 
-### 5.1 Push sends are reported as accepted but never reach the browser
+### 5.1 Browser push configuration corrected
 
-- Observed (2026-10-09, notification 2.0.3, installed Chrome on macOS): the browser
-  registers its FCM token (`POST /notification/v1/devices` 200, `WEB`, correct
-  package). A friend request then shows `delivery_status: ACCEPTED_BY_PROVIDER` in
-  the inbox within 5 s, but nothing reaches the browser. `chrome://gcm-internals`
-  shows the push connection `CONNECTED` and the subscription registered, and its
-  receive log stays empty. Firebase's default VAPID key behaves the same, and a
-  manual test in a normal Chrome profile gave the same result.
-- Ruled out on the client: a standard Web Push (RFC 8291/8292) sent by a local test
-  script with its own VAPID key to the same browser arrives in about 2 s. An
-  FCM-format push given to the client's worker shows the templated system
-  notification in the background and refreshes the open inbox in the foreground.
-- Likely causes: sends made with `validate_only` (Firebase answers
-  `projects/<id>/messages/fake_message_id` and delivers nothing), a service
-  account from another Firebase project than the web configuration (403
-  `SENDER_ID_MISMATCH`), or a failed send recorded as `ACCEPTED_BY_PROVIDER`.
-- Suggest: log the FCM HTTP v1 response of each send; record
-  `ACCEPTED_BY_PROVIDER` only for HTTP 200 with a real message name; confirm the
-  project matches the web configuration; send to `message.token` exactly as
-  registered, data-only, with string values (a `notification` block makes Firebase
-  show its own text instead of the client's templates). The client's
-  `tests/e2e/real/push.spec.ts` confirms the fix: foreground, background and
-  removal at sign-out.
+The private acceptance Compose file actually used `PUSH_PROVIDER=stub`. Setting
+`NOTIFICATION_PUSH_PROVIDER=fcm` inside the container did not select FCM; Shared
+Compose normally maps that host setting to `PUSH_PROVIDER`. Correcting the private
+resolved value and recreating only Notification restored real FCM delivery.
+Previous provider-mismatch and dry-run diagnoses were unverified hypotheses.
+
+The client previously refreshed the inbox for foreground pushes without displaying
+a banner. It now displays a notification through its existing worker, with the
+same templates and click destination as background delivery. Browser permission,
+per-user device registration and macOS banners are required. Signing out removes
+this browser's registration. No backend source fix is required for this issue.
 
 ### 5.2 Registry requires Idempotency-Key on edits the contract marks If-Match only
 
