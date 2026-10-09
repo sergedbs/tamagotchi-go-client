@@ -5,6 +5,9 @@ import { presentNotification } from '../notifications/templates.ts'
 /** Where a push opens when it carries no usable destination. */
 export const INBOX_PATH = '/notifications'
 
+/** Worker-to-page message asking an open tab to navigate in-app. */
+export const OPEN_MESSAGE = 'tamagotchi-go/push-open'
+
 const paramsSchema = z.record(z.string().max(64), z.union([z.string().max(512), z.number(), z.boolean()]))
 
 /**
