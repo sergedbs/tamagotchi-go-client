@@ -1,0 +1,10 @@
+{
+  "api_base": "/api",
+  "map_style_url": "https://tiles.openfreemap.org/styles/liberty",
+  "map_default_center": [28.8638, 47.0105],
+  "diagnostics_enabled": false,
+  "manual_location_enabled": false,
+  "allowed_socket_origins": ["ws://localhost:13004"],
+  "package_presentations": {},
+  "push": null
+}
