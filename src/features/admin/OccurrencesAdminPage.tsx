@@ -36,6 +36,13 @@ function localInput(ms: number): string {
   return date.toISOString().slice(0, 16)
 }
 
+function availabilityLabel(occurrence: Occurrence, availability: ReturnType<typeof occurrenceAvailability>, now: number): string {
+  if (availability === 'available') return 'Open now'
+  if (availability === 'upcoming') return 'Opens later'
+  const insideWindow = Date.parse(occurrence.available_from) <= now && now < Date.parse(occurrence.available_until)
+  return insideWindow && occurrence.status !== 'cancelled' ? 'Not active yet' : 'Closed'
+}
+
 export default function OccurrencesAdminPage() {
   const { user } = useAuthenticated()
   const me = user.user_id
@@ -127,7 +134,7 @@ function OccurrenceRow({ userId, occurrence, bossName, now }: { userId: string; 
           {occurrence.status}
         </span>
       </td>
-      <td>{availability === 'available' ? 'Open now' : availability === 'upcoming' ? 'Opens later' : 'Closed'}</td>
+      <td>{availabilityLabel(occurrence, availability, now)}</td>
       <td>
         <div className={styles.rowActions}>
           {TRANSITIONS[occurrence.status].map((action) => (

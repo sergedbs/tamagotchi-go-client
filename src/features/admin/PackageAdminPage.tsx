@@ -106,7 +106,8 @@ function MetadataForm({ userId, current, refreshing, onReload }: { userId: strin
       method: 'PATCH',
       path: apiPath`/registry/v1/packages/${pkg.package_id}`,
       body: { name: form.name.trim(), description: form.description, version: form.version.trim(), status: form.status, developer_user_ids: developers.ids, moderator_user_ids: moderators.ids },
-      idempotent: false,
+      // The live Registry also requires an Idempotency-Key here (not in the contract table).
+      idempotent: true,
       ifMatch: current.etag,
       parse: (value) => packageSchema.parse(value),
       actor: userId,

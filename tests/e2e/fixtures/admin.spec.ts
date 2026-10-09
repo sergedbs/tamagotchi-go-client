@@ -85,6 +85,7 @@ test.describe('fixture: administration', () => {
     await expect(metadata.getByText('Saved as revision 4.')).toBeVisible()
 
     expect(sent.map((request) => request.headers()['if-match'])).toEqual(['"2"', '"3"'])
+    expect(sent[1]!.headers()['idempotency-key']).toBeTruthy()
     expect(sent[1]!.postDataJSON()).toEqual({ name: 'Grove Companions', description: 'Edited elsewhere', version: '0.2.0', status: 'active', developer_user_ids: [ME.user_id], moderator_user_ids: [ME.user_id] })
   })
 
@@ -161,6 +162,7 @@ test.describe('fixture: administration', () => {
     expect(writes[0]!.postDataJSON()).toMatchObject({ name: 'Ember Gryfon', max_hp: 40, weaknesses: ['WATER'], special_properties: {}, defeat_rewards: { xp: 10, global_currency: 0 } })
     expect(writes[0]!.headers()['idempotency-key']).toBeTruthy()
     expect(writes[1]!.headers()['if-match']).toBe('"1"')
+    expect(writes[1]!.headers()['idempotency-key']).toBeTruthy()
     expect(writes[1]!.postDataJSON()).toMatchObject({ name: 'Ember Gryfon', duration_seconds: 300 })
   })
 

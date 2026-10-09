@@ -68,7 +68,8 @@ function BossAdmin({ bossId }: { bossId: string }) {
               busy={save.pending}
               onSubmit={(input) =>
                 boss.data.etag &&
-                save.start({ method: 'PUT', path: apiPath`/registry/v1/bosses/${bossId}`, body: input, idempotent: false, ifMatch: boss.data.etag, parse: (value) => bossSchema.parse(value), actor: me })
+                // The live Registry also requires an Idempotency-Key here (not in the contract table).
+                save.start({ method: 'PUT', path: apiPath`/registry/v1/bosses/${bossId}`, body: input, idempotent: true, ifMatch: boss.data.etag, parse: (value) => bossSchema.parse(value), actor: me })
               }
               feedback={
                 save.error ? (
