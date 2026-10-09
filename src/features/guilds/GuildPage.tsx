@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import { useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Crown, MessagesSquare, Send, Users } from 'lucide-react'
+import { ArrowLeft, Crown, MessagesSquare, Send, Skull, Users } from 'lucide-react'
 import { describeApiError, isApiError } from '../../api/errors.ts'
 import { apiPath } from '../../api/http.ts'
 import { useCommand } from '../../api/useCommand.ts'
@@ -95,9 +95,14 @@ function GuildView({ guildId }: { guildId: string }) {
           </p>
         </div>
         {role && (
-          <Link to={`/guilds/${guildId}/chat`} className={styles.linkButtonPrimary}>
-            <MessagesSquare size={18} aria-hidden="true" /> Open chat
-          </Link>
+          <div className={styles.headerLinks}>
+            <Link to="/combat/raids" className={styles.linkButton}>
+              <Skull size={18} aria-hidden="true" /> Raids
+            </Link>
+            <Link to={`/guilds/${guildId}/chat`} className={styles.linkButtonPrimary}>
+              <MessagesSquare size={18} aria-hidden="true" /> Open chat
+            </Link>
+          </div>
         )}
       </header>
 
