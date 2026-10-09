@@ -1,0 +1,886 @@
+{
+  "pack": "Lythbound Creatures Asset Pack",
+  "artist": "Jackalune",
+  "concept_credit": "Toripng: Laguna, Igalyph, Nimblithe",
+  "license": "CC-BY-4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://jackalune.itch.io/lythbound-creatures-asset-pack-free",
+  "downloaded_at": "2026-10-09",
+  "source_archive_sha256": "b9769fa3cae989f362efd4f87697ac0631b725d5a53f0602f16cf75a71448e63",
+  "modifications": "PNG bytes unchanged; directory and file names lowercased.",
+  "assets": [
+    {
+      "sprite_ref": "lythbound/flyte/black",
+      "species": "Flyte",
+      "variant": "Black",
+      "url": "/assets/creatures/lythbound/flyte/black.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "215affa1762acf39415abeee4ee6afcad2f1543846b62807d7ef269b859415d7"
+    },
+    {
+      "sprite_ref": "lythbound/flyte/blue",
+      "species": "Flyte",
+      "variant": "Blue",
+      "url": "/assets/creatures/lythbound/flyte/blue.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "f42c1d8648bfd36277a4f81a3c09836c904f6930eed176abbc5ec8fbdc38a1aa"
+    },
+    {
+      "sprite_ref": "lythbound/flyte/brown",
+      "species": "Flyte",
+      "variant": "Brown",
+      "url": "/assets/creatures/lythbound/flyte/brown.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "f1edf152a2472fec9ea528ed873fd093456545da28ac7b2b7699e86299409a98"
+    },
+    {
+      "sprite_ref": "lythbound/flyte/cool",
+      "species": "Flyte",
+      "variant": "Cool",
+      "url": "/assets/creatures/lythbound/flyte/cool.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "feab984c6c76a763422182e269044b8f3ff5eb565fea6eb56769de418cafa1e1"
+    },
+    {
+      "sprite_ref": "lythbound/flyte/gray",
+      "species": "Flyte",
+      "variant": "Gray",
+      "url": "/assets/creatures/lythbound/flyte/gray.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "d998094fe33a96ce158da0fb4d98e0ac3dab99ae1adc24ce6a0127dd011408a8"
+    },
+    {
+      "sprite_ref": "lythbound/flyte/green",
+      "species": "Flyte",
+      "variant": "Green",
+      "url": "/assets/creatures/lythbound/flyte/green.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "79e6d90bc8b6bd65804d3d73d346d4638c482121db1c21586903a22efd2c9f49"
+    },
+    {
+      "sprite_ref": "lythbound/flyte/neutral",
+      "species": "Flyte",
+      "variant": "Neutral",
+      "url": "/assets/creatures/lythbound/flyte/neutral.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "a2fc2b1f0a4ba76648400d214b5f4a881311e1531f9574955ce9831f46cab408"
+    },
+    {
+      "sprite_ref": "lythbound/flyte/orange",
+      "species": "Flyte",
+      "variant": "Orange",
+      "url": "/assets/creatures/lythbound/flyte/orange.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "1ab034ab9340afce073eacc77a0b3cb4a682e2a274d1aac0d707fc4c4681ddd4"
+    },
+    {
+      "sprite_ref": "lythbound/flyte/pink",
+      "species": "Flyte",
+      "variant": "Pink",
+      "url": "/assets/creatures/lythbound/flyte/pink.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "91c13cc8f5476c40347248057e8e7fee57f46715523d6f38941ca707d1949315"
+    },
+    {
+      "sprite_ref": "lythbound/flyte/purple",
+      "species": "Flyte",
+      "variant": "Purple",
+      "url": "/assets/creatures/lythbound/flyte/purple.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "a102244afeebd7e7a84e8b857c4f418e5e1f0a870f7ab6d2a865dcb823de3ccc"
+    },
+    {
+      "sprite_ref": "lythbound/flyte/rainbow",
+      "species": "Flyte",
+      "variant": "Rainbow",
+      "url": "/assets/creatures/lythbound/flyte/rainbow.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "ab8bf18b3db5ae6a4af1e5dc6f79d642ed1f8f3eb004e8ea7349080c2b484876"
+    },
+    {
+      "sprite_ref": "lythbound/flyte/red",
+      "species": "Flyte",
+      "variant": "Red",
+      "url": "/assets/creatures/lythbound/flyte/red.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "0c107d7fb9187d848e1cc838ac240e45012a62d36635f2edadb2e79bcad532f6"
+    },
+    {
+      "sprite_ref": "lythbound/flyte/spicy",
+      "species": "Flyte",
+      "variant": "Spicy",
+      "url": "/assets/creatures/lythbound/flyte/spicy.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "43df1b7f64aaa0d915564523d998b86ae7f7daaa05e788b1d40eda429e202c1f"
+    },
+    {
+      "sprite_ref": "lythbound/flyte/teal",
+      "species": "Flyte",
+      "variant": "Teal",
+      "url": "/assets/creatures/lythbound/flyte/teal.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "254a02ae44d1a1ba2b0148a34007262c6bcb0c5df920b651d23ccf1fd05fade0"
+    },
+    {
+      "sprite_ref": "lythbound/flyte/white",
+      "species": "Flyte",
+      "variant": "White",
+      "url": "/assets/creatures/lythbound/flyte/white.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "857448150e2ff341e06d69c610b5f3bb82bf698c9d6839404c7fb11ea870a718"
+    },
+    {
+      "sprite_ref": "lythbound/flyte/yellow",
+      "species": "Flyte",
+      "variant": "Yellow",
+      "url": "/assets/creatures/lythbound/flyte/yellow.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "ab0eb91fcdde3688308611f8cc2c09c784dfd18c240b88197604a9a1b08ff24c"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/black",
+      "species": "Gryfon",
+      "variant": "Black",
+      "url": "/assets/creatures/lythbound/gryfon/black.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "d663137fc0be6acd56ce7c5f6d0507fca429e386d92b7452bc4bb3676824db81"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/blue",
+      "species": "Gryfon",
+      "variant": "Blue",
+      "url": "/assets/creatures/lythbound/gryfon/blue.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "77c8b66e8da27074e1d1eaaea10368c38a4e9677a9a9eba636938b3c20d9cba0"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/brown",
+      "species": "Gryfon",
+      "variant": "Brown",
+      "url": "/assets/creatures/lythbound/gryfon/brown.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "11282d6f41c1a64285a6f0d903e6d1ad334801149ec0732b956fe1ebf1e08186"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/cool",
+      "species": "Gryfon",
+      "variant": "Cool",
+      "url": "/assets/creatures/lythbound/gryfon/cool.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "25f80611d75cd5702ce767c032f0377ea32a305b89eab4af7215284f99a0e85b"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/gray",
+      "species": "Gryfon",
+      "variant": "Gray",
+      "url": "/assets/creatures/lythbound/gryfon/gray.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "b1b80b5014cbbc421d7f27590e1cfb58d191687fa9ffd2e5be2faa8a9dc9aa36"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/green",
+      "species": "Gryfon",
+      "variant": "Green",
+      "url": "/assets/creatures/lythbound/gryfon/green.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "5992b2e5d8f460be8345e4300aeb5e7ff866dc9cbeaef3c8cf8dd4e49dcc46f6"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/neutral",
+      "species": "Gryfon",
+      "variant": "Neutral",
+      "url": "/assets/creatures/lythbound/gryfon/neutral.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "14d9a9a5cb6829f721c6a3afb4d04f62c7d0943c66ab2502c04a42de56641b92"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/orange",
+      "species": "Gryfon",
+      "variant": "Orange",
+      "url": "/assets/creatures/lythbound/gryfon/orange.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "c401e0070876a6bb380a2100fbc83a7c191c1231d30955d6e26e3c29596e68c6"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/pink",
+      "species": "Gryfon",
+      "variant": "Pink",
+      "url": "/assets/creatures/lythbound/gryfon/pink.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "d6a6680d8a221ccd2c5bb093fee7c6bf4566acbb88d2f0c87c2bbc813e91bc8c"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/purple",
+      "species": "Gryfon",
+      "variant": "Purple",
+      "url": "/assets/creatures/lythbound/gryfon/purple.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "abbd33e07387cc319fa9a62d97d1ea5ad4b20366c336996a9bf6e0a5b04ea898"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/rainbow",
+      "species": "Gryfon",
+      "variant": "Rainbow",
+      "url": "/assets/creatures/lythbound/gryfon/rainbow.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "4e0b99e2cfc32e9aefd9f8b5d456cbd35ea4618a4570734ba74447badaa274a3"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/red",
+      "species": "Gryfon",
+      "variant": "Red",
+      "url": "/assets/creatures/lythbound/gryfon/red.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "d16d5e86e16d9bb24194dcc90850a0fc7a5d2371f89fdabbc339bb30d1fcd72a"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/spicy",
+      "species": "Gryfon",
+      "variant": "Spicy",
+      "url": "/assets/creatures/lythbound/gryfon/spicy.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "4b0a5ab80ec5c3b673050a65d0892eee2f827deb594b90d402d105405131d540"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/teal",
+      "species": "Gryfon",
+      "variant": "Teal",
+      "url": "/assets/creatures/lythbound/gryfon/teal.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "99a98e6a919037a16fab84c558bdd352fe8e161aeddb51dd895e27f2abfc0409"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/white",
+      "species": "Gryfon",
+      "variant": "White",
+      "url": "/assets/creatures/lythbound/gryfon/white.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "4c78c9a900a2d60d894a69b02e99195bd67faf432993b076f8a3d94e230fa01a"
+    },
+    {
+      "sprite_ref": "lythbound/gryfon/yellow",
+      "species": "Gryfon",
+      "variant": "Yellow",
+      "url": "/assets/creatures/lythbound/gryfon/yellow.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "a660231e08927842fb7780391551e40189dbf77d4a9c24e68a93efeb7c1e21dd"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/black",
+      "species": "Igalyph",
+      "variant": "Black",
+      "url": "/assets/creatures/lythbound/igalyph/black.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "a51cd02ebb8f4d490f0a5aab1bfd514a21c5f6e6c81ec6c406e1117960de64f1"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/blue",
+      "species": "Igalyph",
+      "variant": "Blue",
+      "url": "/assets/creatures/lythbound/igalyph/blue.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "37fd86b6652ccbd8ed335e0404d60d6f0b552ef09a0f06b6280ee232331d401d"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/brown",
+      "species": "Igalyph",
+      "variant": "Brown",
+      "url": "/assets/creatures/lythbound/igalyph/brown.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "ad4998aceea50db086faaa7633ac6bbe50173927573c5695823c23ba3c9b4049"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/cool",
+      "species": "Igalyph",
+      "variant": "Cool",
+      "url": "/assets/creatures/lythbound/igalyph/cool.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "da1780b2fb2249a1cd0a279176b28137e117a6a00b0c3257f6a9123feabc72ac"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/gray",
+      "species": "Igalyph",
+      "variant": "Gray",
+      "url": "/assets/creatures/lythbound/igalyph/gray.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "9e9e22fdad9ae6612dc3e7021d05096de0ab41f2d58e26d12a1befa77859a97c"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/green",
+      "species": "Igalyph",
+      "variant": "Green",
+      "url": "/assets/creatures/lythbound/igalyph/green.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "03d897eb75cda4b0d47f07094d62c4b611c4d3000f1e880a4b427091f9684475"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/neutral",
+      "species": "Igalyph",
+      "variant": "Neutral",
+      "url": "/assets/creatures/lythbound/igalyph/neutral.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "6a1704204a8aa78fd1ec5a97e73192239436f0009d1614670339201b183e0c0c"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/orange",
+      "species": "Igalyph",
+      "variant": "Orange",
+      "url": "/assets/creatures/lythbound/igalyph/orange.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "2a59fd9c487f1467ed3f8fbb50b553ef6bfcbdb3a989a8e4373ffeb14cc18720"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/pink",
+      "species": "Igalyph",
+      "variant": "Pink",
+      "url": "/assets/creatures/lythbound/igalyph/pink.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "7a90c5a3080b55bf6fe26eca92b1d460cacf3f7ccb82d803e088ae0b3bb68c46"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/purple",
+      "species": "Igalyph",
+      "variant": "Purple",
+      "url": "/assets/creatures/lythbound/igalyph/purple.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "2cec4cba8d094099f2034b5d0d7b32b0742cc8941d996e653e8b9d6f37834ddf"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/rainbow",
+      "species": "Igalyph",
+      "variant": "Rainbow",
+      "url": "/assets/creatures/lythbound/igalyph/rainbow.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "345aee2d0d3215aaaf71157ed5033f3d7c999f42fae030d3f30bcdb351de6e73"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/red",
+      "species": "Igalyph",
+      "variant": "Red",
+      "url": "/assets/creatures/lythbound/igalyph/red.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "db5f6dc0b6a46b706edc6583c0269711c4421387e463757281c901cca5097062"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/spicy",
+      "species": "Igalyph",
+      "variant": "Spicy",
+      "url": "/assets/creatures/lythbound/igalyph/spicy.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "591585f4754c61b2f0d36500ff1185c801b0d52811cdba2cef36ddd80c153de6"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/teal",
+      "species": "Igalyph",
+      "variant": "Teal",
+      "url": "/assets/creatures/lythbound/igalyph/teal.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "7e7529d390db5a29b2afc2eb241c0fddffd14e3d9a42bf99bca0e60d77cee3fe"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/white",
+      "species": "Igalyph",
+      "variant": "White",
+      "url": "/assets/creatures/lythbound/igalyph/white.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "2516dc04eceb3a920ae0d53210874b0c10ec44ef11b42c19ac9b9c7650b8ad14"
+    },
+    {
+      "sprite_ref": "lythbound/igalyph/yellow",
+      "species": "Igalyph",
+      "variant": "Yellow",
+      "url": "/assets/creatures/lythbound/igalyph/yellow.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "06e961ce854841859e29b5075bc9cf3c47f6e5f1dabbadc1e9114c64134b6d3d"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/black",
+      "species": "Laguna",
+      "variant": "Black",
+      "url": "/assets/creatures/lythbound/laguna/black.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "6202bfb6230dfc79676faac21f31fc1de63672ffd3a051ad8769058035ee5189"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/blue",
+      "species": "Laguna",
+      "variant": "Blue",
+      "url": "/assets/creatures/lythbound/laguna/blue.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "9f35f7eb74a817bfe62b566b3256603a47b4558251b36ef80ad798ebfa49ccb0"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/brown",
+      "species": "Laguna",
+      "variant": "Brown",
+      "url": "/assets/creatures/lythbound/laguna/brown.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "c88bc3808b023aae2aae4a3de2ed50f6066a8df4e7e0eb9c4590f178af59032c"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/cool",
+      "species": "Laguna",
+      "variant": "Cool",
+      "url": "/assets/creatures/lythbound/laguna/cool.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "e9693890c67606ad437e0c2a81980f7703dabe5dafdbcb4359674fa451c7969e"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/gray",
+      "species": "Laguna",
+      "variant": "Gray",
+      "url": "/assets/creatures/lythbound/laguna/gray.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "4d91c3615d2df4dfe6bbc43d2cff57e733953691be03aa4fc8a1db4f61c753a9"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/green",
+      "species": "Laguna",
+      "variant": "Green",
+      "url": "/assets/creatures/lythbound/laguna/green.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "badb013a90c27cc5b19a8c46b43216f7db62f12853cdab7b19f619f5de4eeff1"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/neutral",
+      "species": "Laguna",
+      "variant": "Neutral",
+      "url": "/assets/creatures/lythbound/laguna/neutral.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "bb87e67c5c051fc78d1b479927c56ed5e2829ff8d86982f9fcd97d0aea663001"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/orange",
+      "species": "Laguna",
+      "variant": "Orange",
+      "url": "/assets/creatures/lythbound/laguna/orange.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "fa711605797662b6b541d62d9c017162e3b496792b099288ce0cbd4fcff3b1fd"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/pink",
+      "species": "Laguna",
+      "variant": "Pink",
+      "url": "/assets/creatures/lythbound/laguna/pink.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "db5353dc182b67e8b8b13f0df028c3af6b35d5a08ced9e8a5589b250b2d19993"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/purple",
+      "species": "Laguna",
+      "variant": "Purple",
+      "url": "/assets/creatures/lythbound/laguna/purple.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "8c1b639eb567a2c0e3c563b51fe16d512f018e726d242bf0152747499dd44351"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/rainbow",
+      "species": "Laguna",
+      "variant": "Rainbow",
+      "url": "/assets/creatures/lythbound/laguna/rainbow.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "ff573e17a8d4a8c7a156967db0160d1fde4b32e7238c094ea95ae02bd0902b7c"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/red",
+      "species": "Laguna",
+      "variant": "Red",
+      "url": "/assets/creatures/lythbound/laguna/red.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "ea7f746d661b1888a433afdbd4e2d07dd8a5e038daba6c53134c44060d799fc7"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/spicy",
+      "species": "Laguna",
+      "variant": "Spicy",
+      "url": "/assets/creatures/lythbound/laguna/spicy.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "eda18d0197cc5ce104950548f9e8e8f8fa987088fa9194b1aab5ef8f54029edd"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/teal",
+      "species": "Laguna",
+      "variant": "Teal",
+      "url": "/assets/creatures/lythbound/laguna/teal.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "48c0f4d31bba4d52de268c43fe154335465ca7871644620419af7d26067d102f"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/white",
+      "species": "Laguna",
+      "variant": "White",
+      "url": "/assets/creatures/lythbound/laguna/white.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "2c615523fa21584c50090f3c55426621e6625a9a72082b8ed435f6aff0e38a4e"
+    },
+    {
+      "sprite_ref": "lythbound/laguna/yellow",
+      "species": "Laguna",
+      "variant": "Yellow",
+      "url": "/assets/creatures/lythbound/laguna/yellow.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "abda5bc55da47d00fb295aba1ddd25120d5828fde8865cca488c5dbf925da1ad"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/aurora",
+      "species": "Nimblithe",
+      "variant": "Aurora",
+      "url": "/assets/creatures/lythbound/nimblithe/aurora.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "1743a1715aa05293075e2442760cd9ff1dccf5ebbafc487fbd3d6f2a7263067d"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/black",
+      "species": "Nimblithe",
+      "variant": "Black",
+      "url": "/assets/creatures/lythbound/nimblithe/black.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "022139ee2d307ab637a135456581294af78a2e230276a32333fc8cd7c1dae4e0"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/blue",
+      "species": "Nimblithe",
+      "variant": "Blue",
+      "url": "/assets/creatures/lythbound/nimblithe/blue.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "d16e2ac296fab1e5a239611bbe54427c0e52d783d640f8628a2dcf7c6a956e67"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/brown",
+      "species": "Nimblithe",
+      "variant": "Brown",
+      "url": "/assets/creatures/lythbound/nimblithe/brown.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "693c67e3175bf0a874cb6e2e92dc7278a0d5741f4eb23d38e222f2182eb4a569"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/gray",
+      "species": "Nimblithe",
+      "variant": "Gray",
+      "url": "/assets/creatures/lythbound/nimblithe/gray.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "a161564529b72b344f4add7bb968809cb256d763ac2a16e03222603713d8cdbb"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/green",
+      "species": "Nimblithe",
+      "variant": "Green",
+      "url": "/assets/creatures/lythbound/nimblithe/green.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "a29c0e14bbfcdca884bf3fc7bb71e672622d9115cfd32da6884d58b65bc44ab6"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/orange",
+      "species": "Nimblithe",
+      "variant": "Orange",
+      "url": "/assets/creatures/lythbound/nimblithe/orange.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "cbcc7f27fafc830ce705253c2707b048a01aa132100ba4f4c472d62c0fc326b7"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/overcast",
+      "species": "Nimblithe",
+      "variant": "Overcast",
+      "url": "/assets/creatures/lythbound/nimblithe/overcast.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "cacad94d28926ffb6b32bfe55a65f955a228fe7bb3d0e775248fb544789aec95"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/pink",
+      "species": "Nimblithe",
+      "variant": "Pink",
+      "url": "/assets/creatures/lythbound/nimblithe/pink.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "8daa99032cfb6f36415e25f3231a8b8f47914a6a8749d48a0745c5a1c60d2253"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/purple",
+      "species": "Nimblithe",
+      "variant": "Purple",
+      "url": "/assets/creatures/lythbound/nimblithe/purple.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "e041342ff90ca90d18c6f5dd5101c37063d9af1df87485d317f6317007082116"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/rainbow",
+      "species": "Nimblithe",
+      "variant": "Rainbow",
+      "url": "/assets/creatures/lythbound/nimblithe/rainbow.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "cbc91f8436392c04284c4f33d118e7d97e25b8b90a28f8165c705ae91116d00f"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/red",
+      "species": "Nimblithe",
+      "variant": "Red",
+      "url": "/assets/creatures/lythbound/nimblithe/red.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "5245273ab318f207e219026c1b9dcf4611b3a302cd6999e7ddda16c94b4feb66"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/sunrise",
+      "species": "Nimblithe",
+      "variant": "Sunrise",
+      "url": "/assets/creatures/lythbound/nimblithe/sunrise.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "c02a3bd9cb098235ff49e77d4f0b38733d5dde72c984ec2d186361fb9e617e32"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/teal",
+      "species": "Nimblithe",
+      "variant": "Teal",
+      "url": "/assets/creatures/lythbound/nimblithe/teal.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "f42615eff96f1d3ff878bbcfd04c3781c286032c3410d9efce3c91d4de50d6c2"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/white",
+      "species": "Nimblithe",
+      "variant": "White",
+      "url": "/assets/creatures/lythbound/nimblithe/white.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "eccfbe88dc64eeebac9b63578358ab6768be77d7c5b6b77f1118ad65418a7533"
+    },
+    {
+      "sprite_ref": "lythbound/nimblithe/yellow",
+      "species": "Nimblithe",
+      "variant": "Yellow",
+      "url": "/assets/creatures/lythbound/nimblithe/yellow.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "7b26dc76bdcdef261105ac586933c4cdd225b9d853c8fafc5db818ef95b16a34"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/black",
+      "species": "Wolfren",
+      "variant": "Black",
+      "url": "/assets/creatures/lythbound/wolfren/black.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "27f629fe10da9ba8896177cd9713d03fcd8aa90cd3be3e3742f63e1faf29804d"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/blue",
+      "species": "Wolfren",
+      "variant": "Blue",
+      "url": "/assets/creatures/lythbound/wolfren/blue.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "2ceada423f296e0c2e1e35c96bb2688eea0ccf0dc26b428eaa2d38a92b908238"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/brown",
+      "species": "Wolfren",
+      "variant": "Brown",
+      "url": "/assets/creatures/lythbound/wolfren/brown.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "aa48c7597e5ed6b969b05dc3c8829e0cdf800c459e50b1162ea0a8ba66472a2a"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/cool",
+      "species": "Wolfren",
+      "variant": "Cool",
+      "url": "/assets/creatures/lythbound/wolfren/cool.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "5f52d8ec0f790f3dda5864df9b3e0d052edf0d2dac61315aef6dfe64c3dc657c"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/gray",
+      "species": "Wolfren",
+      "variant": "Gray",
+      "url": "/assets/creatures/lythbound/wolfren/gray.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "7e2c2caf4d6f54b1b5f2ed36cc72ee5b1310672fb44f4f378b5a1151f5f66ee7"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/green",
+      "species": "Wolfren",
+      "variant": "Green",
+      "url": "/assets/creatures/lythbound/wolfren/green.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "d0da58a6813e2b054a2a64628b6c43da5e183fd9889e7d6206009837b4927fff"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/neutral",
+      "species": "Wolfren",
+      "variant": "Neutral",
+      "url": "/assets/creatures/lythbound/wolfren/neutral.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "44a4293e58f628ead81ad90bdbe8e39bb445ea66a898af92e6bbb0c9766913ed"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/orange",
+      "species": "Wolfren",
+      "variant": "Orange",
+      "url": "/assets/creatures/lythbound/wolfren/orange.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "bc855e04ab78716ff6d6f87db99430bce0c5c4011e6d94778a51e015f66526e9"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/pink",
+      "species": "Wolfren",
+      "variant": "Pink",
+      "url": "/assets/creatures/lythbound/wolfren/pink.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "dc2936ce4a640c54b1f6438a8033fba80698b7018f1cf777dfb42fe3e84d11e2"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/purple",
+      "species": "Wolfren",
+      "variant": "Purple",
+      "url": "/assets/creatures/lythbound/wolfren/purple.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "5e17327ad83a5fbe3bdf1b3c9e0c7b96b64e68222d7a3a55531ca19f4c9fc309"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/rainbow",
+      "species": "Wolfren",
+      "variant": "Rainbow",
+      "url": "/assets/creatures/lythbound/wolfren/rainbow.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "4c458c2a343b22890525737eea335e7d3aeea2522847e17a45d883ecf2079bc4"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/red",
+      "species": "Wolfren",
+      "variant": "Red",
+      "url": "/assets/creatures/lythbound/wolfren/red.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "1bb560ec5ce315ba4d8ebab826a704109521df5306b03b6a682fabfa5a065c94"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/sketchy",
+      "species": "Wolfren",
+      "variant": "Sketchy",
+      "url": "/assets/creatures/lythbound/wolfren/sketchy.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "e050a214c5a5bfca28d70cb4bddd5af94e2abac53e37a438b9d05734d8ff1962"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/spicy",
+      "species": "Wolfren",
+      "variant": "Spicy",
+      "url": "/assets/creatures/lythbound/wolfren/spicy.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "ca3e9bf2f006f03555199ef49d78c71eed0028974fffe9867becfdf2ca4a3fe9"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/teal",
+      "species": "Wolfren",
+      "variant": "Teal",
+      "url": "/assets/creatures/lythbound/wolfren/teal.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "d53c632194ae643f108acf24c392e33f2a2f2c63992c271f7ece2576d56bcf34"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/white",
+      "species": "Wolfren",
+      "variant": "White",
+      "url": "/assets/creatures/lythbound/wolfren/white.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "68bcede1a613461058189471c60e56babf47c55f86a93eba649f19153b154095"
+    },
+    {
+      "sprite_ref": "lythbound/wolfren/yellow",
+      "species": "Wolfren",
+      "variant": "Yellow",
+      "url": "/assets/creatures/lythbound/wolfren/yellow.png",
+      "width": 200,
+      "height": 200,
+      "sha256": "ed1ae11941d8fdbbd2bd4f80f3cf0781a586c6ae19c07fadb6a71f1844498f14"
+    }
+  ]
+}
