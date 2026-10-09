@@ -1,0 +1,925 @@
+{
+  "snapshot_date": "2026-10-09",
+  "status": "local client planning package; no application runtime yet",
+  "source_revisions": {
+    "shared": "046899ec0d0d63c42bacd0a5635a721e3585d8bb",
+    "shared_review": "https://github.com/PAD-TEAM-9-2026/tamagotchi-go/pull/228",
+    "gateway_runtime": "8b40c8b",
+    "gateway_publication_branch": "846c5b6cbe1ab20b4f58afff782281ebe55cf4c5",
+    "map_published_main": "6c013d7792cb37cd0108da83b967978a6045fe2c",
+    "raid_published_main": "dee2ca372c908e799c09f20715b41192ce208cb1"
+  },
+  "source_files": {
+    "shared_README_sha256": "c54fb9b38e66065c9550bac2de8e7b21bf7b79b7769b019337cb3106b1d3f646",
+    "shared_field_types_sha256": "0ef862b46844a24190786ac6416b74b0852ec4f820f23cc92f89963d29b4d23f",
+    "supplied_visual_guidelines_sha256": "6fb3db075d9660a44ad66955b1ce93e9212d370c0558d22d72b7ef57c3dc0197"
+  },
+  "bundled_files": {
+    "PAYLOADS.md_sha256": "989c7aa2ecbe123a18b9ce88f180c9fe2df68d6f6af8612a91f9cc4ac3aecd2f",
+    "VISUAL_GUIDELINES.md_sha256": "2f7492dc2bdcbce336cc2d9af36aa4e68a4a3242343e8b23964e5d2d25fb501a"
+  },
+  "payload_shape_count": 146,
+  "endpoint_count": 110,
+  "images": {
+    "map": "sergedbs/map:2.0.0",
+    "monster-raid": "sergedbs/monster-raid:2.0.0",
+    "gateway": "local source build, pending reviewed publication",
+    "user-management": "patriciamoraru/user-management:2.0.1",
+    "battle": "patriciamoraru/battle:2.0.1",
+    "guild": "mihaelacatan/guild-service:2.0.3",
+    "package-registry": "mihaelacatan/package-registry-service:2.0.3",
+    "tamagotchi": "victoriamutruc/tamagotchi:2.0.4",
+    "notification": "victoriamutruc/notification:2.0.3"
+  },
+  "known_runtime_failure": "UM stranger Relationship version=0 violates >=1 and blocks Guild invitation; do not relax client contract",
+  "client_decisions": {
+    "platform": "responsive web",
+    "stack": "React/TypeScript/Vite",
+    "visual_direction": "modern handheld companion",
+    "credentials": "memory only",
+    "demo_data": "explicit API-based fixtures in dedicated test target",
+    "remote_repository": "not created"
+  },
+  "endpoints": [
+    {
+      "service": "Gateway",
+      "method": "ANY",
+      "path": "/{service}/v1/...",
+      "request": "downstream request",
+      "response": "downstream response",
+      "access": "per endpoint"
+    },
+    {
+      "service": "Gateway",
+      "method": "POST",
+      "path": "/gateway/v1/ws-negotiate",
+      "request": "WsNegotiateInput",
+      "response": "200 WsTicket",
+      "access": "user"
+    },
+    {
+      "service": "Gateway",
+      "method": "GET",
+      "path": "/health",
+      "request": "none",
+      "response": "200 Health",
+      "access": "public"
+    },
+    {
+      "service": "Gateway",
+      "method": "GET",
+      "path": "/ready",
+      "request": "none",
+      "response": "200 Readiness or 503 Problem",
+      "access": "public"
+    },
+    {
+      "service": "User Management",
+      "method": "POST",
+      "path": "/users/v1/users/register",
+      "request": "Register, Idempotency-Key",
+      "response": "201 Registration",
+      "access": "public"
+    },
+    {
+      "service": "User Management",
+      "method": "POST",
+      "path": "/users/v1/users/login",
+      "request": "Login",
+      "response": "200 Tokens",
+      "access": "public"
+    },
+    {
+      "service": "User Management",
+      "method": "POST",
+      "path": "/users/v1/auth/refresh",
+      "request": "Refresh",
+      "response": "200 Tokens",
+      "access": "public"
+    },
+    {
+      "service": "User Management",
+      "method": "POST",
+      "path": "/users/v1/auth/logout",
+      "request": "Refresh",
+      "response": "204",
+      "access": "public"
+    },
+    {
+      "service": "User Management",
+      "method": "POST",
+      "path": "/users/v1/service-tokens",
+      "request": "ServiceTokenRequest, X-Service-Secret",
+      "response": "200 ServiceToken",
+      "access": "service client secret or admin"
+    },
+    {
+      "service": "User Management",
+      "method": "GET",
+      "path": "/users/v1/jwks",
+      "request": "none",
+      "response": "200 Jwks",
+      "access": "public"
+    },
+    {
+      "service": "User Management",
+      "method": "GET",
+      "path": "/users/v1/users/me",
+      "request": "none",
+      "response": "200 User",
+      "access": "user"
+    },
+    {
+      "service": "User Management",
+      "method": "GET",
+      "path": "/users/v1/users/{userId}",
+      "request": "none",
+      "response": "200 UserProfile",
+      "access": "user or service"
+    },
+    {
+      "service": "User Management",
+      "method": "POST",
+      "path": "/users/v1/users/me/packages",
+      "request": "JoinPackage, Idempotency-Key",
+      "response": "200 User",
+      "access": "user"
+    },
+    {
+      "service": "User Management",
+      "method": "GET",
+      "path": "/users/v1/internal/users/{userId}/membership",
+      "request": "none",
+      "response": "200 MembershipSnapshot",
+      "access": "service"
+    },
+    {
+      "service": "User Management",
+      "method": "GET",
+      "path": "/users/v1/users/{userId}/relationships",
+      "request": "query limit, cursor",
+      "response": "200 RelationshipPage",
+      "access": "user or service"
+    },
+    {
+      "service": "User Management",
+      "method": "GET",
+      "path": "/users/v1/users/{userId}/relationship/{otherId}",
+      "request": "none",
+      "response": "200 Relationship",
+      "access": "service"
+    },
+    {
+      "service": "User Management",
+      "method": "POST",
+      "path": "/users/v1/friend-requests",
+      "request": "FriendRequestInput, Idempotency-Key",
+      "response": "201 FriendRequest",
+      "access": "user"
+    },
+    {
+      "service": "User Management",
+      "method": "GET",
+      "path": "/users/v1/friend-requests",
+      "request": "query limit, cursor",
+      "response": "200 FriendRequestPage",
+      "access": "user"
+    },
+    {
+      "service": "User Management",
+      "method": "POST",
+      "path": "/users/v1/friend-requests/{id}/accept",
+      "request": "Idempotency-Key",
+      "response": "200 FriendRequest",
+      "access": "user"
+    },
+    {
+      "service": "User Management",
+      "method": "POST",
+      "path": "/users/v1/friend-requests/{id}/reject",
+      "request": "Idempotency-Key",
+      "response": "200 FriendRequest",
+      "access": "user"
+    },
+    {
+      "service": "User Management",
+      "method": "DELETE",
+      "path": "/users/v1/users/{userId}/friends/{otherId}",
+      "request": "none",
+      "response": "204",
+      "access": "user"
+    },
+    {
+      "service": "User Management",
+      "method": "PUT",
+      "path": "/users/v1/users/{userId}/enemies/{otherId}",
+      "request": "none",
+      "response": "200 Relationship",
+      "access": "user"
+    },
+    {
+      "service": "User Management",
+      "method": "DELETE",
+      "path": "/users/v1/users/{userId}/enemies/{otherId}",
+      "request": "none",
+      "response": "204",
+      "access": "user"
+    },
+    {
+      "service": "User Management",
+      "method": "GET",
+      "path": "/users/v1/users/{userId}/currency/global",
+      "request": "none",
+      "response": "200 Wallet",
+      "access": "user or service"
+    },
+    {
+      "service": "User Management",
+      "method": "GET",
+      "path": "/users/v1/users/{userId}/currency/local/{packageId}",
+      "request": "none",
+      "response": "200 Wallet",
+      "access": "user"
+    },
+    {
+      "service": "User Management",
+      "method": "POST",
+      "path": "/users/v1/users/{userId}/currency/global/add",
+      "request": "Credit, Idempotency-Key",
+      "response": "200 CreditReceipt",
+      "access": "service"
+    },
+    {
+      "service": "User Management",
+      "method": "POST",
+      "path": "/users/v1/users/{userId}/currency/local/add",
+      "request": "LocalCredit, Idempotency-Key",
+      "response": "200 CreditReceipt",
+      "access": "service"
+    },
+    {
+      "service": "User Management",
+      "method": "POST",
+      "path": "/users/v1/internal/battle-settlements",
+      "request": "BattleSettlementInput, Idempotency-Key",
+      "response": "200 BattleSettlement",
+      "access": "service"
+    },
+    {
+      "service": "User Management",
+      "method": "GET",
+      "path": "/users/v1/users/me/boosts",
+      "request": "query limit, cursor",
+      "response": "200 BoostPage",
+      "access": "user"
+    },
+    {
+      "service": "User Management",
+      "method": "POST",
+      "path": "/users/v1/internal/boost-consumptions",
+      "request": "ConsumeBoost, Idempotency-Key",
+      "response": "200 BoostReceipt",
+      "access": "service"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "POST",
+      "path": "/tamagotchi/v1/tamagotchis",
+      "request": "Mint, Idempotency-Key",
+      "response": "201 Tamagotchi",
+      "access": "service"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "GET",
+      "path": "/tamagotchi/v1/tamagotchis/{id}",
+      "request": "none",
+      "response": "200 Tamagotchi",
+      "access": "user or service"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "GET",
+      "path": "/tamagotchi/v1/tamagotchis",
+      "request": "query holder_id, package_id, type, limit, cursor",
+      "response": "200 TamagotchiPage",
+      "access": "user"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "POST",
+      "path": "/tamagotchi/v1/tamagotchis/{id}/care",
+      "request": "CareInput, Idempotency-Key",
+      "response": "200 CareReceipt",
+      "access": "user"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "POST",
+      "path": "/tamagotchi/v1/tamagotchis/{id}/xp",
+      "request": "XpInput, Idempotency-Key",
+      "response": "200 XpReceipt",
+      "access": "service"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "POST",
+      "path": "/tamagotchi/v1/tamagotchis/{id}/holders",
+      "request": "GrantAccessInput, Idempotency-Key",
+      "response": "200 AccessGrantReceipt",
+      "access": "service"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "GET",
+      "path": "/tamagotchi/v1/tamagotchis/{id}/holders",
+      "request": "none",
+      "response": "200 Holders",
+      "access": "user or service"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "DELETE",
+      "path": "/tamagotchi/v1/tamagotchis/{id}/holders/{userId}",
+      "request": "If-Match",
+      "response": "204",
+      "access": "user"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "GET",
+      "path": "/tamagotchi/v1/users/{userId}/collection",
+      "request": "query limit, cursor",
+      "response": "200 Collection",
+      "access": "user or service"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "GET",
+      "path": "/tamagotchi/v1/users/{userId}/collection/primary",
+      "request": "none",
+      "response": "200 PrimarySelection",
+      "access": "user"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "PUT",
+      "path": "/tamagotchi/v1/users/{userId}/collection/primary",
+      "request": "PrimaryInput, If-Match",
+      "response": "200 PrimarySelection",
+      "access": "user"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "DELETE",
+      "path": "/tamagotchi/v1/users/{userId}/collection/{id}",
+      "request": "If-Match",
+      "response": "204",
+      "access": "user"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "GET",
+      "path": "/tamagotchi/v1/types",
+      "request": "none",
+      "response": "200 TypeList",
+      "access": "public"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "GET",
+      "path": "/tamagotchi/v1/types/matrix",
+      "request": "none",
+      "response": "200 TypeMatrix",
+      "access": "public"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "POST",
+      "path": "/tamagotchi/v1/internal/engagements",
+      "request": "EngagementInput, Idempotency-Key",
+      "response": "201 Engagement",
+      "access": "service"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "GET",
+      "path": "/tamagotchi/v1/internal/engagements/{referenceId}",
+      "request": "none",
+      "response": "200 Engagement",
+      "access": "service"
+    },
+    {
+      "service": "Tamagotchi",
+      "method": "POST",
+      "path": "/tamagotchi/v1/internal/engagements/{referenceId}/release",
+      "request": "Idempotency-Key",
+      "response": "200 Engagement",
+      "access": "service"
+    },
+    {
+      "service": "Battle",
+      "method": "POST",
+      "path": "/battle/v1/battles",
+      "request": "BattleInput, Idempotency-Key",
+      "response": "201 Battle",
+      "access": "user"
+    },
+    {
+      "service": "Battle",
+      "method": "GET",
+      "path": "/battle/v1/battles",
+      "request": "query limit, cursor",
+      "response": "200 BattlePage",
+      "access": "user"
+    },
+    {
+      "service": "Battle",
+      "method": "GET",
+      "path": "/battle/v1/battles/{battleId}",
+      "request": "none",
+      "response": "200 Battle",
+      "access": "user"
+    },
+    {
+      "service": "Battle",
+      "method": "POST",
+      "path": "/battle/v1/battles/{battleId}/accept",
+      "request": "BattleAccept, Idempotency-Key",
+      "response": "202 Battle",
+      "access": "user"
+    },
+    {
+      "service": "Battle",
+      "method": "POST",
+      "path": "/battle/v1/battles/{battleId}/reject",
+      "request": "Idempotency-Key",
+      "response": "200 Battle",
+      "access": "user"
+    },
+    {
+      "service": "Battle",
+      "method": "POST",
+      "path": "/battle/v1/battles/{battleId}/attack",
+      "request": "ActorInput, Idempotency-Key",
+      "response": "200 BattleAttack",
+      "access": "user"
+    },
+    {
+      "service": "Battle",
+      "method": "POST",
+      "path": "/battle/v1/battles/{battleId}/forfeit",
+      "request": "Idempotency-Key",
+      "response": "200 Battle",
+      "access": "user"
+    },
+    {
+      "service": "Guild",
+      "method": "POST",
+      "path": "/guild/v1/guilds",
+      "request": "GuildInput, Idempotency-Key",
+      "response": "201 Guild",
+      "access": "user"
+    },
+    {
+      "service": "Guild",
+      "method": "GET",
+      "path": "/guild/v1/guilds",
+      "request": "query limit, cursor",
+      "response": "200 GuildPage",
+      "access": "user"
+    },
+    {
+      "service": "Guild",
+      "method": "GET",
+      "path": "/guild/v1/guilds/{guildId}",
+      "request": "none",
+      "response": "200 Guild",
+      "access": "user or service"
+    },
+    {
+      "service": "Guild",
+      "method": "GET",
+      "path": "/guild/v1/guilds/{guildId}/members",
+      "request": "none",
+      "response": "200 Members",
+      "access": "user or service"
+    },
+    {
+      "service": "Guild",
+      "method": "POST",
+      "path": "/guild/v1/guilds/{guildId}/invitations",
+      "request": "InvitationInput, Idempotency-Key",
+      "response": "201 Invitation",
+      "access": "user"
+    },
+    {
+      "service": "Guild",
+      "method": "GET",
+      "path": "/guild/v1/invitations",
+      "request": "query limit, cursor",
+      "response": "200 InvitationPage",
+      "access": "user"
+    },
+    {
+      "service": "Guild",
+      "method": "POST",
+      "path": "/guild/v1/guilds/{guildId}/invitations/{id}/accept",
+      "request": "Idempotency-Key",
+      "response": "200 Invitation",
+      "access": "user"
+    },
+    {
+      "service": "Guild",
+      "method": "POST",
+      "path": "/guild/v1/guilds/{guildId}/invitations/{id}/decline",
+      "request": "Idempotency-Key",
+      "response": "200 Invitation",
+      "access": "user"
+    },
+    {
+      "service": "Guild",
+      "method": "POST",
+      "path": "/guild/v1/guilds/{guildId}/invitations/{id}/revoke",
+      "request": "Idempotency-Key",
+      "response": "200 Invitation",
+      "access": "user"
+    },
+    {
+      "service": "Guild",
+      "method": "DELETE",
+      "path": "/guild/v1/guilds/{guildId}/members/{userId}",
+      "request": "none",
+      "response": "204",
+      "access": "user"
+    },
+    {
+      "service": "Guild",
+      "method": "PATCH",
+      "path": "/guild/v1/guilds/{guildId}/members/{userId}/role",
+      "request": "RoleInput, Idempotency-Key",
+      "response": "200 Members",
+      "access": "user"
+    },
+    {
+      "service": "Guild",
+      "method": "POST",
+      "path": "/guild/v1/guilds/{guildId}/leadership",
+      "request": "LeaderInput, Idempotency-Key",
+      "response": "200 Guild",
+      "access": "user"
+    },
+    {
+      "service": "Guild",
+      "method": "DELETE",
+      "path": "/guild/v1/guilds/{guildId}",
+      "request": "none",
+      "response": "204",
+      "access": "user"
+    },
+    {
+      "service": "Guild",
+      "method": "GET",
+      "path": "/guild/v1/guilds/{guildId}/messages",
+      "request": "query limit, cursor",
+      "response": "200 ChatPage",
+      "access": "user"
+    },
+    {
+      "service": "Guild",
+      "method": "POST",
+      "path": "/guild/v1/guilds/{guildId}/chat-tickets",
+      "request": "none",
+      "response": "201 ChatTicket",
+      "access": "user"
+    },
+    {
+      "service": "Guild",
+      "method": "GET",
+      "path": "/guild/v1/guilds/{guildId}/chat",
+      "request": "WebSocket upgrade",
+      "response": "101",
+      "access": "ticket in the first frame"
+    },
+    {
+      "service": "Package Registry",
+      "method": "POST",
+      "path": "/registry/v1/packages",
+      "request": "PackageInput, Idempotency-Key",
+      "response": "201 Package",
+      "access": "admin"
+    },
+    {
+      "service": "Package Registry",
+      "method": "GET",
+      "path": "/registry/v1/packages",
+      "request": "query limit, cursor",
+      "response": "200 PackagePage",
+      "access": "public"
+    },
+    {
+      "service": "Package Registry",
+      "method": "GET",
+      "path": "/registry/v1/packages/{packageId}",
+      "request": "none",
+      "response": "200 Package",
+      "access": "public"
+    },
+    {
+      "service": "Package Registry",
+      "method": "PATCH",
+      "path": "/registry/v1/packages/{packageId}",
+      "request": "PackageEdit, If-Match",
+      "response": "200 Package",
+      "access": "moderator"
+    },
+    {
+      "service": "Package Registry",
+      "method": "PUT",
+      "path": "/registry/v1/packages/{packageId}/stats",
+      "request": "PackageConfigWrite, Idempotency-Key",
+      "response": "200 PackageConfig",
+      "access": "moderator"
+    },
+    {
+      "service": "Package Registry",
+      "method": "GET",
+      "path": "/registry/v1/packages/{packageId}/stat-definitions",
+      "request": "query config_version",
+      "response": "200 StatDefinitions",
+      "access": "service"
+    },
+    {
+      "service": "Package Registry",
+      "method": "GET",
+      "path": "/registry/v1/packages/{packageId}/stat-bonuses",
+      "request": "query config_version",
+      "response": "200 Bonuses",
+      "access": "service"
+    },
+    {
+      "service": "Package Registry",
+      "method": "GET",
+      "path": "/registry/v1/packages/{packageId}/currency-rules",
+      "request": "query config_version",
+      "response": "200 CurrencyRules",
+      "access": "service"
+    },
+    {
+      "service": "Package Registry",
+      "method": "GET",
+      "path": "/registry/v1/packages/{packageId}/starter-pet",
+      "request": "query config_version",
+      "response": "200 StarterConfig",
+      "access": "service"
+    },
+    {
+      "service": "Package Registry",
+      "method": "GET",
+      "path": "/registry/v1/packages/{packageId}/assets",
+      "request": "query config_version",
+      "response": "200 Assets",
+      "access": "public"
+    },
+    {
+      "service": "Package Registry",
+      "method": "GET",
+      "path": "/registry/v1/packages/{packageId}/users",
+      "request": "query limit, cursor",
+      "response": "200 PackageMemberPage",
+      "access": "service"
+    },
+    {
+      "service": "Package Registry",
+      "method": "POST",
+      "path": "/registry/v1/packages/eligibility-check",
+      "request": "EligibilityInput",
+      "response": "200 Eligibility",
+      "access": "service"
+    },
+    {
+      "service": "Package Registry",
+      "method": "POST",
+      "path": "/registry/v1/bosses",
+      "request": "BossInput, Idempotency-Key",
+      "response": "201 Boss",
+      "access": "admin"
+    },
+    {
+      "service": "Package Registry",
+      "method": "GET",
+      "path": "/registry/v1/bosses",
+      "request": "query limit, cursor",
+      "response": "200 BossPage",
+      "access": "admin"
+    },
+    {
+      "service": "Package Registry",
+      "method": "GET",
+      "path": "/registry/v1/bosses/{bossId}",
+      "request": "query config_version",
+      "response": "200 Boss",
+      "access": "user or service"
+    },
+    {
+      "service": "Package Registry",
+      "method": "PUT",
+      "path": "/registry/v1/bosses/{bossId}",
+      "request": "BossInput, If-Match",
+      "response": "200 Boss",
+      "access": "admin"
+    },
+    {
+      "service": "Package Registry",
+      "method": "POST",
+      "path": "/registry/v1/raid-occurrences",
+      "request": "OccurrenceInput, Idempotency-Key",
+      "response": "201 Occurrence",
+      "access": "admin"
+    },
+    {
+      "service": "Package Registry",
+      "method": "GET",
+      "path": "/registry/v1/raid-occurrences",
+      "request": "query limit, cursor",
+      "response": "200 OccurrencePage",
+      "access": "user"
+    },
+    {
+      "service": "Package Registry",
+      "method": "GET",
+      "path": "/registry/v1/raid-occurrences/{id}",
+      "request": "none",
+      "response": "200 Occurrence",
+      "access": "user or service"
+    },
+    {
+      "service": "Package Registry",
+      "method": "POST",
+      "path": "/registry/v1/raid-occurrences/{id}/activate",
+      "request": "Idempotency-Key",
+      "response": "200 OccurrenceReceipt",
+      "access": "admin"
+    },
+    {
+      "service": "Package Registry",
+      "method": "POST",
+      "path": "/registry/v1/raid-occurrences/{id}/deactivate",
+      "request": "Idempotency-Key",
+      "response": "200 OccurrenceReceipt",
+      "access": "admin"
+    },
+    {
+      "service": "Package Registry",
+      "method": "POST",
+      "path": "/registry/v1/raid-occurrences/{id}/cancel",
+      "request": "Idempotency-Key",
+      "response": "200 OccurrenceReceipt",
+      "access": "admin"
+    },
+    {
+      "service": "Map",
+      "method": "POST",
+      "path": "/map/v1/location",
+      "request": "LocationInput, Idempotency-Key",
+      "response": "200 LocationReceipt",
+      "access": "user"
+    },
+    {
+      "service": "Map",
+      "method": "GET",
+      "path": "/map/v1/location/{userId}",
+      "request": "none",
+      "response": "200 Location",
+      "access": "user"
+    },
+    {
+      "service": "Map",
+      "method": "GET",
+      "path": "/map/v1/location/nearby/{userId}",
+      "request": "query limit, cursor",
+      "response": "200 Nearby",
+      "access": "user"
+    },
+    {
+      "service": "Map",
+      "method": "DELETE",
+      "path": "/map/v1/location/{userId}",
+      "request": "none",
+      "response": "204",
+      "access": "user"
+    },
+    {
+      "service": "Monster Raid",
+      "method": "POST",
+      "path": "/raid/v1/raids",
+      "request": "RaidInput, Idempotency-Key",
+      "response": "201 Raid",
+      "access": "user"
+    },
+    {
+      "service": "Monster Raid",
+      "method": "GET",
+      "path": "/raid/v1/raids",
+      "request": "query guild_id, limit, cursor",
+      "response": "200 RaidPage",
+      "access": "user"
+    },
+    {
+      "service": "Monster Raid",
+      "method": "GET",
+      "path": "/raid/v1/raids/{raidId}",
+      "request": "none",
+      "response": "200 Raid",
+      "access": "user or service"
+    },
+    {
+      "service": "Monster Raid",
+      "method": "POST",
+      "path": "/raid/v1/raids/{raidId}/attack",
+      "request": "ActorInput, Idempotency-Key",
+      "response": "200 RaidAttack",
+      "access": "user"
+    },
+    {
+      "service": "Monster Raid",
+      "method": "GET",
+      "path": "/raid/v1/raids/{raidId}/leaderboard",
+      "request": "query limit, cursor",
+      "response": "200 Leaderboard",
+      "access": "user or service"
+    },
+    {
+      "service": "Monster Raid",
+      "method": "DELETE",
+      "path": "/raid/v1/raids/{raidId}",
+      "request": "none",
+      "response": "204",
+      "access": "user"
+    },
+    {
+      "service": "Notification",
+      "method": "POST",
+      "path": "/notification/v1/devices",
+      "request": "DeviceInput, Idempotency-Key",
+      "response": "200 Device",
+      "access": "user"
+    },
+    {
+      "service": "Notification",
+      "method": "GET",
+      "path": "/notification/v1/devices",
+      "request": "query limit, cursor",
+      "response": "200 DevicePage",
+      "access": "user"
+    },
+    {
+      "service": "Notification",
+      "method": "DELETE",
+      "path": "/notification/v1/devices/{id}",
+      "request": "none",
+      "response": "204",
+      "access": "user"
+    },
+    {
+      "service": "Notification",
+      "method": "GET",
+      "path": "/notification/v1/users/{userId}/notifications",
+      "request": "query limit, cursor",
+      "response": "200 NotificationPage",
+      "access": "user"
+    },
+    {
+      "service": "Notification",
+      "method": "PATCH",
+      "path": "/notification/v1/notifications/{id}",
+      "request": "ReadInput",
+      "response": "200 Notification",
+      "access": "user"
+    },
+    {
+      "service": "Notification",
+      "method": "POST",
+      "path": "/notification/v1/users/{userId}/notifications/read-all",
+      "request": "ReadAllInput, Idempotency-Key",
+      "response": "200 ReadAllReceipt",
+      "access": "user"
+    },
+    {
+      "service": "Notification",
+      "method": "GET",
+      "path": "/notification/v1/users/{userId}/preferences",
+      "request": "none",
+      "response": "200 Preferences",
+      "access": "user"
+    },
+    {
+      "service": "Notification",
+      "method": "PUT",
+      "path": "/notification/v1/users/{userId}/preferences",
+      "request": "PreferencesInput, If-Match",
+      "response": "200 Preferences",
+      "access": "user"
+    }
+  ]
+}
