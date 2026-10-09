@@ -1,0 +1,58 @@
+{
+  "key": "grove-companions",
+  "package": {
+    "name": "Grove Companions",
+    "description": "Small woodland companions for an exploration demo.",
+    "version": "0.1.0"
+  },
+  "definition": {
+    "stats": [
+      { "key": "energy", "value_type": "NUMBER", "minimum": 0, "maximum": 100, "allowed_strings": null },
+      { "key": "bond", "value_type": "NUMBER", "minimum": 0, "maximum": 100, "allowed_strings": null },
+      {
+        "key": "temperament",
+        "value_type": "STRING",
+        "minimum": null,
+        "maximum": null,
+        "allowed_strings": ["curious", "calm", "bold"]
+      }
+    ],
+    "bonuses": [{ "stat_key": "bond", "operator": "GTE", "threshold": 80, "effect": "DEFENSE_BPS", "value_bps": 500 }],
+    "care_actions": [
+      { "action": "FEED", "deltas": [{ "stat_key": "energy", "delta": 10 }], "xp": 2, "cooldown_seconds": 5, "local_currency": 1 },
+      {
+        "action": "PLAY",
+        "deltas": [
+          { "stat_key": "bond", "delta": 5 },
+          { "stat_key": "energy", "delta": -3 }
+        ],
+        "xp": 3,
+        "cooldown_seconds": 5,
+        "local_currency": 1
+      },
+      { "action": "REST", "deltas": [{ "stat_key": "energy", "delta": 6 }], "xp": 1, "cooldown_seconds": 30, "local_currency": 0 }
+    ],
+    "daily_currency_cap": 50,
+    "starter": {
+      "name": "Mossling",
+      "combat_type": "NATURE",
+      "sprite_ref": "lythbound/wolfren/green",
+      "initial_stats": { "energy": 50, "bond": 30, "temperament": "curious" }
+    },
+    "assets": [
+      { "sprite_ref": "lythbound/wolfren/green", "url": "<PUBLIC_CLIENT_ORIGIN>/assets/creatures/lythbound/wolfren/green.png" }
+    ]
+  },
+  "presentation": {
+    "stats": {
+      "energy": { "label": "Energy" },
+      "bond": { "label": "Bond" },
+      "temperament": { "label": "Temperament" }
+    },
+    "actions": {
+      "FEED": { "label": "Feed", "icon": "apple", "progressive": "Feeding" },
+      "PLAY": { "label": "Play", "icon": "sparkles", "progressive": "Playing" },
+      "REST": { "label": "Rest", "icon": "moon", "progressive": "Resting" }
+    }
+  }
+}

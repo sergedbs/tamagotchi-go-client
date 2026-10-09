@@ -1,0 +1,50 @@
+{
+  "key": "tidewater-companions",
+  "package": {
+    "name": "Tidewater Companions",
+    "description": "Shoreline companions who love rain, tides and long walks.",
+    "version": "0.1.0"
+  },
+  "definition": {
+    "stats": [
+      { "key": "hydration", "value_type": "NUMBER", "minimum": 0, "maximum": 100, "allowed_strings": null },
+      { "key": "curiosity", "value_type": "NUMBER", "minimum": 0, "maximum": 50, "allowed_strings": null },
+      { "key": "shell_polished", "value_type": "BOOLEAN", "minimum": null, "maximum": null, "allowed_strings": null }
+    ],
+    "bonuses": [],
+    "care_actions": [
+      { "action": "SPLASH", "deltas": [{ "stat_key": "hydration", "delta": 12 }], "xp": 2, "cooldown_seconds": 5, "local_currency": 1 },
+      {
+        "action": "EXPLORE",
+        "deltas": [
+          { "stat_key": "curiosity", "delta": 4 },
+          { "stat_key": "hydration", "delta": -4 }
+        ],
+        "xp": 3,
+        "cooldown_seconds": 10,
+        "local_currency": 1
+      }
+    ],
+    "daily_currency_cap": 40,
+    "starter": {
+      "name": "Ripple",
+      "combat_type": "WATER",
+      "sprite_ref": "lythbound/laguna/blue",
+      "initial_stats": { "hydration": 60, "curiosity": 10, "shell_polished": false }
+    },
+    "assets": [
+      { "sprite_ref": "lythbound/laguna/blue", "url": "<PUBLIC_CLIENT_ORIGIN>/assets/creatures/lythbound/laguna/blue.png" }
+    ]
+  },
+  "presentation": {
+    "stats": {
+      "hydration": { "label": "Hydration" },
+      "curiosity": { "label": "Curiosity" },
+      "shell_polished": { "label": "Polished shell" }
+    },
+    "actions": {
+      "SPLASH": { "label": "Splash", "icon": "droplets", "progressive": "Splashing" },
+      "EXPLORE": { "label": "Explore", "icon": "compass", "progressive": "Exploring" }
+    }
+  }
+}
