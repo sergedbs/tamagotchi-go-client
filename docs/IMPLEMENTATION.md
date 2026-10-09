@@ -225,10 +225,12 @@ gap did not trigger between friends), both connect live and exchange a message,
 then the leader deletes the guild. Rendered review of People, Guilds, guild and
 chat at 390x844 and 1440x900.
 
-### Slice 8 - battles and raids (code committed; checks in progress)
+### Slice 8 - battles and raids (complete; real raid start awaits admin data)
 
 Commits 74f8db6 (join another package from Account, needed for two-creature
-lineups), 4ed7c24 (battles), 6dbc8db (raids).
+lineups), 4ed7c24 (battles), 6dbc8db (raids), f72fff4 (guild raids link),
+e7cd2d0 (fixture tests), cca18b9 and 0da63e1 (Account waits for the joined
+package's starter), a4850e3 (review fixes), 12fc96d (real battle test).
 
 - Battles: challenge with an opponent (friend or player ID, or `?opponent=` from a
   profile), two distinct held creatures and an optional ATTACK_10 boost; accept or
@@ -243,12 +245,26 @@ lineups), 4ed7c24 (battles), 6dbc8db (raids).
   (first accepted attack admits), honours `next_attack_at`, leaderboard keyed by
   `raid_version`, distinct victory/timeout/cancel reward semantics.
 
-Done: lint, typecheck, 141 unit tests, build, 43 fixture tests still passing; real
-raids list renders historical acceptance raids. Not done yet: combat fixture tests,
-real battle test, rendered review of battle and raid detail. Real raid start needs
-an available occurrence, which requires admin writes (not yet authorized).
+- Account: after joining a package, the collection is polled every 2 s for at most
+  60 s until that package's starter appears, then linked.
+- Denied detail reads (403/404) explain who can open a battle or raid and offer no
+  pointless retry.
 
-Next: finish slice 8 checks, then slice 9 (notifications and wallets).
+Checks: lint, typecheck, `npm run test` (141 unit tests), build, `npm run test:e2e`
+(55 fixture tests: challenge body and lineup validation, accept/decline, attack only
+on my turn, polling stops at terminal, bounded delivery window with a fake clock,
+`challenge_expired`; raid availability by window, start body, `next_attack_at`,
+leaderboard, cancel, timeout semantics; join-package starter wait),
+`npm run test:e2e:real` (9 tests). Real battle: two synthetic players join a second
+package, A challenges B from the profile, B accepts (202, status already
+`ONGOING`; `PREPARING` was not observed), turns alternate as the server decides, B
+forfeits, both see the result; settlement `DELIVERED` and access grant `GRANTED`
+arrived within one poll. Rendered review at 390x844 and 1440x900: real battle
+detail and battles list, real raid detail for a non-member (403, now explained),
+fixture raid detail (active, cancelled, timed out). Real raid start was not run:
+every active occurrence's window is closed, and creating one needs admin writes.
+
+Next: slice 9 (notifications inbox and wallets).
 
 ## Definition of done
 
