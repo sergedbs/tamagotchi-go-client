@@ -20,7 +20,7 @@ one change or commit unfinished placeholders as if all flows work.
 | Order | Deliverable | Acceptance and commit boundaries |
 |---|---|---|
 | 1 | Bootstrap React/TS/Vite, exact npm lockfile, routing, configuration/proxy, lint/types/unit/build | Fresh npm ci; no backend source dependency; configured fixed upstream; /api errors remain API errors; setup commit separate from CI |
-| 2 | Visual proof: creature home, design tokens, original first artwork and responsive navigation | Actual mobile/desktop renders; five-point critique/refinement; preview data explicitly isolated; design tokens/artwork/screen can be separate commits |
+| 2 | Visual proof: creature home, design tokens, bundled licensed artwork and responsive navigation | Actual mobile/desktop renders; five-point critique/refinement; preview data explicitly isolated; design tokens/artwork/screen can be separate commits |
 | 3 | HTTP/session foundation and package-aware register/login/logout | Memory-only credentials, coordinated refresh, /me identity, safe Problem/204 handling, exact keys, abort and account reset tests; transport and auth separate |
 | 4 | Supported package presentation, collection, care, primary/holder operations | Real starters, unknown-package fallback, exact ETags, care/currency distinction; collection/care/selection small commits |
 | 5 | Minimal fixture provisioner with two packages and a few personas, then dataset expansion as scenarios need it | API-only, explicit test target/admin, resumable private ledger, no mutation re-keying; no initial 12-account prerequisite to prove one screen |
@@ -68,7 +68,7 @@ Copy this into a new session opened in this repository, initially in Plan mode:
 Plan and then implement Tamagotchi Go Client in this repository.
 
 First read AGENTS.md and README.md, then docs/PRODUCT.md, ARCHITECTURE.md,
-API.md, DESIGN.md, VISUAL_GUIDELINES.md, ENVIRONMENT.md, VALIDATION.md and IMPLEMENTATION.md.
+API.md, DESIGN.md, VISUAL_GUIDELINES.md, ASSETS.md, ENVIRONMENT.md, VALIDATION.md and IMPLEMENTATION.md.
 Use PAYLOADS.md and CONTRACT_SNAPSHOT.json for exact API fields and provenance.
 Inspect current Git status and existing client files before changing anything.
 

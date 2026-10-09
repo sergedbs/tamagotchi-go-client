@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import struct
 import sys
 from urllib.parse import unquote, urlsplit
 
@@ -21,6 +22,30 @@ def anchors(text):
 
 def check():
     errors = []
+    asset_root = ROOT / "public/assets/creatures/lythbound"
+    catalog = json.loads((asset_root / "catalog.json").read_text())
+    refs = set()
+    for asset in catalog["assets"]:
+        path = ROOT / "public" / asset["url"].lstrip("/")
+        if not path.resolve().is_relative_to(asset_root.resolve()) or not path.is_file():
+            errors.append(f"Missing or invalid asset path: {asset['sprite_ref']}")
+            continue
+        data = path.read_bytes()
+        if data[:8] != b"\x89PNG\r\n\x1a\n" or len(data) < 26:
+            errors.append(f"Invalid PNG: {asset['sprite_ref']}")
+            continue
+        width, height, _, color_type = struct.unpack(">IIBB", data[16:26])
+        if (width, height, color_type) != (asset["width"], asset["height"], 6):
+            errors.append(f"Asset dimensions or alpha format differ: {asset['sprite_ref']}")
+        if hashlib.sha256(data).hexdigest() != asset["sha256"]:
+            errors.append(f"Asset checksum differs: {asset['sprite_ref']}")
+        if asset["sprite_ref"] in refs:
+            errors.append(f"Duplicate asset reference: {asset['sprite_ref']}")
+        refs.add(asset["sprite_ref"])
+    if set(asset_root.rglob("*.png")) != {
+        ROOT / "public" / asset["url"].lstrip("/") for asset in catalog["assets"]
+    }:
+        errors.append("Creature catalog does not match bundled PNG files")
     markdown = [p for p in ROOT.rglob("*.md")
                 if not {"node_modules", ".git", "dist", ".local"}.intersection(p.relative_to(ROOT).parts)]
     for path in markdown:

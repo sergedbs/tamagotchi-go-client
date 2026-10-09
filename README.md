@@ -14,7 +14,7 @@ Read [AGENTS.md](AGENTS.md), then these documents in order:
 2. [Architecture and setup](docs/ARCHITECTURE.md)
 3. [API behaviour and endpoint reference](docs/API.md)
 4. [Payload definitions](docs/PAYLOADS.md), as referenced by each feature
-5. [Visual system](docs/DESIGN.md) and [supplied guidelines](docs/VISUAL_GUIDELINES.md)
+5. [Visual system](docs/DESIGN.md), [bundled assets](docs/ASSETS.md) and [supplied guidelines](docs/VISUAL_GUIDELINES.md)
 6. [Backend environment](docs/ENVIRONMENT.md) and [fixtures and validation](docs/VALIDATION.md)
 7. [Implementation order and kickoff prompt](docs/IMPLEMENTATION.md)
 

@@ -71,14 +71,11 @@ utility drawer/page; it never dominates the player experience.
 
 ## Artwork and presentation
 
-No finished artwork was provided. Create original coherent art during the design
-proof, beginning with two starter creatures and one boss. Expand only as authored
-fixtures need more. Rounded readable silhouettes, limited shading, distinct
-materials/personality and consistent lighting are preferable to random stock art.
-Produce transparent WebP/PNG or authored SVG as appropriate; use SVG for icons and
-simple vector illustrations, not code tricks to imitate a detailed creature.
-Image generation may be used for original raster art if available, followed by
-visual QA and consistent crop/scale; never copy another game's characters.
+Use the bundled licensed Lythbound creature pack described in [ASSETS.md](ASSETS.md).
+Begin the visual proof with two companions and one boss using the selected catalog
+references. Preserve its consistent outlines, shading and personality. Custom art
+is optional where a demonstrated gap exists. Use SVG for ordinary icons and simple
+vector illustrations; do not imitate detailed creatures with code tricks.
 
 Art references are logical sprite_ref IDs mapped through package asset manifests
 or the client catalog. Include provenance/licenses. Ship local assets; no hotlinked

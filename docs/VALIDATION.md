@@ -35,7 +35,7 @@ Sizes are demo fixtures, not server limits. Keep history small enough to explain
 
 Suggested personas: Mira the guild leader, Theo the regular player, Nia the new
 player, Leon the rival and eight ordinary members. Use synthetic .example.test
-addresses, plausible names/descriptions and original creature artwork. Server
+addresses, plausible names/descriptions and bundled licensed creature artwork. Server
 IDs are returned UUIDv7 values, never hardcoded user IDs or forged tokens.
 
 Three explicit tool modes:

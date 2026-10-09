@@ -11,7 +11,7 @@
 | Native fetch | One typed transport; no second HTTP library |
 | CSS Modules + CSS custom properties | Compact custom visual system, responsive styles and state variants |
 | MapLibre GL JS + OpenFreeMap Liberty | Existing provider choice; preserve attribution, no geocoding |
-| Lucide React | Coherent ordinary UI icons; creature artwork remains original |
+| Lucide React | Coherent ordinary UI icons; licensed creature artwork stays coherent |
 | Zod | Validate configuration/forms and critical external payloads with useful errors |
 | Vitest + React Testing Library | Transport, reducers, forms and focused interaction tests |
 | Playwright | Rendered browser flows, real integration and explicitly identified fixture tests |
@@ -190,7 +190,7 @@ and config_version. Permit safe http URLs only in local test configuration, http
 or same-origin paths elsewhere. Do not fetch an untrusted manifest as executable
 code or render unsanitized SVG/HTML. Images use ordinary img and accessible fallback.
 
-Serve original assets from the client. For fixture manifests, publish absolute
+Serve bundled licensed assets from the client; see [ASSETS.md](ASSETS.md). For fixture manifests, publish absolute
 URLs reachable both by browsers and, if needed, services. A relative URL or
 localhost referring to a different container cannot be assumed to resolve. Boss
 art needs a client sprite catalog: there is no separate boss-asset manifest API.
