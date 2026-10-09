@@ -89,7 +89,36 @@ Limitations: creature routes still show "not part of this build" until auth and
 real collection reads land; the preview simulates care locally and is not evidence
 of integration.
 
-Next: slice 3 transport, session and package-aware authentication.
+### Slice 3 - transport, session and authentication (complete)
+
+Commits d666081 (transport, Problem errors, command snapshots), 98009f3 (memory-only
+session, single-flight refresh), cd28fe3 (sign-in, registration, sign-out UI).
+
+- `src/api/http.ts`: same-origin `api_base`, fresh UUIDv7 `X-Correlation-Id` per
+  attempt, 10 s timeout combined with caller abort (timer cleared), redirects refused,
+  Problem/204/HTML-fallback handling, ETag/Retry-After/correlation captured. GET is
+  retried once after a successful refresh; mutations are never replayed after 401.
+- `src/api/command.ts` + `useCommand`: frozen body snapshot and UUIDv7
+  Idempotency-Key; "Retry same request" re-sends the exact command; changed input
+  discards it.
+- Session: tokens only in memory, refresh 60 s before expiry through one shared
+  promise, public refresh/logout without bearer, refused refresh ends the session,
+  identity from `/users/me`, every identity change clears cached queries.
+- Login requires a package; 401 invalid_credentials, 403 package_membership_required
+  and 429 Retry-After are distinct. Registration offers only configured packages.
+
+Checks: `npm run lint`, `npm run typecheck`, `npm run test` (99 unit tests),
+`npm run build`, `npm run test:e2e` (21 fixture tests incl. exact replay of an
+uncertain registration, throttling, sign-out without bearer, reload needs sign-in,
+no browser storage), `npm run test:e2e:real` against local-acceptance (5 tests:
+synthetic registration, sign-out 204, sign-in again, wrong password refused).
+Rendered review of login/register at 390x844 and 1440x900 (welcome scene framing
+and mobile crop fixed).
+
+Real-run note: each real run registers one synthetic `e2e-<run>-auth` user in the
+bootstrap package; credentials stay in `.local/real-runs/`.
+
+Next: slice 4 real collection, care, primary selection and holders.
 
 ## Definition of done
 
