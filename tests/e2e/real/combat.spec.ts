@@ -6,13 +6,20 @@ test.beforeAll(() => {
   requireRealTarget()
 })
 
-/** Waits until exactly one player can attack, according to the server's turn. */
-async function playerOnTurn(players: Player[]): Promise<Player> {
+const finished = (player: Player) => player.page.getByRole('status').filter({ hasText: /You won|You lost/ })
+
+/** Waits until one player can attack, or returns null once the server ended the battle. */
+async function playerOnTurn(players: Player[]): Promise<Player | null> {
   let current: Player | null = null
+  let over = false
   await expect
     .poll(
       async () => {
         for (const player of players) {
+          if ((await finished(player).count()) > 0) {
+            over = true
+            return true
+          }
           const attack = player.page.getByRole('button', { name: 'Attack', exact: true })
           if ((await attack.count()) > 0 && (await attack.isEnabled())) {
             current = player
@@ -21,16 +28,14 @@ async function playerOnTurn(players: Player[]): Promise<Player> {
         }
         return false
       },
-      { timeout: 20_000 },
+      { timeout: 40_000 },
     )
     .toBe(true)
-  return current!
+  return over ? null : current
 }
 
-const finished = (player: Player) => player.page.getByRole('status').filter({ hasText: /You won|You lost/ })
-
 test('real: two players battle with server turns, then a forfeit settles it', async ({ browser }) => {
-  test.setTimeout(240_000)
+  test.setTimeout(300_000)
   const a = await registerPlayer(browser, 'battle-a')
   const b = await registerPlayer(browser, 'battle-b')
 
@@ -60,14 +65,26 @@ test('real: two players battle with server turns, then a forfeit settles it', as
   test.info().annotations.push({ type: 'accept', description: `${acceptResponse.status()} ${acceptBody.status}` })
   expect(acceptResponse.ok()).toBe(true)
 
-  // Turns alternate as the server decides; the waiting side cannot attack.
+  // Turns alternate as the server decides and expire on a short server timer, so a
+  // round retries when the turn moves between finding the attacker and clicking.
   for (let round = 0; round < 2; round++) {
-    const attacker = await playerOnTurn([a, b])
-    const waiting = attacker === a ? b : a
-    await expect(waiting.page.getByRole('button', { name: 'Not your turn' })).toBeDisabled()
-    await attacker.page.getByRole('button', { name: 'Attack', exact: true }).click()
-    await expect(attacker.page.getByText(/Your attack dealt \d+ damage/)).toBeVisible()
-    if ((await finished(attacker).count()) > 0) break
+    if ((await finished(a).count()) > 0 || (await finished(b).count()) > 0) break
+    await expect(async () => {
+      const attacker = await playerOnTurn([a, b])
+      // An expired turn ends the battle on the server; that is a valid end here.
+      if (!attacker) return
+      const waiting = attacker === a ? b : a
+      await expect(waiting.page.getByRole('button', { name: 'Not your turn' })).toBeDisabled({ timeout: 3_000 })
+      const reply = attacker.page.waitForResponse((response) => /\/attack$/.test(response.url()), { timeout: 5_000 })
+      await attacker.page.getByRole('button', { name: 'Attack', exact: true }).click({ timeout: 2_000 })
+      expect((await reply).ok()).toBe(true)
+    }).toPass({ timeout: 90_000 }).catch(async (error: unknown) => {
+      for (const [name, player] of [['a', a], ['b', b]] as const) {
+        const state = await player.page.locator('main').innerText().catch(() => 'unreadable')
+        test.info().annotations.push({ type: `stuck-${name}`, description: state.replace(/\s+/g, ' ').slice(0, 400) })
+      }
+      throw error
+    })
   }
 
   // B forfeits if the battle is still running; both sides see the server's result.

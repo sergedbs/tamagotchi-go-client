@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { goTo, openUtility, provisionedPackages, registerPlayer } from './players.ts'
-import { requireRealTarget } from './target.ts'
+import { assetOriginOf, requireRealTarget } from './target.ts'
 
 test.beforeAll(() => {
   requireRealTarget()
@@ -14,7 +14,16 @@ test('real: a provisioned package gives labelled care with the authored starter 
   const page = player.page
 
   await expect(page.locator('#creature-name')).toHaveText('Mossling', { timeout: 35_000 })
-  await expect(page.getByRole('img', { name: /Mossling/ }).first()).toHaveAttribute('src', /\/assets\/creatures\/lythbound\/wolfren\/green\.png$/)
+  // Provisioned manifests point at the fixture target's public_client_origin. The
+  // client renders plain-http art only from its own origin, so another origin
+  // (for example the packaged runtime on :8080) shows the labelled fallback.
+  const assetOrigin = assetOriginOf(requireRealTarget())
+  if (new URL(page.url()).origin === assetOrigin) {
+    await expect(page.getByRole('img', { name: /Mossling/ }).first()).toHaveAttribute('src', `${assetOrigin}/assets/creatures/lythbound/wolfren/green.png`)
+  } else {
+    await expect(page.getByRole('img', { name: 'Mossling: artwork unavailable' }).first()).toBeVisible()
+    test.info().annotations.push({ type: 'art', description: `fallback: assets are published for ${assetOrigin}` })
+  }
   await expect(page.getByText('Energy', { exact: true }).first()).toBeVisible()
 
   const care = page.getByRole('region', { name: 'Care' })
