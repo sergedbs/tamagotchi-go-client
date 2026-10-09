@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), clientConfigFile(process.env.CLIENT_CONFIG ?? env.CLIENT_CONFIG)],
     server: {
       host: 'localhost',
+      allowedHosts: (process.env.DEV_ALLOWED_HOSTS ?? env.DEV_ALLOWED_HOSTS ?? '').split(',').map((host) => host.trim()).filter(Boolean),
       port: 5173,
       strictPort: true,
       proxy,

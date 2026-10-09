@@ -36,6 +36,9 @@ cp .env.example .env.local   # set GATEWAY_UPSTREAM to your Gateway
 npm run dev                  # http://localhost:5173
 ```
 
+For a development tunnel, set `DEV_ALLOWED_HOSTS` in `.env.local` to its exact
+hostname (comma-separated for multiple tunnels), then restart Vite.
+
 The development server proxies `/api` to `GATEWAY_UPSTREAM`. Sessions are kept in
 memory only, so reloading the page asks you to sign in again.
 
