@@ -1,83 +1,149 @@
 # Tamagotchi Go Client
 
-Responsive player and administration client for Tamagotchi Go.
+Web client for **Tamagotchi Go**, a location-based creature companion game.
+Players raise creatures, meet nearby players on a map, form guilds, battle each
+other and take on raid bosses together. Administrators manage game packages,
+bosses and raid events. The interface is responsive from phones to desktops.
 
-Implementation progress, checks and known backend gaps are in
-[implementation progress](docs/IMPLEMENTATION.md); backend owners start with the
-[backend handoff](docs/BACKEND_HANDOFF.md). No demo accounts or populated
-database are included. Repository: [sergedbs/tamagotchi-go-client](https://github.com/sergedbs/tamagotchi-go-client).
+## Features
 
-## Run locally
+- **Creatures**: collection, care actions, primary creature and shared holders
+- **Explore**: map of nearby players (MapLibre and OpenFreeMap) with a list fallback
+- **Social**: friends, guilds with roles and live guild chat
+- **Combat**: turn-based player battles and guild raids with leaderboards
+- **Account**: notifications inbox, wallets, preferences and package membership
+- **Administration**: packages and configurations, bosses and raid occurrences
+- **Diagnostics**: optional, privacy-preserving request log for troubleshooting
+
+## Tech stack
+
+React 19, TypeScript, Vite, React Router, TanStack Query, Zod, CSS Modules,
+MapLibre GL, Vitest and Playwright. Production builds are served by Caddy.
+
+## Requirements
+
+- Node.js 24 LTS and npm
+- A running Tamagotchi Go backend (its Gateway URL)
+- Google Chrome, for the browser tests
+- Docker, optional, for the production image
+
+## Getting started
 
 ```sh
 npm ci
-cp .env.example .env.local   # set GATEWAY_UPSTREAM, e.g. http://127.0.0.1:13000
-npm run dev                  # http://localhost:5173, /api proxied to Gateway
+cp .env.example .env.local   # set GATEWAY_UPSTREAM to your Gateway
+npm run dev                  # http://localhost:5173
 ```
 
-Checks: `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build`,
-`npm run test:e2e` (identified browser fixtures, system Chrome). Real-target tests
-need an explicit target name and confirmation:
-`E2E_REAL_TARGET=local-acceptance E2E_CONFIRM_TEST_TARGET=local-acceptance npm run test:e2e:real`.
-Runtime settings live in `public/client-config.json` (public values only).
+The development server proxies `/api` to `GATEWAY_UPSTREAM`. Sessions are kept in
+memory only, so reloading the page asks you to sign in again.
 
-Fixture CLI (explicit, never on startup; credentials stay in ignored `.local/`):
-`npm run fixtures -- preflight --target local-acceptance` (read-only) and
-`npm run fixtures -- provision --target local-acceptance --run-id <id> --confirm-test-target local-acceptance`.
-Provision prints the `package_presentations` mapping for `public/client-config.json`;
-the labelled-care and raid real tests use the latest provisioned run and are
-skipped without one. Package artwork is published for the target's
-`public_client_origin`, so serve the client there (default `http://localhost:5173`).
+## Scripts
 
-## Packaged runtime
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run build` | Type-check and build for production into `dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm run lint` | Lint with ESLint |
+| `npm run typecheck` | Type-check the project |
+| `npm run test` | Run unit tests (Vitest) |
+| `npm run test:e2e` | Run browser tests against mocked API responses |
+| `npm run test:e2e:real` | Run browser tests against a real backend (see below) |
+| `npm run fixtures` | Prepare test data through the API (see below) |
 
-`deploy/` holds a two-stage image (Node 24 build, Caddy on port 8080) and a
-standalone Compose file. Caddy serves the build with SPA deep links, removes `/api`
-once and proxies it to a fixed Gateway; API paths never fall back to `index.html`,
-and an unreachable Gateway yields a `502 upstream_unavailable` Problem. The
-upstream is read at start and must be reachable from inside the container:
+## Configuration
+
+**Server side.** `GATEWAY_UPSTREAM` is the Gateway address used by the proxy. Set it
+in `.env.local` for development or in the container environment in production.
+
+**Runtime.** `public/client-config.json` is loaded when the app starts and can be
+changed without rebuilding. It must contain public values only.
+
+| Key | Purpose |
+| --- | --- |
+| `api_base` | API path prefix, `/api` by default |
+| `map_style_url`, `map_default_center` | Map style and initial view |
+| `allowed_socket_origins` | Origins allowed for guild chat sockets |
+| `package_presentations` | Maps package IDs and config versions to bundled presentations |
+| `diagnostics_enabled` | Enables the diagnostics page |
+| `manual_location_enabled` | Allows typed coordinates, for testing only |
+
+## Testing
 
 ```sh
-GATEWAY_UPSTREAM=http://host.docker.internal:13000 docker compose -f deploy/compose.yaml up -d --build --wait
-E2E_BASE_URL=http://localhost:8080 E2E_REAL_TARGET=local-acceptance E2E_CONFIRM_TEST_TARGET=local-acceptance npm run test:e2e:real
-GATEWAY_UPSTREAM=unused docker compose -f deploy/compose.yaml down
+npm run lint && npm run typecheck && npm run test && npm run build
+npm run test:e2e
 ```
 
-`client-config.json` is mounted read-only (override with `CLIENT_CONFIG=<path>`),
-so configuration changes need a restart, not a rebuild. `/healthz` reports only the
-web process. No image is published.
-
-## Start here
-
-Read [AGENTS.md](AGENTS.md), then these documents in order:
-
-1. [Product and flows](docs/PRODUCT.md)
-2. [Architecture and setup](docs/ARCHITECTURE.md)
-3. [API behaviour and endpoint reference](docs/API.md)
-4. [Payload definitions](docs/PAYLOADS.md), as referenced by each feature
-5. [Visual system](docs/DESIGN.md), [bundled assets](docs/ASSETS.md) and [supplied guidelines](docs/VISUAL_GUIDELINES.md)
-6. [Backend environment](docs/ENVIRONMENT.md) and [fixtures and validation](docs/VALIDATION.md)
-7. [Implementation order and kickoff prompt](docs/IMPLEMENTATION.md)
-
-The documents are self-contained. Backend source access is not required to build
-the client. [Contract provenance](docs/CONTRACT_SNAPSHOT.json) records the dated
-source and image baseline. Target contracts and known runtime differences are
-distinguished in API.md; do not assume a future server supports new features.
-
-Selected stack: React, TypeScript, Vite, React Router, TanStack Query, native
-fetch, CSS Modules, MapLibre/OpenFreeMap, Vitest and Playwright. Use Node 24 LTS
-and npm; dependency versions are exact and locked in `package-lock.json`.
-
-The finished client must run with a Gateway address and public configuration.
-The existing isolated acceptance stack is the preferred local backend target;
-see [environment setup](docs/ENVIRONMENT.md). Data population is a separate,
-explicit API-based fixture command against a dedicated test environment.
-
-Specification check (Python 3, no installed dependencies):
+Real-backend tests create synthetic `*.example.test` players and need the target
+named twice as a safeguard:
 
 ```sh
-python3 tools/check_spec.py
+E2E_REAL_TARGET=local-acceptance E2E_CONFIRM_TEST_TARGET=local-acceptance npm run test:e2e:real
 ```
 
-This checks local links, field anchors, endpoint coverage and snapshot integrity.
-It does not verify backend runtime compatibility or UI behaviour.
+Care and raid tests use packages created by the fixture tool and are skipped
+without them. Targets are defined in `fixtures/targets.json`. The tool reads admin
+credentials from `.local/admin-credentials.json`, which is ignored by Git.
+
+```sh
+npm run fixtures -- preflight --target local-acceptance
+npm run fixtures -- provision --target local-acceptance --run-id <id> --confirm-test-target local-acceptance
+```
+
+`provision` prints the `package_presentations` entries to add to the runtime
+configuration.
+
+## Deployment
+
+`deploy/` contains a multi-stage Dockerfile (Node build, Caddy runtime on port 8080)
+and a Compose file. Caddy serves the app with deep-link support and proxies `/api`
+to the Gateway set in `GATEWAY_UPSTREAM`, which must be reachable from inside the
+container:
+
+```sh
+GATEWAY_UPSTREAM=http://host.docker.internal:3000 docker compose -f deploy/compose.yaml up -d --build
+```
+
+The runtime configuration is mounted read-only (override the file with
+`CLIENT_CONFIG=<path>`), and `/healthz` reports the health of the web server.
+
+## Project structure
+
+```text
+src/
+  app/          app shell, routing and runtime configuration
+  api/          HTTP transport, errors and command handling
+  components/   shared UI components
+  features/     one folder per area (creatures, explore, social, combat, ...)
+  packages/     package presentations and artwork catalog
+  styles/       design tokens and global styles
+public/         static assets and client-config.json
+deploy/         Dockerfile, Caddyfile and Compose file
+scripts/        fixture tool
+tests/          browser tests (mocked and real backend)
+docs/           product, architecture and API documentation
+```
+
+## Documentation
+
+- [Product](docs/PRODUCT.md) and [architecture](docs/ARCHITECTURE.md)
+- [API behaviour](docs/API.md) and [payloads](docs/PAYLOADS.md)
+- [Design](docs/DESIGN.md) and [assets](docs/ASSETS.md)
+- [Backend environment](docs/ENVIRONMENT.md) and [validation](docs/VALIDATION.md)
+- [Implementation notes](docs/IMPLEMENTATION.md) and [backend handoff](docs/BACKEND_HANDOFF.md)
+
+Run `python3 tools/check_spec.py` to validate links and API coverage in the docs.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for branch and commit conventions.
+
+## License
+
+Code is released under the [MIT License](LICENSE). Creature artwork is by
+[Jackalune](https://jackalune.itch.io/) under
+[CC BY 4.0](public/assets/creatures/lythbound/LICENSE.txt); see the in-app Credits
+page and [CREDITS.md](public/assets/creatures/lythbound/CREDITS.md). Fonts are
+licensed under the SIL Open Font License.

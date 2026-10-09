@@ -18,8 +18,8 @@
 
 ## Current state
 
-Implementation started 2026-10-09 on local branch `feat/client-app` (not merged,
-no remote). Product, stack and art direction are settled. Progress, exact checks
+Implementation started 2026-10-09 on branch `feat/client-app`, since merged into
+`develop` and `main`. Product, stack and art direction are settled. Progress, exact checks
 and the next step are recorded below.
 
 Reuse the existing isolated backend described in [ENVIRONMENT.md](ENVIRONMENT.md).
@@ -452,8 +452,8 @@ notice no longer overlaps it.
 
 ## Current state
 
-All twelve slices are complete on branch `feat/client-app` (not merged or
-pushed). Checks at the end: lint, typecheck, 153 unit tests, build, 74 fixture
+All twelve slices are complete and published on `main` and `develop` of
+[sergedbs/tamagotchi-go-client](https://github.com/sergedbs/tamagotchi-go-client). Checks at the end: lint, typecheck, 153 unit tests, build, 74 fixture
 tests, 12 real tests on the dev server (and on the packaged container before the
 last fixes), `python3 tools/check_spec.py`. Server-side observations for the
 backend owners are collected in [backend handoff](BACKEND_HANDOFF.md).
@@ -471,7 +471,7 @@ Known limitations and backend gaps:
   authorization). Browser push stays disabled (no provider configuration).
 - Local development runs on Node 26; the image and CI use Node 24.
 
-Next: user review; merge, push or dataset expansion only with explicit approval.
+Next: dataset expansion and backend follow-ups from the backend handoff, when approved.
 
 ## Definition of done
 
