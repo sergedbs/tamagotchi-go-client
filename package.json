@@ -16,7 +16,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test --project=fixtures",
-    "test:e2e:real": "playwright test --project=real"
+    "test:e2e:real": "playwright test --project=real",
+    "fixtures": "node scripts/fixtures.ts"
   },
   "dependencies": {
     "@tanstack/react-query": "5.104.1",

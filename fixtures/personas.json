@@ -1,0 +1,6 @@
+[
+  { "key": "mira", "display": "Mira", "package": "grove-companions", "role": "Guild leader" },
+  { "key": "theo", "display": "Theo", "package": "grove-companions", "role": "Regular player" },
+  { "key": "nia", "display": "Nia", "package": "tidewater-companions", "role": "New player" },
+  { "key": "leon", "display": "Leon", "package": "grove-companions", "role": "Rival" }
+]

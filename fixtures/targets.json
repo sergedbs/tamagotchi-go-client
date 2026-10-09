@@ -1,0 +1,8 @@
+{
+  "local-acceptance": {
+    "description": "Isolated tamagotchi-go-acceptance Compose project (docs/ENVIRONMENT.md)",
+    "gateway": "http://127.0.0.1:13000",
+    "public_client_origin": "http://localhost:5173",
+    "test_target": true
+  }
+}
