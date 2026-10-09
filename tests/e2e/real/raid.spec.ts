@@ -127,5 +127,12 @@ test('real: an admin opens a run-named boss, and a guild raids it to the end', a
     await openUtility(member.page, 'Account')
     await expect(member.page.getByRole('region', { name: 'Wallets' }).getByRole('listitem').filter({ hasText: 'Coins' })).toContainText(/[1-9]/, { timeout: 2_000 })
   }).toPass({ timeout: 60_000 })
+
+  // Cleanup: the admin cancels this run's occurrence so it is not offered to other players.
+  await openAdmin(admin, 'Occurrences')
+  const ours = admin.getByRole('row', { name: new RegExp(bossName) })
+  await ours.getByRole('button', { name: 'Cancel' }).click()
+  await admin.getByRole('dialog').getByRole('button', { name: 'Cancel occurrence' }).click()
+  await expect(ours.getByText('cancelled')).toBeVisible()
   await adminContext.close()
 })
