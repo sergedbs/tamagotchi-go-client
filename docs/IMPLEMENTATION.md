@@ -588,3 +588,10 @@ for banners too. Browser permission at localhost5173 was approved and enabled.
 identical on the untouched HEAD baseline (183 tests); no gate was weakened.
 Client docs correct the earlier backend diagnosis. This is a local client fix,
 not a new backend image. No pushes or remote merges performed.
+
+### Tunnel artwork
+
+Configured bundled_asset_origins resolves only bundled creature paths against
+the current app origin, preserving exact Registry manifests and HTTPS checks.
+This supports locally seeded artwork through a tunnel without database edits.
+Lint/typecheck,22 focused tests and build pass; real demo PNGs return200.

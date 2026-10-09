@@ -14,6 +14,7 @@ describe('parseClientConfig', () => {
       diagnostics_enabled: false,
       manual_location_enabled: false,
       allowed_socket_origins: [],
+      bundled_asset_origins: [],
       package_presentations: {},
       push: null,
     })

@@ -60,6 +60,15 @@ export const clientConfigSchema = z.strictObject({
   diagnostics_enabled: z.boolean().default(false),
   manual_location_enabled: z.boolean().default(false),
   allowed_socket_origins: z.array(socketOrigin).max(20).default([]),
+  /** Origins used by manifests for artwork bundled under /assets/creatures/. */
+  bundled_asset_origins: z.array(z.string().refine((value) => {
+    try {
+      const url = new URL(value)
+      return ['http:', 'https:'].includes(url.protocol) && url.origin === value && !url.username && !url.password
+    } catch {
+      return false
+    }
+  }, 'must be an http(s) origin without path or credentials')).max(20).default([]),
   /** package_id -> config_version -> bundled presentation key */
   package_presentations: z
     .record(z.uuid(), z.record(configVersionKey, presentationKey))

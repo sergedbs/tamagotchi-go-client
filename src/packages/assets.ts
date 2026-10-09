@@ -12,9 +12,10 @@ export type PackageAssets = z.output<typeof assetsSchema>
 
 /**
  * Only https URLs or same-origin URLs are rendered. Plain http is accepted for the
- * page's own origin (local development serves fixture art from the client).
+ * page's own origin. Configured bundled origins map creature paths to this app,
+ * so local demo manifests also work through an HTTPS tunnel.
  */
-export function safeAssetUrl(raw: string, pageOrigin: string = window.location.origin): string | null {
+export function safeAssetUrl(raw: string, pageOrigin: string = window.location.origin, bundledOrigins: readonly string[] = []): string | null {
   let url: URL
   try {
     url = new URL(raw, pageOrigin)
@@ -22,6 +23,9 @@ export function safeAssetUrl(raw: string, pageOrigin: string = window.location.o
     return null
   }
   if (url.username || url.password) return null
+  if (bundledOrigins.includes(url.origin) && url.pathname.startsWith('/assets/creatures/')) {
+    return new URL(`${url.pathname}${url.search}${url.hash}`, pageOrigin).href
+  }
   if (url.protocol === 'https:') return url.href
   if (url.protocol === 'http:' && url.origin === pageOrigin) return url.href
   return null
@@ -48,7 +52,7 @@ export function usePackageAssets(packageId: string | undefined, configVersion: n
   })
 }
 
-export function resolveSpriteUrl(assets: PackageAssets | undefined, spriteRef: string): string | null {
+export function resolveSpriteUrl(assets: PackageAssets | undefined, spriteRef: string, bundledOrigins: readonly string[] = []): string | null {
   const asset = assets?.items.find((item) => item.sprite_ref === spriteRef)
-  return asset ? safeAssetUrl(asset.url) : null
+  return asset ? safeAssetUrl(asset.url, window.location.origin, bundledOrigins) : null
 }

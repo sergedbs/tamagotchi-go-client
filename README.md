@@ -37,7 +37,10 @@ npm run dev                  # http://localhost:5173
 ```
 
 For a development tunnel, set `DEV_ALLOWED_HOSTS` in `.env.local` to its exact
-hostname (comma-separated for multiple tunnels), then restart Vite.
+hostname (comma-separated for multiple tunnels), then restart Vite. If demo
+asset manifests point to a local client origin, add that exact origin to
+`bundled_asset_origins` in the public runtime config. Only bundled artwork paths
+under `/assets/creatures/` are resolved against the current client origin.
 
 The development server proxies `/api` to `GATEWAY_UPSTREAM`. Sessions are kept in
 memory only, so reloading the page asks you to sign in again.

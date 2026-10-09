@@ -136,6 +136,7 @@ npm run fixtures -- --target ... --run-id ... --confirm-test-target
 | manual_location_enabled | public config | false by default; true only for demo/test |
 | allowed_socket_origins | public config | Explicit browser-reachable Guild origins for this environment |
 | package_presentations | public config | Known package IDs/version mappings to local presentation keys |
+| bundled_asset_origins | empty by default | Exact manifest origins whose `/assets/creatures/` paths are served by this client; useful for demo tunnels |
 | push | public config, optional | Firebase Web app configuration and public VAPID key; null (off) by default |
 
 Load and validate runtime config before auth; missing optional values have safe

@@ -38,7 +38,7 @@ export function useCreatureViews(creatures: Tamagotchi[]): CreatureView[] {
   const byVersion = new Map(versions.map((creature, index) => [versionKey(creature), manifests[index]?.data]))
   return creatures.map((creature) => ({
     creature,
-    artUrl: resolveSpriteUrl(byVersion.get(versionKey(creature)), creature.sprite_ref),
+    artUrl: resolveSpriteUrl(byVersion.get(versionKey(creature)), creature.sprite_ref, config.bundled_asset_origins),
     presentation: resolvePresentation(config.package_presentations, creature.origin_package_id, creature.config_version),
   }))
 }
