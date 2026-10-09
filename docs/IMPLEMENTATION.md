@@ -416,7 +416,43 @@ Findings from the container run:
 Checks: lint, typecheck, `npm run test` (153), build, `npm run test:e2e` (73
 fixture tests), `npm run test:e2e:real` (12), `python3 tools/check_spec.py`.
 
-Next: final Playwright MCP review of all routes at 360, 390, 768 and 1440 px.
+### Final review (Playwright MCP, 2026-10-09)
+
+Signed in through the client as the real raid leader from the last real run
+(guild, friend, victorious raid, real `RAID_STARTED` notification), the MCP browser
+walked 15 routes client-side at 360x780, 390x844, 768x1024 and 1440x900:
+creatures, creature detail, Explore, People, a profile, guilds, the guild, live
+chat, battles, raids, the raid outcome, notifications, account, credits and Not
+found. No horizontal overflow at any size; the only console errors were the
+expected "no shared location yet" 404. Failure states in the review browser:
+blocked map provider (list fallback with notice), Gateway answering 502 (profile
+and creature home show the outage with Try again), keyboard order (skip link,
+header, content, bottom bar) with a visible 2 px focus ring on every stop.
+
+Fixed from this review (commit 60426ae): Explore, the creature home, its
+loading and error states and creature detail had no `main` landmark; the Explore
+list now clears the measured overlay instead of a fixed offset, so the map-failure
+notice no longer overlaps it.
+
+## Current state
+
+All twelve slices are complete on branch `feat/client-app` (not merged or
+pushed). Checks at the end: lint, typecheck, 153 unit tests, build, 73 fixture
+tests, 12 real tests on the dev server and on the packaged container,
+`python3 tools/check_spec.py`.
+
+Known limitations and backend gaps:
+
+- Live Registry requires Idempotency-Key on package PATCH and boss PUT (API.md).
+- Guild invitations worked between friends; the UM stranger relationship version
+  gap was not hit and remains documented.
+- Battle turn timers are short; an unanswered turn ends the battle server-side.
+- Package art published by the fixture CLI is bound to `public_client_origin`.
+- Scenario fixtures and the realistic demo dataset are not built (need their own
+  authorization). Browser push stays disabled (no provider configuration).
+- Local development runs on Node 26; the image and CI use Node 24.
+
+Next: user review; merge, push or dataset expansion only with explicit approval.
 
 ## Definition of done
 
