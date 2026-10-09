@@ -61,6 +61,9 @@ function Player({ id }: { id: string }) {
             <>
               <RelationshipActions me={user.user_id} otherId={id} name={profile.data.username} />
               <GuildInviteAction me={user.user_id} otherId={id} name={profile.data.username} />
+              <Link to={`/combat/battles?opponent=${id}`} className={styles.challenge}>
+                Challenge to a battle
+              </Link>
             </>
           )}
         </article>
