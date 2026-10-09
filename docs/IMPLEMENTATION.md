@@ -347,8 +347,31 @@ coins wallet is then credited, and the admin cancels the run's occurrence.
 Rendered review of the admin screens with real data at 390x844 and 1440x900
 (tables stack as labelled cards below 640 px).
 
-Next: slice 11 (diagnostics), then slice 12 (packaging; Docker build and a local
-run are authorized).
+### Slice 11 - diagnostics (complete; scenario fixtures deferred)
+
+Commits 3c098f9 (ring and page), bb1eb26 (tests), 9fe65a8 (a timing flake fixed in
+the bounded-delivery fixture test).
+
+- With `diagnostics_enabled: true` in public config, the session provider creates
+  an in-memory ring of the newest 100 transport attempts, fed by `sendRequest` for
+  both the API client and the session store (login, refresh, logout included).
+  A record holds only time, method, ID-free route template, status, duration,
+  outcome (ok, http, timeout, network, cancelled, ...), problem code and
+  correlation ID: no bodies, query strings, headers, tokens, emails, locations or
+  chat text, and nothing is persisted.
+- `/diagnostics` (signed in, enabled only) lists them newest first with a compact
+  copyable correlation ID, a failure count that excludes cancelled requests, and
+  Clear. Account links to it only when enabled; otherwise the route is Not found.
+- Scenario fixtures (`scenario`, `refresh-locations`, the realistic demo dataset)
+  are not built: dataset expansion needs its own authorization.
+
+Checks: `npm run test` (153 unit tests incl. ring bound and a redaction test that
+puts a token, email, user ID and body through the transport), `npm run test:e2e`
+(71 fixture tests, stable across three parallel runs after the flake fix),
+lint, typecheck, build. Rendered review with real traffic at 390x844 and 1440x900
+(rows stack as labelled cards below 640 px; no horizontal overflow).
+
+Next: slice 12 (packaging; Docker build and one local run are authorized).
 
 ## Definition of done
 
