@@ -196,6 +196,35 @@ players ~2 m apart share one-shot locations and see each other as strangers.
 Rendered review of the real populated map at 390x844 and 1440x900 (stop-sharing
 moved into the HUD action row). Observed real TTL of an observation: about 1 minute.
 
+### Slice 7 - social, guilds and chat (complete)
+
+Commits cc057ea (relationships, requests, profiles), 5b380cd (guilds), be83409
+(chat), 8ba1194 (tests).
+
+- People: incoming/outgoing friend requests (accept/reject with keys), friends and
+  enemies, confirmed unfriend/enemy changes, lists reconciled from the server after
+  every change and revalidated on each view. Profiles are reached from markers,
+  lists, rosters or an exact player-ID lookup (no username search API exists).
+- Guilds: paged browse, create, invitations to me (accept/decline), roster for the
+  selected guild only, role changes with `expected_guild_version`, kick, transfer,
+  leave (disabled for leaders) and delete with confirmation. The last-selected guild
+  is a memory hint shown as "Your guild" only after the roster confirms membership.
+  Sent invitations can be revoked only from the tab that sent them (no list API).
+- Chat: fresh negotiation per connection, URL checked against
+  `allowed_socket_origins`/path/wss, first frame `auth`, ready/ack/message merge by
+  message_id in either order, explicit retry with the same client_message_id,
+  drafts kept and never auto-sent, 4401/4403 stop reconnecting, other drops retry
+  1/2/4/8/15 s with jitter while visible, then manual Reconnect; history via REST.
+
+Checks: `npm run test` (137 unit tests), `npm run test:e2e` (43 fixture tests incl.
+mocked WebSocket: auth first frame, one bubble for broadcast+ack, renegotiation with
+a new ticket after a drop, no reconnect after 4403, refused socket origin),
+`npm run test:e2e:real` (8 tests). Real flow: two synthetic players become friends,
+one creates a guild and invites the other (201; the documented stranger-version
+gap did not trigger between friends), both connect live and exchange a message,
+then the leader deletes the guild. Rendered review of People, Guilds, guild and
+chat at 390x844 and 1440x900.
+
 ## Definition of done
 
 - A clean checkout runs with npm ci and supplied public configuration; no source
