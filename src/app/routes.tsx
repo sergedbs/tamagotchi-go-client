@@ -22,6 +22,11 @@ const BattlePage = lazy(() => import('../features/combat/battles/BattlePage.tsx'
 const RaidsPage = lazy(() => import('../features/combat/raids/RaidsPage.tsx'))
 const RaidPage = lazy(() => import('../features/combat/raids/RaidPage.tsx'))
 const NotificationsPage = lazy(() => import('../features/notifications/NotificationsPage.tsx'))
+const PackagesAdminPage = lazy(() => import('../features/admin/PackagesAdminPage.tsx'))
+const PackageAdminPage = lazy(() => import('../features/admin/PackageAdminPage.tsx'))
+const BossesAdminPage = lazy(() => import('../features/admin/BossesAdminPage.tsx'))
+const BossAdminPage = lazy(() => import('../features/admin/BossAdminPage.tsx'))
+const OccurrencesAdminPage = lazy(() => import('../features/admin/OccurrencesAdminPage.tsx'))
 const CreditsPage = lazy(() => import('../features/credits/CreditsPage.tsx'))
 
 // Design preview: compiled into development builds only.
@@ -52,6 +57,12 @@ export function AppRoutes() {
             <Route path="combat/raids" element={<RaidsPage />} />
             <Route path="combat/raids/:id" element={<RaidPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
+            <Route path="admin" element={<Navigate to="/admin/packages" replace />} />
+            <Route path="admin/packages" element={<PackagesAdminPage />} />
+            <Route path="admin/packages/:id" element={<PackageAdminPage />} />
+            <Route path="admin/bosses" element={<BossesAdminPage />} />
+            <Route path="admin/bosses/:id" element={<BossAdminPage />} />
+            <Route path="admin/occurrences" element={<OccurrencesAdminPage />} />
             <Route path="account" element={<AccountPage />} />
           </Route>
         </Route>

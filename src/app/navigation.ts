@@ -1,4 +1,4 @@
-import { Bell, CircleUserRound, Compass, PawPrint, Swords, UsersRound, type LucideIcon } from 'lucide-react'
+import { Bell, CircleUserRound, Compass, PawPrint, ShieldCheck, Swords, UsersRound, type LucideIcon } from 'lucide-react'
 
 export interface NavItem {
   to: string
@@ -19,6 +19,9 @@ export const UTILITIES: NavItem[] = [
   { to: '/notifications', label: 'Notifications', icon: Bell, match: ['/notifications'] },
   { to: '/account', label: 'Account', icon: CircleUserRound, match: ['/account', '/credits'] },
 ]
+
+/** Shown only when the session hints admin or package moderation; the server authorizes. */
+export const ADMIN: NavItem = { to: '/admin/packages', label: 'Admin', icon: ShieldCheck, match: ['/admin'] }
 
 export function isActive(item: NavItem, pathname: string): boolean {
   return item.match.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`))

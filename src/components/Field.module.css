@@ -48,3 +48,10 @@
   color: var(--color-danger);
   font-weight: 600;
 }
+
+.textarea {
+  min-height: 96px;
+  padding-block: var(--space-2);
+  resize: vertical;
+  line-height: var(--leading-body);
+}

@@ -1,8 +1,10 @@
 import type { ReactNode } from 'react'
 import { Link, Outlet, useLocation } from 'react-router'
 import { BrandMark } from '../components/BrandMark.tsx'
+import { useAdminAccess } from '../features/admin/access.ts'
+import { useSession } from '../features/auth/sessionContext.ts'
 import { UnreadBadge } from '../features/notifications/UnreadBadge.tsx'
-import { DESTINATIONS, UTILITIES, isActive, type NavItem } from './navigation.ts'
+import { ADMIN, DESTINATIONS, UTILITIES, isActive, type NavItem } from './navigation.ts'
 import styles from './AppShell.module.css'
 
 const LINK_CLASS = { rail: styles.railLink, bar: styles.barLink, utility: styles.utilityLink }
@@ -22,7 +24,13 @@ function NavEntry({ item, pathname, variant, badge, labelSuffix }: { item: NavIt
   )
 }
 
+function AdminEntry({ pathname }: { pathname: string }) {
+  const access = useAdminAccess()
+  return access.visible ? <NavEntry item={ADMIN} pathname={pathname} variant="utility" /> : null
+}
+
 export function AppShell() {
+  const session = useSession()
   const { pathname } = useLocation()
   return (
     <div className={styles.shell}>
@@ -40,6 +48,7 @@ export function AppShell() {
             ))}
           </nav>
           <nav className={styles.utilities} aria-label="Utilities">
+            {session.status === 'authenticated' && <AdminEntry pathname={pathname} />}
             {UTILITIES.map((item) => (
               <NavEntry
                 key={item.to}

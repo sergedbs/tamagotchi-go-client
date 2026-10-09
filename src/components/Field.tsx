@@ -1,4 +1,4 @@
-import { useId, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from 'react'
+import { useId, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react'
 import styles from './Field.module.css'
 
 interface FieldShellProps {
@@ -66,6 +66,24 @@ export function SelectField({ label, hint, error, children, className, ...select
         >
           {children}
         </select>
+      )}
+    </FieldShell>
+  )
+}
+
+type TextAreaFieldProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'id'> & { label: string; hint?: ReactNode; error?: string | null }
+
+export function TextAreaField({ label, hint, error, className, ...textarea }: TextAreaFieldProps) {
+  return (
+    <FieldShell label={label} hint={hint} error={error}>
+      {({ id, describedBy, invalid }) => (
+        <textarea
+          {...textarea}
+          id={id}
+          className={[styles.control, styles.textarea, className].filter(Boolean).join(' ')}
+          aria-describedby={describedBy}
+          aria-invalid={invalid || undefined}
+        />
       )}
     </FieldShell>
   )
