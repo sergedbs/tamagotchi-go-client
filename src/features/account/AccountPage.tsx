@@ -4,7 +4,10 @@ import { LogOut } from 'lucide-react'
 import { Button } from '../../components/Button.tsx'
 import { usePublicPackages } from '../auth/packagesApi.ts'
 import { useAuthenticated, useSessionStore } from '../auth/sessionContext.ts'
+import { Devices } from './Devices.tsx'
 import { JoinPackage } from './JoinPackage.tsx'
+import { NotificationSettings } from './NotificationSettings.tsx'
+import { Wallets } from './Wallets.tsx'
 import styles from './AccountPage.module.css'
 
 export default function AccountPage() {
@@ -20,32 +23,39 @@ export default function AccountPage() {
         <h1>{user.username}</h1>
         <p className={styles.muted}>{user.email}</p>
       </header>
-      <section aria-labelledby="packages-heading" className={styles.section}>
-        <h2 id="packages-heading">Packages</h2>
-        <ul className={styles.list}>
-          {user.package_ids.map((id) => (
-            <li key={id}>{nameOf(id)}</li>
-          ))}
-        </ul>
-        <JoinPackage user={user} />
-      </section>
-      <section aria-labelledby="session-heading" className={styles.section}>
-        <h2 id="session-heading">Session</h2>
-        <p className={styles.muted}>
-          You stay signed in only while this tab is open. Reloading asks you to sign in again.
-        </p>
-        <Button
-          variant="secondary"
-          icon={<LogOut size={18} aria-hidden="true" />}
-          busy={leaving}
-          onClick={async () => {
-            setLeaving(true)
-            await store.logout()
-          }}
-        >
-          Sign out
-        </Button>
-      </section>
+      <div className={styles.columns}>
+        <div className={styles.column}>
+          <Wallets user={user} nameOf={nameOf} />
+          <section aria-labelledby="packages-heading" className={styles.section}>
+            <h2 id="packages-heading">Packages</h2>
+            <ul className={styles.list}>
+              {user.package_ids.map((id) => (
+                <li key={id}>{nameOf(id)}</li>
+              ))}
+            </ul>
+            <JoinPackage user={user} />
+          </section>
+        </div>
+        <div className={styles.column}>
+          <NotificationSettings userId={user.user_id} />
+          <Devices userId={user.user_id} nameOf={nameOf} />
+          <section aria-labelledby="session-heading" className={styles.section}>
+            <h2 id="session-heading">Session</h2>
+            <p className={styles.muted}>You stay signed in only while this tab is open. Reloading asks you to sign in again.</p>
+            <Button
+              variant="secondary"
+              icon={<LogOut size={18} aria-hidden="true" />}
+              busy={leaving}
+              onClick={async () => {
+                setLeaving(true)
+                await store.logout()
+              }}
+            >
+              Sign out
+            </Button>
+          </section>
+        </div>
+      </div>
       <p>
         <Link to="/credits">Credits and licenses</Link>
       </p>
