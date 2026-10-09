@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { List, Map as MapIcon } from 'lucide-react'
 import { describeApiError, isApiError } from '../../api/errors.ts'
 import { useConfig } from '../../app/configContext.ts'
@@ -33,6 +33,18 @@ export default function ExplorePage() {
   const [mapFailure, setMapFailure] = useState<MapFailure | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [preview, setPreview] = useState<Fix | null>(null)
+  const frameRef = useRef<HTMLDivElement>(null)
+  const overlayRef = useRef<HTMLDivElement>(null)
+
+  // The list sits under the HUD overlay, whose height changes with notices.
+  useEffect(() => {
+    const frame = frameRef.current
+    const overlay = overlayRef.current
+    if (!frame || !overlay) return
+    const observer = new ResizeObserver(() => frame.style.setProperty('--overlay-height', `${overlay.offsetHeight}px`))
+    observer.observe(overlay)
+    return () => observer.disconnect()
+  }, [])
 
   // Stale pins are never shown as current: an expired observation hides the result set.
   const merged = fresh ? mergeBatches(nearby.data?.pages) : { markers: [], partial: false, restarted: false, retrievedAt: null }
@@ -46,8 +58,8 @@ export default function ExplorePage() {
   const truncated = nearby.hasNextPage
 
   return (
-    <div className={styles.explore}>
-      <div className={styles.frame}>
+    <main className={styles.explore}>
+      <div className={styles.frame} ref={frameRef}>
         {!mapFailure && (
           <div className={showList ? styles.mapHidden : styles.mapLayer} aria-hidden={showList || undefined}>
             <MapCanvas
@@ -64,7 +76,7 @@ export default function ExplorePage() {
           </div>
         )}
 
-        <div className={styles.overlay}>
+        <div className={styles.overlay} ref={overlayRef}>
           {location.isError ? (
             <LoadProblem
               title="Your location could not be checked"
@@ -159,6 +171,6 @@ export default function ExplorePage() {
 
         {selected && <PlayerSheet marker={selected} now={now} onClose={() => setSelectedId(null)} />}
       </div>
-    </div>
+    </main>
   )
 }

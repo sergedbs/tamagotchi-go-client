@@ -64,7 +64,7 @@ export function CreatureHome(props: CreatureHomeProps) {
   const { primary } = props
   const { creature, presentation } = primary
   return (
-    <div className={styles.home}>
+    <main className={styles.home}>
       <CreatureDevice view={primary} celebrateKey={props.celebrateKey} detailHref={props.linkTo(primary.creature.id)} />
       <div className={styles.controls}>
         <CareKeys
@@ -83,6 +83,6 @@ export function CreatureHome(props: CreatureHomeProps) {
           onLoadMore={props.onLoadMore}
         />
       </div>
-    </div>
+    </main>
   )
 }

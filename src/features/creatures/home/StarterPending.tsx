@@ -11,7 +11,7 @@ interface StarterPendingProps {
 /** The server mints the starter after sign-up; the browser only waits and checks. */
 export function StarterPending({ waiting, onCheck, checking }: StarterPendingProps) {
   return (
-    <section className={styles.pending} aria-labelledby="starter-heading">
+    <main className={styles.pending} aria-labelledby="starter-heading">
       <div className={styles.stage}>
         <Habitat type="NATURE" />
         <svg className={waiting ? `${styles.egg} ${styles.wobble}` : styles.egg} viewBox="0 0 120 150" aria-hidden="true">
@@ -35,6 +35,6 @@ export function StarterPending({ waiting, onCheck, checking }: StarterPendingPro
           </Button>
         )}
       </div>
-    </section>
+    </main>
   )
 }

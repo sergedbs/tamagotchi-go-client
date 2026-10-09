@@ -45,7 +45,7 @@ export default function CreaturesPage() {
   if (collection.isError) {
     const error = collection.error
     return (
-      <div className={styles.center}>
+      <main className={styles.center}>
         <LoadProblem
           title="Your creatures could not be loaded"
           message={describeApiError(error)}
@@ -53,7 +53,7 @@ export default function CreaturesPage() {
           onRetry={() => void collection.refetch()}
           retrying={collection.isFetching}
         />
-      </div>
+      </main>
     )
   }
   if (empty) {
@@ -78,7 +78,7 @@ export default function CreaturesPage() {
 
   if (!primary) {
     return (
-      <div className={styles.noPrimary}>
+      <main className={styles.noPrimary}>
         <div className={styles.intro}>
           <h1>Choose a primary companion</h1>
           <p>
@@ -86,7 +86,7 @@ export default function CreaturesPage() {
           </p>
         </div>
         <CollectionShelf items={views} {...shelf} />
-      </div>
+      </main>
     )
   }
 

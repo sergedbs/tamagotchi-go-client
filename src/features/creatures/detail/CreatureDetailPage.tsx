@@ -34,7 +34,7 @@ function CreatureDetail({ id }: { id: string }) {
     const forbidden = isApiError(error) && error.status === 403
     const missing = isApiError(error) && error.status === 404
     return (
-      <div className={styles.center}>
+      <main className={styles.center}>
         <BackLink />
         <LoadProblem
           title={forbidden ? 'You do not hold this creature' : missing ? 'This creature is not available' : 'This creature could not be loaded'}
@@ -43,7 +43,7 @@ function CreatureDetail({ id }: { id: string }) {
           onRetry={forbidden || missing ? undefined : () => void creature.refetch()}
           retrying={creature.isFetching}
         />
-      </div>
+      </main>
     )
   }
 
@@ -69,7 +69,7 @@ function DetailBody({ userId, view, etag, refreshing }: { userId: string; view: 
   const care = useCare(userId, view)
   const { creature, presentation } = view
   return (
-    <div className={styles.detail}>
+    <main className={styles.detail}>
       <div className={styles.backRow}>
         <BackLink />
       </div>
@@ -92,6 +92,6 @@ function DetailBody({ userId, view, etag, refreshing }: { userId: string; view: 
         </section>
         <HoldersList userId={userId} creatureId={creature.id} name={creature.name} />
       </div>
-    </div>
+    </main>
   )
 }
