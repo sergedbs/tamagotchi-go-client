@@ -18,6 +18,7 @@ import { flattenCollection, useCollection } from '../../creatures/api.ts'
 import { useCreatureViews } from '../../creatures/useCreatureViews.ts'
 import { PersonName } from '../../social/PersonRow.tsx'
 import { CombatNav } from '../CombatNav.tsx'
+import { StaleNotice } from '../StaleNotice.tsx'
 import { Countdown } from '../Countdown.tsx'
 import { HpBar } from '../HpBar.tsx'
 import { ACCESS_GRANT_LABEL, BATTLE_STATUS_LABEL, battleIsTerminal, DELIVERY_LABEL, deliveryInFlight } from '../status.ts'
@@ -38,7 +39,8 @@ function BattleView({ battleId }: { battleId: string }) {
   const battle = useBattle(me, battleId)
 
   if (battle.isPending) return <main className={styles.page}><p className={styles.muted}>Loading battle…</p></main>
-  if (battle.isError) {
+  // A failed live update keeps the last server state on screen; only a failed first load replaces it.
+  if (battle.isError && !battle.data) {
     const status = isApiError(battle.error) ? battle.error.status : null
     return (
       <main className={styles.page}>
@@ -52,10 +54,10 @@ function BattleView({ battleId }: { battleId: string }) {
       </main>
     )
   }
-  return <Arena me={me} battle={battle.data} refreshing={battle.isFetching} onRefresh={() => void battle.refetch()} />
+  return <Arena me={me} battle={battle.data} refreshing={battle.isFetching} refreshError={battle.isError ? battle.error : null} onRefresh={() => void battle.refetch()} />
 }
 
-function Arena({ me, battle, refreshing, onRefresh }: { me: string; battle: Battle; refreshing: boolean; onRefresh: () => void }) {
+function Arena({ me, battle, refreshing, refreshError, onRefresh }: { me: string; battle: Battle; refreshing: boolean; refreshError: Error | null; onRefresh: () => void }) {
   const queryClient = useQueryClient()
   const [lastHit, setLastHit] = useState<BattleAttack | null>(null)
   const [forfeitOpen, setForfeitOpen] = useState(false)
@@ -96,6 +98,7 @@ function Arena({ me, battle, refreshing, onRefresh }: { me: string; battle: Batt
         <ArrowLeft size={18} aria-hidden="true" /> Battles
       </Link>
 
+      {refreshError && <StaleNotice error={refreshError} refreshing={refreshing} onRefresh={onRefresh} />}
       <section className={styles.arena} aria-labelledby="battle-title">
         <header className={styles.arenaHeader}>
           <h1 id="battle-title">

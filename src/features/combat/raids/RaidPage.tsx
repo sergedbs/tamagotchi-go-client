@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import { useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, Swords } from 'lucide-react'
@@ -24,6 +24,7 @@ import { useCreatureViews } from '../../creatures/useCreatureViews.ts'
 import { roleOf, useMembers } from '../../guilds/api.ts'
 import { PersonName } from '../../social/PersonRow.tsx'
 import { CombatNav } from '../CombatNav.tsx'
+import { StaleNotice } from '../StaleNotice.tsx'
 import { Countdown } from '../Countdown.tsx'
 import { HpBar } from '../HpBar.tsx'
 import { DELIVERY_LABEL, RAID_STATUS_LABEL, raidRewardMeaning } from '../status.ts'
@@ -41,7 +42,8 @@ function RaidView({ raidId }: { raidId: string }) {
   const { user } = useAuthenticated()
   const raid = useRaid(user.user_id, raidId)
   if (raid.isPending) return <main className={styles.page}><p className={styles.muted}>Loading raid…</p></main>
-  if (raid.isError) {
+  // A failed live update keeps the last server state on screen; only a failed first load replaces it.
+  if (raid.isError && !raid.data) {
     const status = isApiError(raid.error) ? raid.error.status : null
     return (
       <main className={styles.page}>
@@ -55,10 +57,16 @@ function RaidView({ raidId }: { raidId: string }) {
       </main>
     )
   }
-  return <Encounter me={user.user_id} raid={raid.data} />
+  return (
+    <Encounter
+      me={user.user_id}
+      raid={raid.data}
+      stale={raid.isError ? <StaleNotice error={raid.error} refreshing={raid.isFetching} onRefresh={() => void raid.refetch()} /> : null}
+    />
+  )
 }
 
-function Encounter({ me, raid }: { me: string; raid: Raid }) {
+function Encounter({ me, raid, stale }: { me: string; raid: Raid; stale: ReactNode }) {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const catalog = useSpriteCatalog()
@@ -101,6 +109,7 @@ function Encounter({ me, raid }: { me: string; raid: Raid }) {
       <Link to="/combat/raids" className={styles.back}>
         <ArrowLeft size={18} aria-hidden="true" /> Raids
       </Link>
+      {stale}
       <div className={styles.raidLayout}>
         <section className={styles.encounter} aria-labelledby="boss-name">
           <div className={styles.bossStage}>
