@@ -12,7 +12,7 @@ test('real: friends form a guild and chat over the negotiated socket', async ({ 
   const a = await registerPlayer(browser, 'guild-a')
   const b = await registerPlayer(browser, 'guild-b')
 
-  // Friendship first (invitations to strangers are affected by a known server gap).
+  // Friendship first, so the invitation comes from the friends list.
   await befriend(a, b)
   await expect(b.page.getByText('No pending requests.')).toBeVisible()
 
