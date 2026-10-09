@@ -26,6 +26,29 @@ const latitude = z.number().min(-90).max(90)
 const presentationKey = z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/, 'must be a presentation key')
 const configVersionKey = z.string().regex(/^[1-9]\d{0,9}$/, 'must be a positive config_version')
 
+const publicValue = z.string().trim().min(1).max(200)
+
+/**
+ * Firebase Web app configuration: public identifiers only. Strict, so a pasted
+ * service-account file (private_key, client_email, ...) is refused.
+ */
+export const firebaseWebConfigSchema = z.strictObject({
+  apiKey: publicValue,
+  projectId: publicValue,
+  messagingSenderId: publicValue,
+  appId: publicValue,
+  authDomain: publicValue.optional(),
+  storageBucket: publicValue.optional(),
+  measurementId: publicValue.optional(),
+})
+
+/** Browser push through Firebase Cloud Messaging; vapid_key is the public key. */
+export const pushConfigSchema = z.strictObject({
+  firebase: firebaseWebConfigSchema,
+  vapid_key: z.string().regex(/^[A-Za-z0-9_-]{40,200}={0,2}$/, 'must be a public VAPID key (base64url)'),
+})
+export type PushConfig = z.output<typeof pushConfigSchema>
+
 /**
  * Public runtime configuration. Strict: unknown keys are refused so a typo or a
  * misplaced secret is reported instead of silently ignored.
@@ -41,8 +64,8 @@ export const clientConfigSchema = z.strictObject({
   package_presentations: z
     .record(z.uuid(), z.record(configVersionKey, presentationKey))
     .default({}),
-  /** Browser push is not implemented; only the disabled value is accepted. */
-  push: z.null().default(null),
+  /** Optional browser push; null keeps it off and the inbox still works. */
+  push: pushConfigSchema.nullable().default(null),
 })
 
 export type ClientConfig = z.output<typeof clientConfigSchema>

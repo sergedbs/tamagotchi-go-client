@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from 'vitest'
 import { ClientConfigError, loadClientConfig, parseClientConfig } from './config.ts'
 
 const PACKAGE_ID = '01a11d09-508b-7095-80e3-cb2c2db6eca5'
+const FIREBASE = { apiKey: 'placeholder-api-key', projectId: 'placeholder-project', messagingSenderId: '000000000000', appId: '1:000000000000:web:placeholder' }
+const VAPID = 'B'.padEnd(87, 'x')
 
 describe('parseClientConfig', () => {
   it('applies safe defaults for missing optional values', () => {
@@ -27,6 +29,12 @@ describe('parseClientConfig', () => {
     expect(config.package_presentations[PACKAGE_ID]?.['1']).toBe('grove-companions')
   })
 
+  it('accepts a public Firebase push configuration', () => {
+    const config = parseClientConfig({ push: { firebase: { ...FIREBASE, authDomain: 'placeholder.firebaseapp.com' }, vapid_key: VAPID } })
+    expect(config.push?.firebase.projectId).toBe('placeholder-project')
+    expect(config.push?.vapid_key).toBe(VAPID)
+  })
+
   it.each([
     [{ api_base: 'https://gateway.example.test' }, 'api_base'],
     [{ api_base: '//evil.example.test' }, 'api_base'],
@@ -37,6 +45,9 @@ describe('parseClientConfig', () => {
     [{ package_presentations: { 'not-a-uuid': { '1': 'grove' } } }, 'package_presentations'],
     [{ package_presentations: { [PACKAGE_ID]: { '0': 'grove' } } }, 'package_presentations'],
     [{ push: { provider: 'firebase' } }, 'push'],
+    [{ push: { firebase: { ...FIREBASE, private_key: 'x' }, vapid_key: VAPID } }, 'push.firebase'],
+    [{ push: { firebase: FIREBASE, vapid_key: 'not a key' } }, 'push.vapid_key'],
+    [{ push: { firebase: { apiKey: 'k' }, vapid_key: VAPID } }, 'push.firebase'],
   ])('refuses invalid value %j', (input, field) => {
     expect(() => parseClientConfig(input)).toThrowError(ClientConfigError)
     try {
