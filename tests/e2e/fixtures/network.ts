@@ -12,7 +12,8 @@ export const test = base.extend<{ api: Map<string, ApiHandler>; unexpectedApiCal
   },
   api: async ({ page, unexpectedApiCalls }, use) => {
     const handlers = new Map<string, ApiHandler>()
-    await page.route(/\/api(\/|$)/, async (route) => {
+    const isApi = (url: URL) => url.pathname === '/api' || url.pathname.startsWith('/api/')
+    await page.route(isApi, async (route) => {
       const url = new URL(route.request().url())
       const key = `${route.request().method()} ${url.pathname.replace(/^\/api/, '')}`
       const handler = handlers.get(key)

@@ -16,7 +16,7 @@ export function Habitat({ type }: { type: CombatType | null }) {
       focusable="false"
     >
       <rect width="480" height="320" className={styles.sky} />
-      <circle cx="392" cy="70" r="22" className={styles.sun} />
+      <circle cx="322" cy="66" r="22" className={styles.sun} />
       <path className={styles.far} d="M0 178c46-26 98-36 150-22 38 10 64 4 104-14 52-22 112-24 160-2 26 12 46 16 66 12V320H0Z" />
       <path className={styles.near} d="M0 214c62-22 128-26 196-8 44 12 92 10 140-6 52-16 98-14 144 4V320H0Z" />
       <g className={styles.shrub}>

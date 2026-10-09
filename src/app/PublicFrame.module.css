@@ -1,0 +1,20 @@
+.frame {
+  min-height: 100dvh;
+}
+
+.top {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-3) var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.brand {
+  display: inline-flex;
+  min-height: var(--touch-target);
+  align-items: center;
+  text-decoration: none;
+}

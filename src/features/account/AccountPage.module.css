@@ -1,0 +1,45 @@
+.account {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--gutter);
+  display: grid;
+  gap: var(--space-6);
+}
+
+.header {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.header h1 {
+  overflow-wrap: anywhere;
+}
+
+.section {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+}
+
+.muted {
+  color: var(--color-ink-muted);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+  border-radius: var(--radius-sheet);
+  background: var(--color-surface);
+  border: var(--line) solid var(--color-line);
+}
+
+.list li {
+  padding: var(--space-3) var(--space-4);
+  overflow-wrap: anywhere;
+}
+
+.list li + li {
+  border-top: var(--line) solid var(--color-line);
+}

@@ -1,0 +1,34 @@
+.error,
+.info {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-control);
+  border-left: 3px solid var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+.info {
+  border-left-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.icon {
+  flex: none;
+  color: var(--color-danger);
+  margin-top: 2px;
+}
+
+.body {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.title {
+  font-weight: 600;
+}
+
+.text {
+  font-size: var(--text-label);
+}

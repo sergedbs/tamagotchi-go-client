@@ -1,10 +1,11 @@
-import { expect, test } from './network.ts'
+import { expect, json, test } from './network.ts'
 
 test.describe('fixture: application boot', () => {
-  test('redirects home to creatures', async ({ page, api }) => {
-    void api
-    await page.goto('/')
-    await expect(page).toHaveURL(/\/creatures$/)
+  test('signed-out visitors are sent to sign in, keeping the destination', async ({ page, api }) => {
+    api.set('GET /registry/v1/packages', (route) => json(route, 200, { items: [], next_cursor: null }))
+    await page.goto('/creatures')
+    await expect(page).toHaveURL(/\/login\?next=%2Fcreatures$/)
+    await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible()
   })
 
   test('explains invalid runtime configuration instead of starting', async ({ page, api }) => {
