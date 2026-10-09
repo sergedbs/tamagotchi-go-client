@@ -6,9 +6,9 @@ export const GROVE = '01a11d09-0000-7000-8000-00000000a001'
 export const ME = { user_id: '01a11e00-0000-7000-8000-000000000001', username: 'nia', email: 'nia@example.test', package_ids: [GROVE], membership_version: 1 }
 export const CORRELATION = '01a11e47-c352-7320-9957-baa3f0722d52'
 
-export function token(): string {
+export function token(roles: string[] = ['user']): string {
   const encode = (value: unknown) => Buffer.from(JSON.stringify(value)).toString('base64url')
-  return `${encode({ alg: 'none' })}.${encode({ sub: ME.user_id, exp: Math.floor(Date.now() / 1000) + 900, roles: ['user'] })}.x`
+  return `${encode({ alg: 'none' })}.${encode({ sub: ME.user_id, exp: Math.floor(Date.now() / 1000) + 900, roles })}.x`
 }
 
 export function problem(status: number, code: string) {
@@ -28,9 +28,9 @@ export async function withGroveConfig(page: Page) {
   )
 }
 
-export async function signIn(page: Page, api: Map<string, ApiHandler>, next = '/creatures') {
+export async function signIn(page: Page, api: Map<string, ApiHandler>, next = '/creatures', roles?: string[]) {
   if (!api.has('GET /registry/v1/packages')) api.set('GET /registry/v1/packages', packagesPage)
-  api.set('POST /users/v1/users/login', (route) => json(route, 200, { access_token: token(), refresh_token: 'r1', token_type: 'Bearer', expires_in: 900 }))
+  api.set('POST /users/v1/users/login', (route) => json(route, 200, { access_token: token(roles), refresh_token: 'r1', token_type: 'Bearer', expires_in: 900 }))
   api.set('GET /users/v1/users/me', (route) => json(route, 200, ME))
   // The bell badge reads the inbox on every signed-in screen; Account reads wallets and settings.
   accountDefaults(api)
