@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 import { adminLogin, runId } from './ledger.ts'
-import { befriend, formGuild, openUtility, provisionedPackages, registerPlayer, type Player } from './players.ts'
+import { befriend, formGuild, goTo, openUtility, provisionedPackages, registerPlayer, type Player } from './players.ts'
 import { requireRealTarget } from './target.ts'
 
 // The admin password is typed into the client; keep it out of traces, screenshots and video.
@@ -135,4 +135,12 @@ test('real: an admin opens a run-named boss, and a guild raids it to the end', a
   await admin.getByRole('dialog').getByRole('button', { name: 'Cancel occurrence' }).click()
   await expect(ours.getByText('cancelled')).toBeVisible()
   await adminContext.close()
+
+  // Cleanup: the leader deletes the synthetic guild.
+  await goTo(leader.page, 'Social')
+  await leader.page.getByRole('navigation', { name: 'Social' }).getByRole('link', { name: 'Guilds' }).click()
+  await leader.page.getByRole('link', { name: `Raiders ${run}` }).first().click()
+  await leader.page.getByRole('button', { name: 'Delete guild' }).click()
+  await leader.page.getByRole('dialog').getByRole('button', { name: 'Delete guild' }).click()
+  await expect(leader.page).toHaveURL(/\/guilds$/)
 })
