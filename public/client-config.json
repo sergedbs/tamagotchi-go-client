@@ -5,6 +5,9 @@
   "diagnostics_enabled": false,
   "manual_location_enabled": false,
   "allowed_socket_origins": ["ws://localhost:13004"],
-  "package_presentations": {},
+  "package_presentations": {
+    "01a11ea6-f94c-7419-beb6-005ec1a0502b": { "1": "grove-companions" },
+    "01a11ea6-f97b-74d2-b962-6aa8726c7ab4": { "1": "tidewater-companions" }
+  },
   "push": null
 }
