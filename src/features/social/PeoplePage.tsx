@@ -7,6 +7,7 @@ import { apiPath } from '../../api/http.ts'
 import { useCommand } from '../../api/useCommand.ts'
 import { isUuid } from '../../api/uuid.ts'
 import { Button } from '../../components/Button.tsx'
+import { CopyValue } from '../../components/CopyValue.tsx'
 import { TextField } from '../../components/Field.tsx'
 import { FormAlert } from '../../components/FormAlert.tsx'
 import { LoadProblem } from '../../components/LoadProblem.tsx'
@@ -102,7 +103,7 @@ export default function PeoplePage() {
       )}
       {relationships.data?.truncated && <p className={styles.muted}>Showing the first 250 relationships.</p>}
 
-      <PlayerLookup />
+      <PlayerLookup userId={user.user_id} />
     </main>
   )
 }
@@ -141,7 +142,7 @@ function IncomingRequest({ request, me, now }: { request: FriendRequest; me: str
 }
 
 /** There is no username search API; a player ID is the secondary way in. */
-function PlayerLookup() {
+function PlayerLookup({ userId }: { userId: string }) {
   const navigate = useNavigate()
   const [value, setValue] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -154,6 +155,9 @@ function PlayerLookup() {
   return (
     <section className={styles.section} aria-labelledby="lookup-heading">
       <h2 id="lookup-heading">Find a player by ID</h2>
+      <p className={styles.muted}>
+        <CopyValue value={userId} label="Your player ID" size="body" />
+      </p>
       <form className={styles.lookup} onSubmit={submit}>
         <TextField
           label="Player ID"
@@ -163,7 +167,7 @@ function PlayerLookup() {
             setError(null)
           }}
           error={error}
-          hint="Usernames cannot be searched. Ask the player for the ID shown on their profile."
+          hint="Usernames cannot be searched. Ask the player for the ID shown in their Account."
           spellCheck={false}
           autoComplete="off"
         />

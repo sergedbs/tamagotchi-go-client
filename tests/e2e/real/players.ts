@@ -62,7 +62,7 @@ export async function joinAnotherPackage(page: Page) {
 /** Opens a profile through the in-app lookup (client-side, keeps the session). */
 export async function openProfile(page: Page, userId: string) {
   await goTo(page, 'Social')
-  await page.getByLabel('Player ID').fill(userId)
+  await page.getByRole('textbox', { name: 'Player ID' }).fill(userId)
   await page.getByRole('button', { name: 'Open profile' }).click()
 }
 

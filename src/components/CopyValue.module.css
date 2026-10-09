@@ -29,3 +29,13 @@
   background: var(--color-surface-sunken);
   color: var(--color-ink);
 }
+
+.ref[data-size='body'],
+.ref[data-size='body'] .code {
+  font-size: var(--text-label);
+}
+
+.ref[data-size='body'] .label {
+  font-weight: 600;
+  color: var(--color-ink);
+}

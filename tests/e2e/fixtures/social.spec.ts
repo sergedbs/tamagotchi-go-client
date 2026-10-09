@@ -70,7 +70,7 @@ test.describe('fixture: people and profiles', () => {
     api.set(`GET /users/v1/users/${ME.user_id}/relationships`, (route) => json(route, 200, { items: [], next_cursor: null }))
     api.set('GET /users/v1/friend-requests', (route) => json(route, 200, { items: [], next_cursor: null }))
     await signIn(page, api, '/social')
-    await page.getByLabel('Player ID').fill('leon')
+    await page.getByRole('textbox', { name: 'Player ID' }).fill('leon')
     await page.getByRole('button', { name: 'Open profile' }).click()
     await expect(page.getByText('Enter a full player ID')).toBeVisible()
   })

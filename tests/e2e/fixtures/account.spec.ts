@@ -28,6 +28,8 @@ test.describe('fixture: account', () => {
     await expect(wallets.getByRole('listitem').filter({ hasText: 'Coins' })).toContainText('1,250')
     await expect(wallets.getByRole('listitem').filter({ hasText: 'Grove Companions' })).toContainText('37')
     await expect(page.getByText('No devices are registered.')).toBeVisible()
+    await expect(page.getByRole('banner').or(page.locator('main header')).getByText(ME.user_id)).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Copy player id' })).toBeVisible()
   })
 
   test('preferences save with the exact ETag; a conflict reloads before saving again', async ({ page, api }) => {

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router'
 import { LogOut } from 'lucide-react'
 import { Button } from '../../components/Button.tsx'
+import { CopyValue } from '../../components/CopyValue.tsx'
 import { usePublicPackages } from '../auth/packagesApi.ts'
 import { useAuthenticated, useSessionStore } from '../auth/sessionContext.ts'
 import { useDiagnosticsRing } from '../diagnostics/diagnosticsContext.ts'
@@ -24,6 +25,10 @@ export default function AccountPage() {
       <header className={styles.header}>
         <h1>{user.username}</h1>
         <p className={styles.muted}>{user.email}</p>
+        <p className={styles.playerId}>
+          <CopyValue value={user.user_id} label="Player ID" size="body" />
+        </p>
+        <p className={styles.muted}>Share your player ID so friends can find you in Social; usernames cannot be searched.</p>
       </header>
       <div className={styles.columns}>
         <div className={styles.column}>

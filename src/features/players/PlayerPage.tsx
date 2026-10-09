@@ -3,7 +3,7 @@ import { ArrowLeft } from 'lucide-react'
 import { describeApiError, isApiError } from '../../api/errors.ts'
 import { isUuid } from '../../api/uuid.ts'
 import { NotFound } from '../../app/NotFound.tsx'
-import { CorrelationRef } from '../../components/CorrelationRef.tsx'
+import { CopyValue } from '../../components/CopyValue.tsx'
 import { LoadProblem } from '../../components/LoadProblem.tsx'
 import { RelationshipBadge } from '../../components/RelationshipBadge.tsx'
 import { useAuthenticated } from '../auth/sessionContext.ts'
@@ -55,7 +55,7 @@ function Player({ id }: { id: string }) {
             </div>
           </div>
           <p className={styles.idLine}>
-            <span className={styles.muted}>Player ID</span> <CorrelationRef id={id} label="Player ID" />
+            <CopyValue value={id} label="Player ID" size="body" />
           </p>
           {!self && (
             <>
