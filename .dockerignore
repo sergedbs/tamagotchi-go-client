@@ -1,0 +1,16 @@
+.git
+.github
+.local
+.env
+.env.*
+node_modules
+dist
+coverage
+playwright-report
+test-results
+docs
+tools
+*.log
+.DS_Store
+.idea
+.vscode

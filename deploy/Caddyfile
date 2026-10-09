@@ -1,0 +1,65 @@
+# Static client with a fixed Gateway upstream. GATEWAY_UPSTREAM is required and is
+# read at start, so changing it needs a restart, not a rebuild.
+{
+	admin off
+	auto_https off
+	persist_config off
+}
+
+:8080 {
+	encode zstd gzip
+
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+
+	# Container health: this process only.
+	handle /healthz {
+		respond "ok" 200
+	}
+
+	# /api is removed exactly once; everything below it goes to Gateway unchanged,
+	# Authorization included. API paths never fall back to index.html.
+	handle_path /api/* {
+		reverse_proxy {$GATEWAY_UPSTREAM} {
+			header_up Host {upstream_hostport}
+		}
+	}
+	handle /api {
+		header Content-Type application/problem+json
+		respond `{"type":"about:blank","title":"Not Found","status":404,"code":"not_found","detail":"Unknown API path."}` 404
+	}
+
+	# Static files: hashed bundles are immutable; config and the shell are revalidated.
+	handle /assets/* {
+		root * /srv
+		@hashed path_regexp [-.][A-Za-z0-9_-]{8,}\.(js|css)$
+		header @hashed Cache-Control "public, max-age=31536000, immutable"
+		file_server
+	}
+	handle /client-config.json {
+		root * /srv
+		header Cache-Control no-cache
+		file_server
+	}
+
+	# SPA deep links: any other path serves the app shell.
+	handle {
+		root * /srv
+		header Cache-Control no-cache
+		try_files {path} /index.html
+		file_server
+	}
+
+	# Gateway unreachable: an API error, never HTML.
+	handle_errors {
+		@api path /api/*
+		handle @api {
+			header Content-Type application/problem+json
+			respond `{"type":"about:blank","title":"Gateway unavailable","status":502,"code":"upstream_unavailable","detail":"The API gateway could not be reached."}` 502
+		}
+		respond "{err.status_code} {err.status_text}" {err.status_code}
+	}
+}

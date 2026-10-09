@@ -1,0 +1,24 @@
+# Standalone client runtime. The backend runs elsewhere; set GATEWAY_UPSTREAM to an
+# address reachable from inside this container (not the container's own localhost),
+# for example http://host.docker.internal:13000 for the local acceptance stack.
+name: tamagotchi-go-client
+
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: tamagotchi-go-client:local
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      GATEWAY_UPSTREAM: ${GATEWAY_UPSTREAM:?Set GATEWAY_UPSTREAM, e.g. http://host.docker.internal:13000}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # Runtime configuration without a rebuild.
+      - ${CLIENT_CONFIG:-../public/client-config.json}:/srv/client-config.json:ro
+    read_only: true
+    tmpfs:
+      - /tmp
+    restart: unless-stopped
