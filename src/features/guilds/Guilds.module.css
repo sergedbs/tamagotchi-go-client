@@ -1,0 +1,229 @@
+@import '../social/Social.module.css';
+
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.invitation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sheet);
+  background: var(--color-surface);
+  border: var(--line) solid var(--color-line);
+}
+
+.rowTitle {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.guildList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.guildRow {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 64px;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sheet);
+  background: var(--color-surface);
+  border: var(--line) solid var(--color-line);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.guildRow:hover {
+  color: var(--color-ink);
+  border-color: var(--color-control-border);
+}
+
+.crest,
+.crestLarge {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 44px;
+  border-radius: 10px 10px 50% 50%;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.crestLarge {
+  width: 56px;
+  height: 62px;
+  font-size: var(--text-section);
+}
+
+.guildText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.guildText h1,
+.guildText h2 {
+  overflow-wrap: anywhere;
+}
+
+.description {
+  font-size: var(--text-label);
+  color: var(--color-ink-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.memberCount {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--color-ink-muted);
+}
+
+.yourGuild,
+.guildHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-stage);
+  background: var(--color-surface);
+  border: var(--line) solid var(--color-line);
+}
+
+.yourGuild .guildText,
+.guildHeader .guildText {
+  flex: 1 1 200px;
+}
+
+.linkButton,
+.linkButtonPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-control);
+  font-weight: 600;
+  text-decoration: none;
+  border: var(--line) solid var(--color-control-border);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-key);
+}
+
+.linkButtonPrimary {
+  border-color: transparent;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-key-primary);
+}
+
+.linkButtonPrimary:hover {
+  color: var(--color-on-primary);
+  background: var(--color-primary-hover);
+}
+
+.createToggle {
+  justify-self: start;
+}
+
+.form,
+.inviteForm {
+  display: grid;
+  gap: var(--space-3);
+  max-width: 560px;
+}
+
+.inviteForm button {
+  justify-self: start;
+}
+
+.notice {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-control);
+  background: var(--color-surface-sunken);
+}
+
+.roster {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-radius: var(--radius-sheet);
+  background: var(--color-surface);
+  border: var(--line) solid var(--color-line);
+}
+
+.member {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+  min-height: 56px;
+  padding: var(--space-2) var(--space-4);
+}
+
+.member + .member {
+  border-top: var(--line) solid var(--color-line);
+}
+
+.memberName {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 600;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.crown {
+  color: var(--color-highlight);
+  fill: var(--color-highlight-soft);
+}
+
+.roleTag {
+  font-size: var(--text-meta);
+  font-weight: 600;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-control);
+  background: var(--color-surface-sunken);
+  color: var(--color-ink-muted);
+}
+
+.inviteAction {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+}

@@ -13,6 +13,8 @@ const AccountPage = lazy(() => import('../features/account/AccountPage.tsx'))
 const CreaturesPage = lazy(() => import('../features/creatures/CreaturesPage.tsx'))
 const CreatureDetailPage = lazy(() => import('../features/creatures/detail/CreatureDetailPage.tsx'))
 const ExplorePage = lazy(() => import('../features/explore/ExplorePage.tsx'))
+const PeoplePage = lazy(() => import('../features/social/PeoplePage.tsx'))
+const PlayerPage = lazy(() => import('../features/players/PlayerPage.tsx'))
 const CreditsPage = lazy(() => import('../features/credits/CreditsPage.tsx'))
 
 // Design preview: compiled into development builds only.
@@ -32,7 +34,8 @@ export function AppRoutes() {
             <Route path="creatures" element={<CreaturesPage />} />
             <Route path="creatures/:id" element={<CreatureDetailPage />} />
             <Route path="explore" element={<ExplorePage />} />
-            <Route path="social" element={<NotInThisBuild title="Social" />} />
+            <Route path="social" element={<PeoplePage />} />
+            <Route path="players/:id" element={<PlayerPage />} />
             <Route path="combat/*" element={<NotInThisBuild title="Combat" />} />
             <Route path="notifications" element={<NotInThisBuild title="Notifications" />} />
             <Route path="account" element={<AccountPage />} />
