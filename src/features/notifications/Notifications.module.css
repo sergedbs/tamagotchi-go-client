@@ -49,10 +49,6 @@
   border-top: var(--line) solid var(--color-line);
 }
 
-.item[data-unread] {
-  background: var(--color-primary-soft);
-}
-
 .item[data-unread]::before {
   content: '';
   position: absolute;
@@ -85,6 +81,18 @@
 
 .item[data-unread] .title {
   font-weight: 700;
+}
+
+.item:not([data-unread]) .title {
+  color: var(--color-ink-muted);
+}
+
+.item:not([data-unread]) .icon {
+  color: var(--color-ink-muted);
+}
+
+.item[data-unread] .icon {
+  background: var(--color-primary-soft);
 }
 
 .meta {
