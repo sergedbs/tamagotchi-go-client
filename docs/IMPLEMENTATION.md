@@ -225,6 +225,31 @@ gap did not trigger between friends), both connect live and exchange a message,
 then the leader deletes the guild. Rendered review of People, Guilds, guild and
 chat at 390x844 and 1440x900.
 
+### Slice 8 - battles and raids (code committed; checks in progress)
+
+Commits 74f8db6 (join another package from Account, needed for two-creature
+lineups), 4ed7c24 (battles), 6dbc8db (raids).
+
+- Battles: challenge with an opponent (friend or player ID, or `?opponent=` from a
+  profile), two distinct held creatures and an optional ATTACK_10 boost; accept or
+  decline; attack only on the server's `turn_user_id`; forfeit with confirmation.
+  Detail polls every 2 s while visible until terminal; after completion settlement
+  and access-grant status are shown separately and polled for at most 60 s, then
+  "Check status". Countdowns are display-only.
+- Raids: availability means `active` and inside the window (status alone is not
+  enough); boss cards use the pinned `boss_version`; leaders of the verified guild
+  start raids; detail uses the raid's RaidBoss snapshot, resolves art/rewards via
+  occurrence and boss_version, polls while ACTIVE, attacks as the user's primary
+  (first accepted attack admits), honours `next_attack_at`, leaderboard keyed by
+  `raid_version`, distinct victory/timeout/cancel reward semantics.
+
+Done: lint, typecheck, 141 unit tests, build, 43 fixture tests still passing; real
+raids list renders historical acceptance raids. Not done yet: combat fixture tests,
+real battle test, rendered review of battle and raid detail. Real raid start needs
+an available occurrence, which requires admin writes (not yet authorized).
+
+Next: finish slice 8 checks, then slice 9 (notifications and wallets).
+
 ## Definition of done
 
 - A clean checkout runs with npm ci and supplied public configuration; no source
