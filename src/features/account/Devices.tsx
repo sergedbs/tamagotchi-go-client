@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { Smartphone, Trash2 } from 'lucide-react'
 import { describeApiError, isApiError } from '../../api/errors.ts'
@@ -7,19 +7,28 @@ import { useCommand } from '../../api/useCommand.ts'
 import { Button } from '../../components/Button.tsx'
 import { ConfirmDialog } from '../../components/ConfirmDialog.tsx'
 import { FormAlert } from '../../components/FormAlert.tsx'
+import { useConfig } from '../../app/configContext.ts'
 import { formatAbsolute } from '../../lib/time.ts'
 import { notificationKeys, useDevices, type Device } from '../notifications/api.ts'
+import { readOwner, subscribeOwner, writeOwner } from '../push/owner.ts'
+import { PushControls } from '../push/PushControls.tsx'
+import { releasePush } from '../push/push.ts'
 import styles from './AccountPage.module.css'
 
 const PLATFORM: Record<Device['platform'], string> = { ANDROID: 'Android', IOS: 'iOS', WEB: 'Web browser' }
 
-/** Registered push devices can be removed; this web client does not register any. */
-export function Devices({ userId, nameOf }: { userId: string; nameOf: (packageId: string) => string }) {
+/** This browser's push opt-in, and every registered device of the account. */
+export function Devices({ userId, packageId, nameOf }: { userId: string; packageId: string; nameOf: (packageId: string) => string }) {
   const devices = useDevices(userId)
   const queryClient = useQueryClient()
+  const push = useConfig().push
+  const owner = useSyncExternalStore(subscribeOwner, readOwner)
+  const thisBrowser = owner?.user_id === userId ? owner.device_id : null
   const [removing, setRemoving] = useState<Device | null>(null)
   const remove = useCommand<void>({
     onSuccess: () => {
+      // Removing this browser's entry also ends its subscription.
+      if (removing && removing.id === thisBrowser) void releasePush(push).finally(() => writeOwner(null))
       setRemoving(null)
       void queryClient.invalidateQueries({ queryKey: notificationKeys.devices(userId) })
     },
@@ -29,7 +38,7 @@ export function Devices({ userId, nameOf }: { userId: string; nameOf: (packageId
   return (
     <section aria-labelledby="devices-heading" className={styles.section}>
       <h2 id="devices-heading">Push devices</h2>
-      <p className={styles.muted}>Push is not configured for this web client, so it never asks for notification permission. Your inbox always works.</p>
+      <PushControls userId={userId} packageId={packageId} />
       {devices.isPending ? (
         <p className={styles.muted}>Loading devices…</p>
       ) : devices.isError ? (
@@ -44,7 +53,10 @@ export function Devices({ userId, nameOf }: { userId: string; nameOf: (packageId
             <li key={device.id} className={styles.device}>
               <Smartphone size={20} aria-hidden="true" />
               <span className={styles.deviceText}>
-                <strong>{PLATFORM[device.platform]}</strong>
+                <strong>
+                  {PLATFORM[device.platform]}
+                  {device.id === thisBrowser && ' · This browser'}
+                </strong>
                 <span className={styles.muted}>
                   {nameOf(device.package_id)} · {device.locale} · registered {formatAbsolute(device.registered_at)}
                 </span>
