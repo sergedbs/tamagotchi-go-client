@@ -45,3 +45,12 @@ export function newSyntheticUser(run: string, label: string, packageId: string):
   writeFileSync(file, JSON.stringify(ledger, null, 2), { mode: 0o600 })
   return user
 }
+
+/** The supplied admin login, for admin acceptance only. Never log or attach it. */
+export function adminLogin(): { email: string; password: string; packageId: string } {
+  const file = join(process.cwd(), '.local', 'admin-credentials.json')
+  if (!existsSync(file)) throw new Error('Admin acceptance needs .local/admin-credentials.json')
+  const value = JSON.parse(readFileSync(file, 'utf8')) as { email?: unknown; password?: unknown; package_id?: unknown }
+  if (typeof value.email !== 'string' || typeof value.password !== 'string' || typeof value.package_id !== 'string') throw new Error('admin-credentials.json is incomplete')
+  return { email: value.email, password: value.password, packageId: value.package_id }
+}

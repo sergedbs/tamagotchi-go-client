@@ -65,3 +65,36 @@ export async function openProfile(page: Page, userId: string) {
   await page.getByLabel('Player ID').fill(userId)
   await page.getByRole('button', { name: 'Open profile' }).click()
 }
+
+/** A sends a friend request from B's profile; B accepts it in Social. */
+export async function befriend(a: Player, b: Player) {
+  await openProfile(a.page, b.userId)
+  await expect(a.page.getByRole('heading', { name: b.user.username })).toBeVisible()
+  await a.page.getByRole('button', { name: 'Send friend request' }).click()
+  await expect(a.page.getByText(/Friend request sent/)).toBeVisible()
+  await goTo(b.page, 'Social')
+  await expect(b.page.getByText('Wants to be friends', { exact: false })).toBeVisible()
+  await b.page.getByRole('button', { name: 'Accept' }).click()
+  await expect(b.page.getByRole('link', { name: a.user.username })).toBeVisible()
+}
+
+/** The leader creates a guild and invites a friend, who accepts; both end on the guild page. */
+export async function formGuild(leader: Player, member: Player, name: string) {
+  await goTo(leader.page, 'Social')
+  await leader.page.getByRole('navigation', { name: 'Social' }).getByRole('link', { name: 'Guilds' }).click()
+  await leader.page.getByRole('button', { name: 'Create a guild' }).click()
+  await leader.page.getByLabel('Name').fill(name)
+  await leader.page.getByLabel('Description').fill('Synthetic guild for client acceptance.')
+  await leader.page.getByRole('button', { name: 'Create guild' }).click()
+  await expect(leader.page.getByRole('heading', { level: 1, name })).toBeVisible()
+  await leader.page.getByLabel('Friend').selectOption(member.userId)
+  const invite = leader.page.waitForResponse((response) => /\/api\/guild\/v1\/guilds\/[^/]+\/invitations$/.test(response.url()))
+  await leader.page.getByRole('button', { name: 'Send invitation' }).click()
+  const status = (await invite).status()
+  expect(status, 'guild invitation (known UM relationship version gap can yield 502)').toBe(201)
+  await goTo(member.page, 'Social')
+  await member.page.getByRole('navigation', { name: 'Social' }).getByRole('link', { name: 'Guilds' }).click()
+  await member.page.getByRole('button', { name: 'Accept' }).click()
+  await expect(member.page.getByRole('heading', { level: 1, name })).toBeVisible()
+  return status
+}
