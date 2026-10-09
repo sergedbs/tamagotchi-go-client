@@ -2,7 +2,7 @@
 
 Responsive player and administration client for Tamagotchi Go.
 
-Implementation is in progress slice by slice; see
+Implementation progress, checks and known backend gaps are in
 [implementation progress](docs/IMPLEMENTATION.md). No demo accounts or populated
 database are included. No remote repository has been created.
 
@@ -23,6 +23,28 @@ Runtime settings live in `public/client-config.json` (public values only).
 Fixture CLI (explicit, never on startup; credentials stay in ignored `.local/`):
 `npm run fixtures -- preflight --target local-acceptance` (read-only) and
 `npm run fixtures -- provision --target local-acceptance --run-id <id> --confirm-test-target local-acceptance`.
+Provision prints the `package_presentations` mapping for `public/client-config.json`;
+the labelled-care and raid real tests use the latest provisioned run and are
+skipped without one. Package artwork is published for the target's
+`public_client_origin`, so serve the client there (default `http://localhost:5173`).
+
+## Packaged runtime
+
+`deploy/` holds a two-stage image (Node 24 build, Caddy on port 8080) and a
+standalone Compose file. Caddy serves the build with SPA deep links, removes `/api`
+once and proxies it to a fixed Gateway; API paths never fall back to `index.html`,
+and an unreachable Gateway yields a `502 upstream_unavailable` Problem. The
+upstream is read at start and must be reachable from inside the container:
+
+```sh
+GATEWAY_UPSTREAM=http://host.docker.internal:13000 docker compose -f deploy/compose.yaml up -d --build --wait
+E2E_BASE_URL=http://localhost:8080 E2E_REAL_TARGET=local-acceptance E2E_CONFIRM_TEST_TARGET=local-acceptance npm run test:e2e:real
+GATEWAY_UPSTREAM=unused docker compose -f deploy/compose.yaml down
+```
+
+`client-config.json` is mounted read-only (override with `CLIENT_CONFIG=<path>`),
+so configuration changes need a restart, not a rebuild. `/healthz` reports only the
+web process. No image is published.
 
 ## Start here
 
@@ -43,8 +65,7 @@ distinguished in API.md; do not assume a future server supports new features.
 
 Selected stack: React, TypeScript, Vite, React Router, TanStack Query, native
 fetch, CSS Modules, MapLibre/OpenFreeMap, Vitest and Playwright. Use Node 24 LTS
-and npm. Pin compatible dependency versions and create the lockfile during the
-first implementation slice.
+and npm; dependency versions are exact and locked in `package-lock.json`.
 
 The finished client must run with a Gateway address and public configuration.
 The existing isolated acceptance stack is the preferred local backend target;
