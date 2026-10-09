@@ -204,20 +204,39 @@ test.describe('fixture: battles', () => {
     await page.clock.runFor(4_100)
     await expect.poll(() => detail.reads).toBeGreaterThan(first)
 
+    // Jump past the window: the due poll fires once and finds the window closed.
     const beforeWindowEnd = detail.reads
-    await page.clock.runFor(61_000)
-    // Let the last in-window poll land before measuring that polling stopped.
+    await page.clock.fastForward(61_000)
     await expect.poll(() => detail.reads).toBeGreaterThan(beforeWindowEnd)
     await page.waitForTimeout(500)
     const settled = detail.reads
-    await page.clock.runFor(10_000)
+    await page.clock.fastForward(10_000)
     await page.waitForTimeout(500)
     expect(detail.reads).toBe(settled)
 
-    // Flush pending UI work on the fake clock, then check on demand.
-    await page.clock.runFor(100)
     await page.getByRole('button', { name: 'Check status' }).click()
     await expect.poll(() => detail.reads).toBe(settled + 1)
+  })
+})
+
+test.describe('fixture: live updates', () => {
+  test('a failed poll keeps the last battle state and recovers on the next poll', async ({ page, api }) => {
+    let failing = false
+    playerReads(api)
+    api.set(`GET /battle/v1/battles/${BATTLE}`, (route) =>
+      failing ? json(route, 503, problem(503, 'service_unavailable')) : json(route, 200, battle({ status: 'ONGOING', sides, turn_user_id: LEON, turn_expires_at: at(30_000), version: 4 })),
+    )
+    await withGroveConfig(page)
+    await signIn(page, api, `/combat/battles/${BATTLE}`)
+    await expect(page.getByRole('button', { name: 'Not your turn' })).toBeDisabled()
+
+    failing = true
+    await expect(page.getByText('Live updates paused.')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByRole('heading', { name: /You vs/ })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'This battle could not be loaded' })).toHaveCount(0)
+
+    failing = false
+    await expect(page.getByText('Live updates paused.')).toHaveCount(0, { timeout: 10_000 })
   })
 })
 
