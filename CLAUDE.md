@@ -1,0 +1,4 @@
+# Working instructions
+
+Read and follow [AGENTS.md](AGENTS.md) before planning or changing this repository.
+It is the canonical source of working instructions.
