@@ -369,7 +369,7 @@ test.describe('fixture: raids', () => {
     api.set(`GET /raid/v1/raids/${RAID}/leaderboard`, (route) => json(route, 200, { raid_id: RAID, items: [{ user_id: LEON, tamagotchi_id: MOSS, damage_dealt: 3800, joined_at: at(-HOUR) }], next_cursor: null, retrieved_at: at(0), raid_version: 9 }))
     await signIn(page, api, `/combat/raids/${RAID}`)
 
-    await expect(page.getByText('Time ran out', { exact: true }).first()).toBeVisible()
+    await expect(page.getByText('Time ran out', { exact: true })).toBeVisible()
     await expect(page.getByText('Defeat rewards apply only if this boss defines them.')).toBeVisible()
     await expect(page.getByText('None for a timeout')).toBeVisible()
     await expect(page.getByRole('button', { name: /Attack/ })).toHaveCount(0)

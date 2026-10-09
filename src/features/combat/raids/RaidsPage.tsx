@@ -77,6 +77,7 @@ export default function RaidsPage() {
 
       <section className={styles.section} aria-labelledby="raids-heading">
         <h2 id="raids-heading">{verifiedGuild ? `${verifiedGuild.name} raids` : 'Recent raids'}</h2>
+        {!verifiedGuild && <p className={styles.muted}>Only members of a raid&apos;s guild can open its details.</p>}
         {raids.isPending ? (
           <p className={styles.muted}>Loading raids…</p>
         ) : raids.isError ? (

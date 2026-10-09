@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { Link, useParams } from 'react-router'
 import { useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Flag, RefreshCw, Swords, Zap } from 'lucide-react'
+import { ArrowLeft, Flag, RefreshCw, Swords, Trophy, Zap } from 'lucide-react'
 import { describeApiError, isApiError } from '../../../api/errors.ts'
 import { apiPath } from '../../../api/http.ts'
 import { useCommand } from '../../../api/useCommand.ts'
@@ -39,14 +39,15 @@ function BattleView({ battleId }: { battleId: string }) {
 
   if (battle.isPending) return <main className={styles.page}><p className={styles.muted}>Loading battle…</p></main>
   if (battle.isError) {
+    const status = isApiError(battle.error) ? battle.error.status : null
     return (
       <main className={styles.page}>
         <CombatNav />
         <LoadProblem
-          title={isApiError(battle.error) && battle.error.status === 404 ? 'This battle is not available' : 'This battle could not be loaded'}
-          message={describeApiError(battle.error)}
+          title={status === 403 ? 'This battle is between other players' : status === 404 ? 'This battle is not available' : 'This battle could not be loaded'}
+          message={status === 403 ? 'Only the two players in a battle can open it.' : describeApiError(battle.error)}
           correlationId={isApiError(battle.error) ? battle.error.correlationId : null}
-          onRetry={() => void battle.refetch()}
+          onRetry={status === 403 || status === 404 ? undefined : () => void battle.refetch()}
         />
       </main>
     )
@@ -63,6 +64,7 @@ function Arena({ me, battle, refreshing, onRefresh }: { me: string; battle: Batt
   const theirSide = battle.sides.find((side) => side.user_id === opponentId)
   const terminal = battleIsTerminal(battle.status)
   const myTurn = battle.status === 'ONGOING' && battle.turn_user_id === me
+  const outcome = battle.status !== 'COMPLETED' ? null : battle.winner_id === me ? 'won' : battle.loser_id === me ? 'lost' : null
   const update = (next: Battle) => queryClient.setQueryData(battleKeys.battle(me, battle.battle_id), next)
 
   const respond = useCommand<Battle>({
@@ -99,7 +101,7 @@ function Arena({ me, battle, refreshing, onRefresh }: { me: string; battle: Batt
           <h1 id="battle-title">
             You vs <PersonName userId={opponentId} />
           </h1>
-          <p className={styles.turn} data-mine={myTurn || undefined} role="status">
+          <p className={styles.turn} data-mine={myTurn || undefined} data-outcome={outcome ?? undefined} role="status">
             {battle.status === 'ONGOING' ? (
               myTurn ? (
                 <>
@@ -111,7 +113,15 @@ function Arena({ me, battle, refreshing, onRefresh }: { me: string; battle: Batt
                 </>
               )
             ) : battle.status === 'COMPLETED' ? (
-              battle.winner_id === me ? 'You won' : battle.loser_id === me ? 'You lost' : 'Finished'
+              outcome === 'won' ? (
+                <>
+                  <Trophy size={22} aria-hidden="true" /> You won
+                </>
+              ) : outcome === 'lost' ? (
+                'You lost'
+              ) : (
+                'Finished'
+              )
             ) : (
               <>
                 {BATTLE_STATUS_LABEL[battle.status]}
@@ -245,7 +255,12 @@ function Side({ label, side, own = false, me, highlight }: { label: ReactNode; s
       <p className={styles.sideLabel}>{label}</p>
       <div className={styles.sideArt}>
         {own && views.length > 0
-          ? views.map((view) => <CreatureArt key={view.creature.id} src={view.artUrl} alt={view.creature.name} size={88} />)
+          ? views.map((view) => (
+              <figure key={view.creature.id} className={styles.member}>
+                <CreatureArt src={view.artUrl} alt="" size={88} />
+                <figcaption>{view.creature.name}</figcaption>
+              </figure>
+            ))
           : [0, 1].map((index) => <CreatureArt key={index} src={null} alt={own ? 'Your creature' : 'Opponent creature'} size={88} />)}
       </div>
       {side ? <HpBar current={side.current_hp} max={side.max_hp} label="Lineup" /> : <p className={styles.muted}>Lineup not chosen yet.</p>}

@@ -42,10 +42,16 @@ function RaidView({ raidId }: { raidId: string }) {
   const raid = useRaid(user.user_id, raidId)
   if (raid.isPending) return <main className={styles.page}><p className={styles.muted}>Loading raid…</p></main>
   if (raid.isError) {
+    const status = isApiError(raid.error) ? raid.error.status : null
     return (
       <main className={styles.page}>
         <CombatNav />
-        <LoadProblem title="This raid could not be loaded" message={describeApiError(raid.error)} correlationId={isApiError(raid.error) ? raid.error.correlationId : null} onRetry={() => void raid.refetch()} />
+        <LoadProblem
+          title={status === 403 ? 'This raid belongs to another guild' : status === 404 ? 'This raid is not available' : 'This raid could not be loaded'}
+          message={status === 403 ? 'Only members of the raiding guild can open it.' : describeApiError(raid.error)}
+          correlationId={isApiError(raid.error) ? raid.error.correlationId : null}
+          onRetry={status === 403 || status === 404 ? undefined : () => void raid.refetch()}
+        />
       </main>
     )
   }
@@ -203,7 +209,7 @@ function Encounter({ me, raid }: { me: string; raid: Raid }) {
 
             {!active && (
               <div className={styles.outcome}>
-                <p className={styles.outcomeTitle}>{RAID_STATUS_LABEL[raid.status]}</p>
+                <h2 className={styles.outcomeTitle}>Outcome</h2>
                 <p>{raidRewardMeaning(raid.status)}</p>
                 <dl className={styles.statusList}>
                   <div>

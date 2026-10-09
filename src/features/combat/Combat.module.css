@@ -167,19 +167,28 @@
   font-weight: 600;
 }
 
-.turn[data-mine] {
+.turn[data-mine],
+.turn[data-outcome='won'] {
   background: var(--color-highlight-soft);
   color: var(--color-on-highlight);
+}
+
+.turn[data-outcome] {
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-display);
+  font-size: var(--text-section);
+  font-weight: 700;
 }
 
 .sides {
   display: grid;
   gap: var(--space-3);
-  align-items: center;
+  align-items: stretch;
 }
 
 .versus {
   justify-self: center;
+  align-self: center;
   font-family: var(--font-display);
   font-weight: 800;
   font-size: var(--text-section);
@@ -188,6 +197,7 @@
 
 .side {
   display: grid;
+  align-content: space-between;
   gap: var(--space-2);
   padding: var(--space-3);
   border-radius: var(--radius-sheet);
@@ -207,6 +217,21 @@
 .sideArt {
   display: flex;
   gap: var(--space-2);
+}
+
+.member {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+  max-width: 112px;
+}
+
+.member figcaption {
+  font-size: var(--text-label);
+  font-weight: 600;
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .controls,
@@ -411,12 +436,14 @@
   align-items: center;
   gap: var(--space-2);
   min-height: 44px;
+  padding-inline-end: var(--space-2);
   border-bottom: var(--line) solid var(--color-line);
 }
 
 .ranks li[data-me] {
   font-weight: 700;
   background: var(--color-primary-soft);
+  border-radius: var(--radius-control);
 }
 
 .rank {
