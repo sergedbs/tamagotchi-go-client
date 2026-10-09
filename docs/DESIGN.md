@@ -2,7 +2,7 @@
 
 ## Modern handheld companion
 
-Sergiu delegated the direction choice. Use a tactile, illustrated companion game:
+The user delegated the direction choice. Use a tactile, illustrated companion game:
 creatures are personal, map exploration is clear and combat feels energetic.
 The interface combines a compact device-like navigation rail, confident organic
 creature silhouettes and restrained physical depth. It is not a literal handheld

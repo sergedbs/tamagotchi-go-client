@@ -2,6 +2,9 @@
 
 ## Data ownership and prerequisites
 
+Use the existing isolated stack and operator handoff in [ENVIRONMENT.md](ENVIRONMENT.md)
+before considering new infrastructure. Revalidate retained fixtures before reuse.
+
 Populate a dedicated, explicitly named test environment through Gateway APIs.
 Do not query/write owner databases, purge volumes, replace existing credentials
 or create fixtures automatically on client startup. The frontend has no server

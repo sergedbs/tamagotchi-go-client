@@ -6,7 +6,7 @@ Build a real Tamagotchi Go web client that makes creature care, exploration,
 relationships and combat understandable. It also supports reproducible demos,
 administration of exposed resources and diagnosis of distributed failures.
 
-Sergiu delegated unspecified choices on 2026-10-09. Selected defaults:
+The user delegated unspecified choices on 2026-10-09. Selected defaults:
 responsive web on desktop and mobile, all current player capabilities, separate
 supported admin workspace, modern handheld companion art direction, English
 first, light theme first and API-based fixtures in a dedicated test environment.

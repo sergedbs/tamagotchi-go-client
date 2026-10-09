@@ -15,7 +15,7 @@ Read [AGENTS.md](AGENTS.md), then these documents in order:
 3. [API behaviour and endpoint reference](docs/API.md)
 4. [Payload definitions](docs/PAYLOADS.md), as referenced by each feature
 5. [Visual system](docs/DESIGN.md) and [supplied guidelines](docs/VISUAL_GUIDELINES.md)
-6. [Fixtures and validation](docs/VALIDATION.md)
+6. [Backend environment](docs/ENVIRONMENT.md) and [fixtures and validation](docs/VALIDATION.md)
 7. [Implementation order and kickoff prompt](docs/IMPLEMENTATION.md)
 
 The documents are self-contained. Backend source access is not required to build
@@ -29,7 +29,8 @@ and npm. Pin compatible dependency versions and create the lockfile during the
 first implementation slice.
 
 The finished client must run with a Gateway address and public configuration.
-Backend infrastructure is an external prerequisite. Data population is a separate,
+The existing isolated acceptance stack is the preferred local backend target;
+see [environment setup](docs/ENVIRONMENT.md). Data population is a separate,
 explicit API-based fixture command against a dedicated test environment.
 
 Specification check (Python 3, no installed dependencies):

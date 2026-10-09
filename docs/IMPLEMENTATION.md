@@ -7,6 +7,10 @@ no UI, dependency installation, runtime fixtures or backend mutation in this
 session. No remote created. The chosen product/stack/art direction are settled.
 Begin the next session in Plan mode and plan the first slice from these files.
 
+Reuse the existing isolated backend described in [ENVIRONMENT.md](ENVIRONMENT.md).
+Do not bootstrap duplicate containers. Existing fixtures are a starting point;
+realistic client dataset preparation remains an explicit, resumable API task.
+
 ## Ordered slices and acceptance
 
 Complete each slice, checks, rendered review and documentation before advancing.
@@ -64,7 +68,7 @@ Copy this into a new session opened in this repository, initially in Plan mode:
 Plan and then implement Tamagotchi Go Client in this repository.
 
 First read AGENTS.md and README.md, then docs/PRODUCT.md, ARCHITECTURE.md,
-API.md, DESIGN.md, VISUAL_GUIDELINES.md, VALIDATION.md and IMPLEMENTATION.md.
+API.md, DESIGN.md, VISUAL_GUIDELINES.md, ENVIRONMENT.md, VALIDATION.md and IMPLEMENTATION.md.
 Use PAYLOADS.md and CONTRACT_SNAPSHOT.json for exact API fields and provenance.
 Inspect current Git status and existing client files before changing anything.
 
