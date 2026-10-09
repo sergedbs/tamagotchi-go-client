@@ -60,7 +60,36 @@ Manual curl through the dev proxy: `/api/health` 200 JSON, `/api/users/v1/users/
 401 problem+json, unknown service 404 problem+json, closed upstream 502 problem+json,
 `/creatures` deep link serves index.html.
 
-Next: slice 2 visual proof of the creature home.
+### Slice 2 - creature home visual proof (complete)
+
+Commits d727e1b (tokens, fonts, WCAG contrast unit test), 79ff2d1 (authored
+package presentations, sprite catalog, resolver), a4e986d (navigation shell,
+credits view), c046177 (creature home and dev-only design preview).
+
+- Tokens follow DESIGN.md; every text/control colour pair is unit-tested for AA.
+- Fonts from the official sources with licenses (`public/assets/fonts/README.md`);
+  Bricolage subset to Latin WOFF2, Source Sans 3 unmodified (reserved font name).
+- Lythbound pack only: Mossling `lythbound/wolfren/green`, Ripple
+  `lythbound/laguna/blue`; hero 184-240 px, cards 80 px; labelled outlined fallback.
+- Two authored packages in `src/packages/authored/` (one source for fixtures and
+  UI); unknown package/config versions render API facts and disable care.
+- `/__preview/creatures?state=...` exists only in dev builds (grep of `dist/` finds
+  no preview code). States: default, loading, long name, empty, unknown package,
+  care pending/done/cooldown/error, API unavailable.
+- `/credits` shows the exact artwork attribution, font and icon licenses.
+
+Checks: `npm run lint`, `npm run typecheck`, `npm run test` (71 unit tests,
+coverage gate 80% lines on api/config/packages), `npm run build`,
+`npm run test:e2e` (15 fixture tests: no overflow at 360/390/768/1440, keyboard
+reach, care feedback, unknown package, axe WCAG 2.1 AA on four states, credits),
+`python3 tools/check_spec.py`. Rendered review: three rounds at 360x780, 390x844,
+768x1024 and 1440x900; five-point critique kept privately under `.local/reviews/`.
+
+Limitations: creature routes still show "not part of this build" until auth and
+real collection reads land; the preview simulates care locally and is not evidence
+of integration.
+
+Next: slice 3 transport, session and package-aware authentication.
 
 ## Definition of done
 
