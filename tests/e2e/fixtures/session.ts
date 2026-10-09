@@ -29,7 +29,7 @@ export async function withGroveConfig(page: Page) {
 }
 
 export async function signIn(page: Page, api: Map<string, ApiHandler>, next = '/creatures') {
-  api.set('GET /registry/v1/packages', packagesPage)
+  if (!api.has('GET /registry/v1/packages')) api.set('GET /registry/v1/packages', packagesPage)
   api.set('POST /users/v1/users/login', (route) => json(route, 200, { access_token: token(), refresh_token: 'r1', token_type: 'Bearer', expires_in: 900 }))
   api.set('GET /users/v1/users/me', (route) => json(route, 200, ME))
   await page.goto(`/login?next=${encodeURIComponent(next)}`)
