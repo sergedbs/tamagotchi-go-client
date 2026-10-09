@@ -4,6 +4,7 @@ import { LogOut } from 'lucide-react'
 import { Button } from '../../components/Button.tsx'
 import { usePublicPackages } from '../auth/packagesApi.ts'
 import { useAuthenticated, useSessionStore } from '../auth/sessionContext.ts'
+import { JoinPackage } from './JoinPackage.tsx'
 import styles from './AccountPage.module.css'
 
 export default function AccountPage() {
@@ -26,6 +27,7 @@ export default function AccountPage() {
             <li key={id}>{nameOf(id)}</li>
           ))}
         </ul>
+        <JoinPackage user={user} />
       </section>
       <section aria-labelledby="session-heading" className={styles.section}>
         <h2 id="session-heading">Session</h2>

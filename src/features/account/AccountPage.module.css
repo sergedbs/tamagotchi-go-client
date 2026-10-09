@@ -43,3 +43,14 @@
 .list li + li {
   border-top: var(--line) solid var(--color-line);
 }
+
+.join {
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 520px;
+}
+
+.join button {
+  justify-self: start;
+}
