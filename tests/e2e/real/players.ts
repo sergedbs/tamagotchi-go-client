@@ -29,6 +29,21 @@ export async function goTo(page: Page, name: 'Creatures' | 'Explore' | 'Social' 
   await page.getByRole('navigation', { name: 'Main' }).filter({ visible: true }).getByRole('link', { name }).click()
 }
 
+/** Utility destinations in the shell (client-side, keeps the session). */
+export async function openUtility(page: Page, name: 'Notifications' | 'Account') {
+  await page.getByRole('navigation', { name: 'Utilities' }).getByRole('link', { name }).click()
+}
+
+/** Joins the first other onboardable package and waits for its server-created starter. */
+export async function joinAnotherPackage(page: Page) {
+  await openUtility(page, 'Account')
+  const select = page.getByLabel('Join another package')
+  await expect(select.locator('option')).not.toHaveCount(1)
+  await select.selectOption({ index: 1 })
+  await page.getByRole('button', { name: 'Join package' }).click()
+  await expect(page.getByText(/is now in your collection/)).toBeVisible({ timeout: 60_000 })
+}
+
 /** Opens a profile through the in-app lookup (client-side, keeps the session). */
 export async function openProfile(page: Page, userId: string) {
   await goTo(page, 'Social')
