@@ -2,9 +2,23 @@
 
 Responsive player and administration client for Tamagotchi Go.
 
-This checkout contains the approved implementation specification. Application
-implementation starts in the next session. No runtime application, demo accounts
-or populated database is included yet. No remote repository has been created.
+Implementation is in progress slice by slice; see
+[implementation progress](docs/IMPLEMENTATION.md). No demo accounts or populated
+database are included. No remote repository has been created.
+
+## Run locally
+
+```sh
+npm ci
+cp .env.example .env.local   # set GATEWAY_UPSTREAM, e.g. http://127.0.0.1:13000
+npm run dev                  # http://localhost:5173, /api proxied to Gateway
+```
+
+Checks: `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build`,
+`npm run test:e2e` (identified browser fixtures, system Chrome). Real-target tests
+need an explicit target name and confirmation:
+`E2E_REAL_TARGET=local-acceptance E2E_CONFIRM_TEST_TARGET=local-acceptance npm run test:e2e:real`.
+Runtime settings live in `public/client-config.json` (public values only).
 
 ## Start here
 

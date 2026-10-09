@@ -2,10 +2,9 @@
 
 ## Current state
 
-Local repository prepared on 2026-10-09. Specification and contract snapshot only;
-no UI, dependency installation, runtime fixtures or backend mutation in this
-session. No remote created. The chosen product/stack/art direction are settled.
-Begin the next session in Plan mode and plan the first slice from these files.
+Implementation started 2026-10-09 on local branch `feat/client-app` (not merged,
+no remote). Product, stack and art direction are settled. Progress, exact checks
+and the next step are recorded below.
 
 Reuse the existing isolated backend described in [ENVIRONMENT.md](ENVIRONMENT.md).
 Do not bootstrap duplicate containers. Existing fixtures are a starting point;
@@ -41,7 +40,27 @@ the runtime with fake success or change server contracts to make tests pass.
 For each completed slice record source commit, commands, unit/browser results,
 real target/image evidence, rendered review and the next bounded step. Keep private
 reports and credentials under .local/. Record only redacted links/counts here.
-No business slice is complete at this snapshot.
+
+Environment notes: the machine runs Node 26.10 (spec target Node 24 LTS; `.nvmrc`
+and CI use 24, `engines` is `>=24`). TypeScript is 6.0 because typescript-eslint
+does not yet support 7. Playwright uses the installed Chrome channel.
+
+### Slice 1 - bootstrap (complete)
+
+Commits 9d50605, 95aecb4, 2d235b9 (setup) and 2727a43 (CI). Exact pinned
+dependencies with package-lock.json; runtime config validated before render
+(strict schema, unknown keys refused); Vite proxy removes `/api` once, never
+follows redirects and answers `502 application/problem+json` when Gateway is down.
+
+Checks: fresh `npm ci`; `npm run lint`; `npm run typecheck`; `npm run test`
+(26 unit tests); `npm run build`; `npm run test:e2e` (3 fixture tests);
+`npm run test:e2e:real` against local-acceptance (3 read-only tests: health/ready,
+401/404 stay Problem JSON, public package/type reads); `python3 tools/check_spec.py`.
+Manual curl through the dev proxy: `/api/health` 200 JSON, `/api/users/v1/users/me`
+401 problem+json, unknown service 404 problem+json, closed upstream 502 problem+json,
+`/creatures` deep link serves index.html.
+
+Next: slice 2 visual proof of the creature home.
 
 ## Definition of done
 
