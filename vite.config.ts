@@ -11,7 +11,14 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
-    server: { host: 'localhost', port: 5173, strictPort: true, proxy },
+    server: {
+      host: 'localhost',
+      port: 5173,
+      strictPort: true,
+      proxy,
+      // Test reports and private output must not trigger reloads of open pages.
+      watch: { ignored: ['**/playwright-report/**', '**/test-results/**', '**/coverage/**', '**/.local/**'] },
+    },
     preview: { host: 'localhost', port: 4173, strictPort: true, proxy },
     build: { sourcemap: true },
     test: {
