@@ -56,3 +56,21 @@
     grid-template-columns: 160px 1fr;
   }
 }
+
+.license summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding-block: var(--space-2);
+}
+
+.license pre {
+  margin: var(--space-2) 0 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sheet);
+  background: var(--color-surface);
+  border: var(--line) solid var(--color-line);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: var(--text-label);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

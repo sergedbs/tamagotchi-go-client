@@ -65,5 +65,8 @@ test.describe('fixture: credits', () => {
     await expect(page.getByRole('link', { name: 'Creative Commons Attribution 4.0 International' })).toBeVisible()
     await expect(page.getByRole('link', { name: 'full license text' })).toHaveAttribute('href', '/assets/creatures/lythbound/LICENSE.txt')
     await expect(page.getByText('PNG bytes unchanged; directory and file names lowercased.')).toBeVisible()
+    await expect(page.getByText(/released under the MIT License\. Copyright \(c\) 2026 Tamagotchi Go contributors\./)).toBeVisible()
+    await page.getByText('MIT License text').click()
+    await expect(page.getByText(/Permission is hereby granted, free of charge/)).toBeVisible()
   })
 })

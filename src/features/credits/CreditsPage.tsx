@@ -1,6 +1,10 @@
+import mitLicense from '../../../LICENSE?raw'
 import { useSpriteCatalog } from '../../packages/spriteCatalog.ts'
 import styles from './CreditsPage.module.css'
 
+const REPOSITORY_URL = 'https://github.com/sergedbs/tamagotchi-go-client'
+// The repository LICENSE file is the single source for the text shown here.
+const COPYRIGHT = mitLicense.split('\n').find((line) => line.startsWith('Copyright')) ?? ''
 const LICENSE_TEXT_URL = '/assets/creatures/lythbound/LICENSE.txt'
 const ARTIST_URL = 'https://jackalune.itch.io/'
 const CONCEPT_ARTIST_URL = 'https://toripng.carrd.co/'
@@ -11,6 +15,19 @@ export default function CreditsPage() {
   return (
     <main className={styles.credits}>
       <h1>Credits</h1>
+      <section aria-labelledby="app-license">
+        <h2 id="app-license">Tamagotchi Go client</h2>
+        <p>
+          The client&apos;s source code is released under the MIT License. {COPYRIGHT}.{' '}
+          <a href={REPOSITORY_URL} rel="noreferrer" target="_blank">
+            Source code
+          </a>
+        </p>
+        <details className={styles.license}>
+          <summary>MIT License text</summary>
+          <pre>{mitLicense.trim()}</pre>
+        </details>
+      </section>
       <section aria-labelledby="art-credits">
         <h2 id="art-credits">Creature artwork</h2>
         {catalog.isError ? (
