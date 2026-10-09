@@ -1,0 +1,78 @@
+.pending {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-3) var(--gutter);
+  display: grid;
+  gap: var(--space-5);
+}
+
+.stage {
+  position: relative;
+  overflow: hidden;
+  min-height: 248px;
+  border-radius: var(--radius-stage);
+  display: grid;
+  place-items: end center;
+}
+
+.egg {
+  position: relative;
+  z-index: 1;
+  width: 120px;
+  height: 150px;
+  margin-bottom: 16px;
+  transform-origin: 50% 90%;
+}
+
+.wobble {
+  animation: wobble 2.4s ease-in-out infinite;
+}
+
+.shell {
+  fill: #fbf6e8;
+  stroke: var(--color-ink);
+  stroke-width: 3;
+}
+
+.spot {
+  fill: var(--color-highlight);
+  opacity: 0.85;
+}
+
+.shadow {
+  fill: rgb(24 48 44 / 0.16);
+}
+
+.copy {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+}
+
+.copy p {
+  color: var(--color-ink-muted);
+  max-width: 52ch;
+}
+
+@keyframes wobble {
+  0%,
+  60%,
+  100% {
+    transform: rotate(0deg);
+  }
+  70% {
+    transform: rotate(-5deg);
+  }
+  80% {
+    transform: rotate(4deg);
+  }
+  90% {
+    transform: rotate(-2deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wobble {
+    animation: none;
+  }
+}

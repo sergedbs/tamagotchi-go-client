@@ -1,0 +1,23 @@
+.center {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-5) var(--gutter);
+}
+
+.noPrimary {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-5) var(--gutter);
+  display: grid;
+  gap: var(--space-5);
+}
+
+.intro {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.intro p {
+  color: var(--color-ink-muted);
+  max-width: 60ch;
+}

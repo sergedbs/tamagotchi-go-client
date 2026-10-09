@@ -132,8 +132,11 @@
 }
 
 .feedback {
-  min-height: 1.45em;
   font-size: var(--text-label);
+}
+
+.feedback:empty {
+  margin-top: calc(-1 * var(--space-3));
 }
 
 .feedback p + p {

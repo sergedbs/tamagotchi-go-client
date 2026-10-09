@@ -69,6 +69,22 @@
   color: var(--color-ink-muted);
 }
 
+.details {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--touch-target);
+  margin: calc(-1 * var(--space-2)) 0 calc(-1 * var(--space-3));
+  font-size: var(--text-label);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.details:hover {
+  text-decoration: underline;
+}
+
 .controls {
   display: grid;
   gap: var(--space-5);

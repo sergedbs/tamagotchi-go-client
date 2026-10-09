@@ -10,6 +10,7 @@ import { ShellOrPublic } from './PublicFrame.tsx'
 
 const RegisterPage = lazy(() => import('../features/auth/RegisterPage.tsx'))
 const AccountPage = lazy(() => import('../features/account/AccountPage.tsx'))
+const CreaturesPage = lazy(() => import('../features/creatures/CreaturesPage.tsx'))
 const CreditsPage = lazy(() => import('../features/credits/CreditsPage.tsx'))
 
 // Design preview: compiled into development builds only.
@@ -26,7 +27,7 @@ export function AppRoutes() {
         <Route element={<RequireSession />}>
           <Route element={<AppShell />}>
             <Route index element={<Navigate to="/creatures" replace />} />
-            <Route path="creatures" element={<NotInThisBuild title="Creatures" />} />
+            <Route path="creatures" element={<CreaturesPage />} />
             <Route path="explore" element={<NotInThisBuild title="Explore" />} />
             <Route path="social" element={<NotInThisBuild title="Social" />} />
             <Route path="combat/*" element={<NotInThisBuild title="Combat" />} />
