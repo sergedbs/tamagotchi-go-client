@@ -31,6 +31,6 @@ code before changes. Preserve unrelated work.
   issue numbers, AI co-author trailers, credentials or generated reports in Git.
 - Local setup and small commits are authorized. Remote creation, pushes, merges,
   publication, server changes and runtime/data changes need the user's scope.
-  The current repository has no remote and no assumed live branch policies.
+  Inspect current remote branch policies before delivery; do not assume approvals.
 - Maintain IMPLEMENTATION.md with completed slices, exact checks, limitations
   and the next step. Ask only for blockers not settled in these documents.

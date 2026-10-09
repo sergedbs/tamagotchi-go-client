@@ -5,7 +5,7 @@ Responsive player and administration client for Tamagotchi Go.
 Implementation progress, checks and known backend gaps are in
 [implementation progress](docs/IMPLEMENTATION.md); backend owners start with the
 [backend handoff](docs/BACKEND_HANDOFF.md). No demo accounts or populated
-database are included. No remote repository has been created.
+database are included. Repository: [sergedbs/tamagotchi-go-client](https://github.com/sergedbs/tamagotchi-go-client).
 
 ## Run locally
 

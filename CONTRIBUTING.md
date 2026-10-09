@@ -3,8 +3,8 @@
 Branch from develop using feat/, fix/, docs/ or chore/. Use short conventional
 subjects: type(scope): description. Keep coherent commits and preserve their
 history with merge commits for work and release PRs. Every remote develop/main
-change uses a PR once the private remote exists; inspect actual policies then.
-This local-only specification bootstrap needs no invented remote issue.
+change uses a PR after the initial repository publication. Inspect actual policies
+before merging. Do not invent issue numbers.
 
 Update the relevant specification when a verified interface or setup changes.
 Link real issues when available. Do not modify backend repositories as part of a
