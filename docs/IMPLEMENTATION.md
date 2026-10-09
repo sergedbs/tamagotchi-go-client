@@ -1,5 +1,21 @@
 # Implementation handoff
 
+### After the final review (user feedback, 2026-10-09)
+
+- Player ID: Account, the Social lookup and profiles show a copyable player ID
+  (commit 6d736cb). The lookup hint pointed at an ID that was not shown anywhere.
+- Location "not updated": a client issue. Probing the live Map service showed
+  `STALE` means the reading's timestamp is older than 60 s (nothing is stored),
+  not that a newer location exists, and an observation expires 60 s after its own
+  timestamp. The client sent the device fix time, which macOS can report minutes
+  old, and showed a wrong message. It now stamps the observation when the player
+  presses Share, measures preview age from delivery, asks to locate again after
+  30 s, and explains STALE, OUT_OF_ORDER and `invalid_timestamp` correctly
+  (commit 069749a). Recorded in API.md.
+- The real raid test now deletes its synthetic guild; leftover synthetic guilds
+  (12) and occurrences were removed with private cleanup tools.
+- `LICENSE` (MIT) committed (f12a129).
+
 ## Current state
 
 Implementation started 2026-10-09 on local branch `feat/client-app` (not merged,
@@ -437,9 +453,10 @@ notice no longer overlaps it.
 ## Current state
 
 All twelve slices are complete on branch `feat/client-app` (not merged or
-pushed). Checks at the end: lint, typecheck, 153 unit tests, build, 73 fixture
-tests, 12 real tests on the dev server and on the packaged container,
-`python3 tools/check_spec.py`.
+pushed). Checks at the end: lint, typecheck, 153 unit tests, build, 74 fixture
+tests, 12 real tests on the dev server (and on the packaged container before the
+last fixes), `python3 tools/check_spec.py`. Server-side observations for the
+backend owners are collected in [backend handoff](BACKEND_HANDOFF.md).
 
 Known limitations and backend gaps:
 
@@ -447,6 +464,8 @@ Known limitations and backend gaps:
 - Guild invitations worked between friends; the UM stranger relationship version
   gap was not hit and remains documented.
 - Battle turn timers are short; an unanswered turn ends the battle server-side.
+- Map readings are accepted only within 60 s of their timestamp and expire 60 s
+  after it, so a shared location is visible for at most a minute.
 - Package art published by the fixture CLI is bound to `public_client_origin`.
 - Scenario fixtures and the realistic demo dataset are not built (need their own
   authorization). Browser push stays disabled (no provider configuration).

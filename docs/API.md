@@ -250,6 +250,7 @@ produce neutral wording/list navigation, never a forged route or app crash.
 | Gateway metrics and domain probes are infrastructure routes | Do not expose internal metrics/service hosts in ordinary player UI |
 | Gateway/Shared preparation PRs require review | Source specification is not proof those changes are published |
 | Live Registry (acceptance, 2026-10-09) refuses package PATCH and boss PUT without Idempotency-Key, though the table lists only If-Match | Client sends both; one key per logical edit, reused only by an explicit retry. Recheck when Registry is corrected |
+| Live Map (acceptance, 2026-10-09): STALE means the reading's timestamp is more than 60 s old (nothing stored, current_timestamp null); OUT_OF_ORDER means older than the stored reading; more than about 30 s ahead is 400 invalid_timestamp; expires_at is timestamp + 60 s | Client stamps an observation when it is shared, re-locates previews older than 30 s and explains each reason |
 
 ## Examples
 

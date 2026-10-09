@@ -3,7 +3,8 @@
 Responsive player and administration client for Tamagotchi Go.
 
 Implementation progress, checks and known backend gaps are in
-[implementation progress](docs/IMPLEMENTATION.md). No demo accounts or populated
+[implementation progress](docs/IMPLEMENTATION.md); backend owners start with the
+[backend handoff](docs/BACKEND_HANDOFF.md). No demo accounts or populated
 database are included. No remote repository has been created.
 
 ## Run locally
