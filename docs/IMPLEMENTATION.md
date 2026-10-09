@@ -118,7 +118,36 @@ and mobile crop fixed).
 Real-run note: each real run registers one synthetic `e2e-<run>-auth` user in the
 bootstrap package; credentials stay in `.local/real-runs/`.
 
-Next: slice 4 real collection, care, primary selection and holders.
+### Slice 4 - collection, care, primary and holders (complete)
+
+Commits b0a9306 (collection, starter onboarding, care), d25503d (primary
+selection, release, holders), 11f7ce6 (tests).
+
+- Collection pages use limit 25 and a visible Load more; primary from page one,
+  secondaries de-duplicated by id. Empty collections poll every 2 s for at most
+  30 s while visible, then offer Check again; the browser never mints.
+- Art resolves only through the public Registry asset manifest for the exact
+  package/config_version; http is accepted only on the page origin, https otherwise.
+- Care sends `{"action": ...}` with a UUIDv7 key; the returned creature replaces
+  every cached copy, the wallet is invalidated (never adjusted), currency stays
+  "pending". Cooldown, engaged and uncertain outcomes are distinct; uncertain care
+  is replayed only by "Retry same request" with the same key and body.
+- Primary change reads the PrimarySelection ETag and sends it as If-Match; 412
+  reloads and asks for review. Release uses the creature ETag; a changed creature
+  version drops the cached ETag instead of guessing. Sole origin owners cannot
+  release. Holder removal uses the Holders ETag and is offered to origin owners.
+
+Checks: `npm run lint`, `npm run typecheck`, `npm run test` (105 unit tests),
+`npm run build`, `npm run test:e2e` (29 fixture tests), `npm run test:e2e:real`
+(6 tests; a new synthetic player receives a real server-created starter, sees its
+details, holders and disabled release). Rendered review of real `/creatures` and
+`/creatures/:id` at 390x844 and 1440x900 (added the nameplate details link).
+
+Limitation: existing acceptance packages have no client presentation, so real care
+stays disabled for them by design; labelled real care needs the authored packages
+from slice 5 to be provisioned (requires explicit authorization).
+
+Next: slice 5 fixture CLI (preflight read-only; provisioning awaits authorization).
 
 ## Definition of done
 
