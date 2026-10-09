@@ -15,8 +15,11 @@ export interface SyntheticUser {
   packageId: string
 }
 
+const RUN_ID = process.env.E2E_RUN_ID ?? Date.now().toString(36)
+
+/** One run id per test process, so every synthetic user of a run shares a ledger. */
 export function runId(): string {
-  return process.env.E2E_RUN_ID ?? Date.now().toString(36)
+  return RUN_ID
 }
 
 export function bootstrapPackageId(): string {
