@@ -1,0 +1,118 @@
+/* Tamagotchi Go design tokens: modern handheld companion (docs/DESIGN.md). */
+:root {
+  /* Colour roles */
+  --color-bg: #f3f5ec;
+  --color-surface: #ffffff;
+  --color-surface-sunken: #e8eddf;
+  --color-ink: #18302c;
+  --color-ink-muted: #50645d;
+  --color-line: #d6ddd0;
+  --color-control-border: #7b8c84;
+  --color-primary: #256b53;
+  --color-primary-hover: #1e5c47;
+  --color-primary-pressed: #174a39;
+  --color-primary-soft: #dcebe0;
+  --color-on-primary: #ffffff;
+  --color-highlight: #e3a63b;
+  --color-highlight-soft: #f8e9c9;
+  --color-on-highlight: #18302c;
+  --color-danger: #9e352c;
+  --color-danger-soft: #f7e4e0;
+  --color-focus: #18302c;
+
+  /* Relationship: always paired with an icon and a label */
+  --color-friend: #2b7449;
+  --color-enemy: #9e3f2c;
+  --color-stranger: #536477;
+
+  /* Combat types: symbol colour on a light tint; text label carries meaning */
+  --type-flame: #a63f1a;
+  --type-flame-tint: #fbe3d7;
+  --type-nature: #2a6e30;
+  --type-nature-tint: #dff0d9;
+  --type-earth: #85602c;
+  --type-earth-tint: #f1e6d3;
+  --type-electric: #7a5d00;
+  --type-electric-tint: #f8efc4;
+  --type-water: #23679a;
+  --type-water-tint: #dbeaf5;
+  --type-shadow: #5a4987;
+  --type-shadow-tint: #e7e2f3;
+
+  /* Typography */
+  --font-display: 'Bricolage Grotesque', 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Source Sans 3', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --text-meta: 0.75rem;
+  --text-label: 0.875rem;
+  --text-body: 1rem;
+  --text-section: 1.25rem;
+  --text-title: 1.75rem;
+  --text-display: 2.25rem;
+  --leading-tight: 1.15;
+  --leading-body: 1.45;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Shape */
+  --radius-control: 8px;
+  --radius-sheet: 14px;
+  --radius-stage: 20px;
+  --line: 1px;
+  --line-strong: 2px;
+
+  /* Depth: short and neutral; keys get a physical lower edge */
+  --shadow-hud: 0 1px 2px rgb(24 48 44 / 0.08), 0 4px 12px rgb(24 48 44 / 0.08);
+  --shadow-key: 0 2px 0 rgb(24 48 44 / 0.18);
+  --shadow-key-primary: 0 2px 0 #123a2c;
+
+  /* Motion */
+  --duration-control: 150ms;
+  --duration-context: 240ms;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* Layout */
+  --touch-target: 44px;
+  --content-max: 1120px;
+  --rail-height: 64px;
+  --bottom-nav-height: 64px;
+  --gutter: var(--space-4);
+}
+
+@media (min-width: 900px) {
+  :root {
+    --gutter: var(--space-6);
+  }
+}
+
+/* Combat type roles, available to any element with data-type. */
+[data-type='FLAME'] {
+  --type-color: var(--type-flame);
+  --type-tint: var(--type-flame-tint);
+}
+[data-type='NATURE'] {
+  --type-color: var(--type-nature);
+  --type-tint: var(--type-nature-tint);
+}
+[data-type='EARTH'] {
+  --type-color: var(--type-earth);
+  --type-tint: var(--type-earth-tint);
+}
+[data-type='ELECTRIC'] {
+  --type-color: var(--type-electric);
+  --type-tint: var(--type-electric-tint);
+}
+[data-type='WATER'] {
+  --type-color: var(--type-water);
+  --type-tint: var(--type-water-tint);
+}
+[data-type='SHADOW'] {
+  --type-color: var(--type-shadow);
+  --type-tint: var(--type-shadow-tint);
+}

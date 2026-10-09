@@ -19,6 +19,8 @@ export default defineConfig(({ mode }) => {
       setupFiles: ['./tests/setup.ts'],
       include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.ts'],
       restoreMocks: true,
+      // Token tests read the raw stylesheet; other CSS stays unprocessed.
+      css: { include: [/tokens\.css/] },
       coverage: {
         provider: 'v8',
         include: ['src/api/**', 'src/app/config.ts', 'src/packages/**/*.ts'],
