@@ -15,11 +15,17 @@ import { formatDistance } from './geo.ts'
 import { GEO_FAILURE_TEXT, useGeolocation, type Fix } from './useGeolocation.ts'
 import styles from './Explore.module.css'
 
+// Receipt reasons as observed on the live Map service: STALE means the reading's
+// timestamp is older than the map accepts (about one minute), not that a newer
+// location exists; OUT_OF_ORDER means a newer reading is already stored.
 const NOT_UPDATED: Record<Exclude<LocationReceipt['reason'], 'ACCEPTED'>, string> = {
   DUPLICATE: 'This exact observation was already recorded; nothing changed.',
-  STALE: 'The server already holds a newer location for you; this one was not used.',
-  OUT_OF_ORDER: 'This observation is older than your latest one, so it was not used.',
+  STALE: 'That reading was too old for the map, which only accepts locations from the last minute. Locate again to share a fresh one.',
+  OUT_OF_ORDER: 'A newer location of yours is already on the map, so this older reading was not used.',
 }
+
+/** A preview older than this is located again rather than sent (the map accepts about 60 s). */
+const PREVIEW_MAX_AGE_MS = 30_000
 
 interface LocationControlProps {
   userId: string
@@ -63,6 +69,12 @@ export function LocationControl(props: LocationControlProps) {
 
   const submitPreview = () => {
     if (!preview) return
+    if (Date.now() - preview.receivedAt > PREVIEW_MAX_AGE_MS) {
+      onPreview(null)
+      setNotice('That reading is more than 30 seconds old. Locate again to share where you are now.')
+      return
+    }
+    setNotice(null)
     share.start({
       method: 'POST',
       path: '/map/v1/location',
@@ -70,7 +82,8 @@ export function LocationControl(props: LocationControlProps) {
         user_id: userId,
         lat: preview.lat,
         lng: preview.lng,
-        timestamp: preview.timestamp,
+        // A new observation is stamped when it is shared; an explicit retry reuses this body.
+        timestamp: new Date().toISOString(),
         ...(preview.accuracy_m !== null ? { accuracy_m: preview.accuracy_m } : {}),
       },
       idempotent: true,
@@ -88,7 +101,7 @@ export function LocationControl(props: LocationControlProps) {
       return
     }
     setNotice(null)
-    onPreview({ lat, lng, accuracy_m: null, timestamp: new Date().toISOString() })
+    onPreview({ lat, lng, accuracy_m: null, receivedAt: Date.now() })
   }
 
   return (
@@ -163,7 +176,11 @@ export function LocationControl(props: LocationControlProps) {
       {notice && <FormAlert title="Location not updated." tone="info">{notice}</FormAlert>}
       {share.error && (
         <FormAlert title={share.uncertain ? 'We could not confirm your location was saved.' : 'Location not saved.'} correlationId={isApiError(share.error) ? share.error.correlationId : null}>
-          <p>{describeApiError(share.error)}</p>
+          <p>
+            {isApiError(share.error) && share.error.code === 'invalid_timestamp'
+              ? 'The map refused the time of this reading. Check that your device clock is set automatically, then try again.'
+              : describeApiError(share.error)}
+          </p>
           {share.uncertain && (
             <Button variant="quiet" onClick={share.retry}>
               Retry same request

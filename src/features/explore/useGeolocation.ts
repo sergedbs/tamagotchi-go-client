@@ -4,8 +4,11 @@ export interface Fix {
   lat: number
   lng: number
   accuracy_m: number | null
-  /** When the device measured it; becomes the observation timestamp. */
-  timestamp: string
+  /**
+   * When the browser delivered the reading (ms). Device fix times can be minutes
+   * old (cached OS locations), so freshness is measured from delivery.
+   */
+  receivedAt: number
 }
 
 export type GeoFailure = 'insecure' | 'unsupported' | 'denied' | 'unavailable' | 'timeout'
@@ -35,7 +38,7 @@ export function useGeolocation() {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
           accuracy_m: Number.isFinite(position.coords.accuracy) ? Math.min(100_000, position.coords.accuracy) : null,
-          timestamp: new Date(Math.min(position.timestamp, Date.now())).toISOString(),
+          receivedAt: Date.now(),
         })
       },
       (error) => {

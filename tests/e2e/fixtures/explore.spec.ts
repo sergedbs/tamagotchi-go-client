@@ -107,7 +107,8 @@ test.describe('fixture: explore', () => {
       api.set(locationPath, (route) => json(route, 404, problem(404, 'not_found')))
       api.set('POST /map/v1/location', (route) => {
         writes.push(route.request())
-        return json(route, 200, { ok: true, accepted: false, reason: 'DUPLICATE', current_timestamp: null, expires_at: null })
+        // Live Map semantics: STALE is a reading older than about a minute; nothing is stored.
+        return json(route, 200, { ok: true, accepted: false, reason: 'STALE', current_timestamp: null, expires_at: null })
       })
       await signIn(page, api)
       await openExplore(page)
@@ -116,12 +117,40 @@ test.describe('fixture: explore', () => {
       await expect(page.getByText('Share this location?')).toBeVisible()
       await expect(page.getByText('47.02000, 28.83000')).toBeVisible()
       expect(writes).toHaveLength(0)
+      const clicked = Date.now()
       await page.getByRole('button', { name: 'Share', exact: true }).click()
-      await expect(page.getByText('This exact observation was already recorded; nothing changed.')).toBeVisible()
+      await expect(page.getByText(/That reading was too old for the map/)).toBeVisible()
       const body = writes[0]?.postDataJSON()
       expect(body).toMatchObject({ user_id: ME.user_id, lat: 47.02, lng: 28.83, accuracy_m: 12 })
       expect(body.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
+      // Stamped when shared, not with the device's (possibly cached) fix time.
+      expect(Math.abs(Date.parse(body.timestamp) - clicked)).toBeLessThan(5_000)
       expect(writes[0]?.headers()['idempotency-key']).toMatch(/^[0-9a-f-]{14}7/)
+    })
+
+    test('an old preview is located again instead of being sent', async ({ page, api }) => {
+      await page.clock.install()
+      await blankMap(page)
+      const writes: Request[] = []
+      api.set(locationPath, (route) => json(route, 404, problem(404, 'not_found')))
+      api.set('POST /map/v1/location', (route) => {
+        writes.push(route.request())
+        return json(route, 400, problem(400, 'invalid_timestamp'))
+      })
+      await signIn(page, api)
+      await openExplore(page)
+      await page.getByRole('button', { name: 'Share location' }).click()
+      await expect(page.getByText('Share this location?')).toBeVisible()
+      await page.clock.fastForward(31_000)
+      await page.getByRole('button', { name: 'Share', exact: true }).click()
+      await expect(page.getByText('That reading is more than 30 seconds old. Locate again to share where you are now.')).toBeVisible()
+      expect(writes).toHaveLength(0)
+
+      // A fresh reading is sent; a refused timestamp points at the device clock.
+      await page.getByRole('button', { name: 'Share location' }).click()
+      await page.getByRole('button', { name: 'Share', exact: true }).click()
+      await expect(page.getByText(/Check that your device clock is set automatically/)).toBeVisible()
+      expect(writes).toHaveLength(1)
     })
   })
 
