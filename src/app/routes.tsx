@@ -20,6 +20,8 @@ const GuildPage = lazy(() => import('../features/guilds/GuildPage.tsx'))
 const ChatPage = lazy(() => import('../features/guilds/chat/ChatPage.tsx'))
 const BattlesPage = lazy(() => import('../features/combat/battles/BattlesPage.tsx'))
 const BattlePage = lazy(() => import('../features/combat/battles/BattlePage.tsx'))
+const RaidsPage = lazy(() => import('../features/combat/raids/RaidsPage.tsx'))
+const RaidPage = lazy(() => import('../features/combat/raids/RaidPage.tsx'))
 const CreditsPage = lazy(() => import('../features/credits/CreditsPage.tsx'))
 
 // Design preview: compiled into development builds only.
@@ -47,6 +49,8 @@ export function AppRoutes() {
             <Route path="combat" element={<Navigate to="/combat/battles" replace />} />
             <Route path="combat/battles" element={<BattlesPage />} />
             <Route path="combat/battles/:id" element={<BattlePage />} />
+            <Route path="combat/raids" element={<RaidsPage />} />
+            <Route path="combat/raids/:id" element={<RaidPage />} />
             <Route path="notifications" element={<NotInThisBuild title="Notifications" />} />
             <Route path="account" element={<AccountPage />} />
           </Route>
