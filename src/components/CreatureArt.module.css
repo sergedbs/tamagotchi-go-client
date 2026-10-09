@@ -1,0 +1,39 @@
+.art {
+  display: block;
+  width: var(--art-size, 200px);
+  height: var(--art-size, 200px);
+  object-fit: contain;
+  image-rendering: auto;
+  user-select: none;
+}
+
+.fallback {
+  margin: 0;
+  width: var(--art-size, 200px);
+  height: var(--art-size, 200px);
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--space-1);
+}
+
+.silhouette {
+  width: 72%;
+  height: auto;
+  fill: none;
+  stroke: var(--color-ink-muted);
+  stroke-width: 2.5;
+  stroke-dasharray: 6 5;
+  stroke-linejoin: round;
+}
+
+.silhouette circle {
+  fill: var(--color-ink-muted);
+  stroke: none;
+}
+
+.caption {
+  font-size: var(--text-meta);
+  color: var(--color-ink-muted);
+  font-weight: 600;
+}

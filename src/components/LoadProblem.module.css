@@ -1,0 +1,49 @@
+.problem {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  border-radius: var(--radius-sheet);
+  background: var(--color-surface);
+  border: var(--line) solid var(--color-line);
+  max-width: 560px;
+}
+
+.icon {
+  color: var(--color-danger);
+}
+
+.problem p {
+  color: var(--color-ink-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-2);
+}
+
+.retry {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  padding: 0 var(--space-4);
+  border: none;
+  border-radius: var(--radius-control);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: 600;
+  box-shadow: var(--shadow-key-primary);
+}
+
+.retry:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.retry:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: none;
+}

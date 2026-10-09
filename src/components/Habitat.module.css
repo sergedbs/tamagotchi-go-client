@@ -1,0 +1,75 @@
+.habitat {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+[data-habitat='NEUTRAL'],
+[data-habitat='NATURE'] {
+  --sky: #e5eed9;
+  --far: #d2e2c1;
+  --near: #bdd5a8;
+  --ground: #a9c792;
+  --shrub: #9fbf87;
+}
+[data-habitat='WATER'] {
+  --sky: #deebee;
+  --far: #c9dfe3;
+  --near: #b2d2d8;
+  --ground: #c9dcc3;
+  --shrub: #98c1c6;
+}
+[data-habitat='FLAME'] {
+  --sky: #f4e6d6;
+  --far: #ead3ba;
+  --near: #ddc09e;
+  --ground: #ceb08a;
+  --shrub: #c9a47b;
+}
+[data-habitat='EARTH'] {
+  --sky: #ede8da;
+  --far: #ddd3bb;
+  --near: #ccbf9e;
+  --ground: #bbab84;
+  --shrub: #a99b76;
+}
+[data-habitat='ELECTRIC'] {
+  --sky: #f0eed6;
+  --far: #e2dfb7;
+  --near: #d1cc97;
+  --ground: #c0bb80;
+  --shrub: #b2ad73;
+}
+[data-habitat='SHADOW'] {
+  --sky: #e5e2ed;
+  --far: #d4cfe1;
+  --near: #c2bbd3;
+  --ground: #b0a8c5;
+  --shrub: #a199b8;
+}
+
+.sky {
+  fill: var(--sky);
+}
+.sun {
+  fill: #ffffff;
+  opacity: 0.5;
+}
+.far {
+  fill: var(--far);
+}
+.near {
+  fill: var(--near);
+}
+.shrub {
+  fill: var(--shrub);
+}
+.ground {
+  fill: var(--ground);
+}
+.pebble {
+  fill: var(--shrub);
+  opacity: 0.7;
+}

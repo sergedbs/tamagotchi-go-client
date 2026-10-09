@@ -1,0 +1,31 @@
+.ref {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  font-size: var(--text-meta);
+  color: var(--color-ink-muted);
+  max-width: 100%;
+}
+
+.code {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: var(--text-meta);
+  overflow-wrap: anywhere;
+}
+
+.copy {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--color-ink-muted);
+}
+
+.copy:hover {
+  background: var(--color-surface-sunken);
+  color: var(--color-ink);
+}

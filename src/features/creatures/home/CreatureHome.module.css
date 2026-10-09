@@ -1,0 +1,118 @@
+.home {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-2) var(--gutter) 0;
+  display: grid;
+  gap: var(--space-5);
+}
+
+.device {
+  display: grid;
+  border-radius: var(--radius-stage);
+  background: var(--color-surface);
+  border: var(--line) solid var(--color-line);
+  overflow: hidden;
+}
+
+.device > :first-child {
+  border-radius: calc(var(--radius-stage) - 1px) calc(var(--radius-stage) - 1px) 0 0;
+}
+
+.plate {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+
+.identity {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--text-title);
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  font-size: var(--text-body);
+}
+
+.level {
+  font-weight: 600;
+}
+
+.role {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-control);
+  background: var(--color-highlight-soft);
+  color: var(--color-on-highlight);
+  font-size: var(--text-label);
+  font-weight: 600;
+}
+
+.role svg {
+  fill: var(--color-highlight);
+  stroke: var(--color-on-highlight);
+}
+
+.origin {
+  font-size: var(--text-label);
+  color: var(--color-ink-muted);
+}
+
+.controls {
+  display: grid;
+  gap: var(--space-5);
+  align-content: start;
+  min-width: 0;
+}
+
+@media (min-width: 900px) {
+  .home {
+    padding-top: var(--space-5);
+    grid-template-columns: minmax(0, 1.4fr) minmax(340px, 1fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .name {
+    font-size: var(--text-display);
+  }
+
+  .plate {
+    gap: var(--space-4);
+    padding: var(--space-5);
+  }
+
+  .controls {
+    gap: var(--space-6);
+  }
+}
+
+.skeletonLine {
+  height: 16px;
+  border-radius: 6px;
+  background: var(--color-surface-sunken);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonLine {
+    animation: none;
+  }
+}

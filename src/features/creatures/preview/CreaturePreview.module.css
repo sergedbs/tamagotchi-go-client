@@ -1,0 +1,31 @@
+.banner {
+  max-width: var(--content-max);
+  margin: 0 auto var(--space-2);
+  padding: 0 var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-meta);
+}
+
+.banner p {
+  flex: 1;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-control);
+  background: var(--color-highlight-soft);
+  border: 1px dashed var(--color-highlight);
+}
+
+.picker select {
+  min-height: 32px;
+  border: var(--line) solid var(--color-control-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  font-size: var(--text-meta);
+}
+
+.center {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-5) var(--gutter);
+}

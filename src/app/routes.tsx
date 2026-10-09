@@ -6,6 +6,9 @@ import { NotInThisBuild } from './NotInThisBuild.tsx'
 
 const CreditsPage = lazy(() => import('../features/credits/CreditsPage.tsx'))
 
+// Design preview: compiled into development builds only.
+const CreaturePreview = import.meta.env.DEV ? lazy(() => import('../features/creatures/preview/CreaturePreview.tsx')) : null
+
 export function AppRoutes() {
   return (
     <Suspense fallback={null}>
@@ -19,6 +22,7 @@ export function AppRoutes() {
           <Route path="notifications" element={<NotInThisBuild title="Notifications" />} />
           <Route path="account" element={<NotInThisBuild title="Account" />} />
           <Route path="credits" element={<CreditsPage />} />
+          {CreaturePreview && <Route path="__preview/creatures" element={<CreaturePreview />} />}
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
