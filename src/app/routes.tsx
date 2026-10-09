@@ -27,6 +27,7 @@ const PackageAdminPage = lazy(() => import('../features/admin/PackageAdminPage.t
 const BossesAdminPage = lazy(() => import('../features/admin/BossesAdminPage.tsx'))
 const BossAdminPage = lazy(() => import('../features/admin/BossAdminPage.tsx'))
 const OccurrencesAdminPage = lazy(() => import('../features/admin/OccurrencesAdminPage.tsx'))
+const DiagnosticsPage = lazy(() => import('../features/diagnostics/DiagnosticsPage.tsx'))
 const CreditsPage = lazy(() => import('../features/credits/CreditsPage.tsx'))
 
 // Design preview: compiled into development builds only.
@@ -63,6 +64,7 @@ export function AppRoutes() {
             <Route path="admin/bosses" element={<BossesAdminPage />} />
             <Route path="admin/bosses/:id" element={<BossAdminPage />} />
             <Route path="admin/occurrences" element={<OccurrencesAdminPage />} />
+            <Route path="diagnostics" element={<DiagnosticsPage />} />
             <Route path="account" element={<AccountPage />} />
           </Route>
         </Route>

@@ -3,6 +3,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import { ApiContext } from '../../api/apiContext.ts'
 import { createApiClient } from '../../api/http.ts'
 import { useConfig } from '../../app/configContext.ts'
+import { DiagnosticsContext } from '../diagnostics/diagnosticsContext.ts'
+import { ActivityRing } from '../diagnostics/ring.ts'
 import { SessionStore } from './session.ts'
 import { SessionContext } from './sessionContext.ts'
 
@@ -13,8 +15,10 @@ import { SessionContext } from './sessionContext.ts'
 export function SessionProvider({ children }: { children: ReactNode }) {
   const config = useConfig()
   const queryClient = useQueryClient()
-  const store = useMemo(() => new SessionStore({ baseUrl: config.api_base }), [config.api_base])
-  const api = useMemo(() => createApiClient({ baseUrl: config.api_base, session: store }), [config.api_base, store])
+  // Diagnostics exist only when public config enables them; the ring lives in memory.
+  const ring = useMemo(() => (config.diagnostics_enabled ? new ActivityRing() : null), [config.diagnostics_enabled])
+  const store = useMemo(() => new SessionStore({ baseUrl: config.api_base, observe: ring?.record }), [config.api_base, ring])
+  const api = useMemo(() => createApiClient({ baseUrl: config.api_base, session: store, observe: ring?.record }), [config.api_base, store, ring])
   const identity = useRef<string | null>(null)
 
   useEffect(
@@ -34,7 +38,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   return (
     <SessionContext value={store}>
-      <ApiContext value={api}>{children}</ApiContext>
+      <ApiContext value={api}>
+        <DiagnosticsContext value={ring}>{children}</DiagnosticsContext>
+      </ApiContext>
     </SessionContext>
   )
 }

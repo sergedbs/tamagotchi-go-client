@@ -4,6 +4,7 @@ import { LogOut } from 'lucide-react'
 import { Button } from '../../components/Button.tsx'
 import { usePublicPackages } from '../auth/packagesApi.ts'
 import { useAuthenticated, useSessionStore } from '../auth/sessionContext.ts'
+import { useDiagnosticsRing } from '../diagnostics/diagnosticsContext.ts'
 import { Devices } from './Devices.tsx'
 import { JoinPackage } from './JoinPackage.tsx'
 import { NotificationSettings } from './NotificationSettings.tsx'
@@ -15,6 +16,7 @@ export default function AccountPage() {
   const store = useSessionStore()
   const packages = usePublicPackages()
   const [leaving, setLeaving] = useState(false)
+  const diagnostics = useDiagnosticsRing() !== null
   const nameOf = (id: string) => packages.data?.items.find((pkg) => pkg.package_id === id)?.name ?? id
 
   return (
@@ -56,8 +58,9 @@ export default function AccountPage() {
           </section>
         </div>
       </div>
-      <p>
+      <p className={styles.links}>
         <Link to="/credits">Credits and licenses</Link>
+        {diagnostics && <Link to="/diagnostics">Diagnostics</Link>}
       </p>
     </main>
   )

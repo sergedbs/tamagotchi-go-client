@@ -1,3 +1,4 @@
+import type { ActivityObserver } from './activity.ts'
 import { ApiError, parseProblem } from './errors.ts'
 import { newUuidV7 } from './uuid.ts'
 
@@ -71,13 +72,31 @@ export interface SendOptions {
   baseUrl: string
   accessToken: string | null
   fetchImpl?: typeof fetch
+  /** Opt-in diagnostics: receives a redacted record of every attempt. */
+  observe?: ActivityObserver
+}
+
+/** Times one attempt and reports it to the optional observer (never the body or headers). */
+export async function sendRequest<T>(request: ApiRequest<T>, options: SendOptions): Promise<ApiResponse<T>> {
+  if (!options.observe) return attempt(request, options)
+  const started = performance.now()
+  const report = (status: number | null, outcome: string, code: string | null, correlationId: string | null) =>
+    options.observe?.({ at: Date.now(), method: request.method, route: routeTemplate(request.path), status, durationMs: Math.round(performance.now() - started), outcome, code, correlationId })
+  try {
+    const response = await attempt(request, options)
+    report(response.status, 'ok', null, response.correlationId)
+    return response
+  } catch (error) {
+    if (error instanceof ApiError) report(error.status, error.kind, error.code, error.correlationId)
+    throw error
+  }
 }
 
 /**
  * One transport attempt. Fresh UUIDv7 correlation ID per attempt, combined
  * caller/timeout abort with timer cleanup, redirects refused, Problem/204 handled.
  */
-export async function sendRequest<T>(request: ApiRequest<T>, options: SendOptions): Promise<ApiResponse<T>> {
+async function attempt<T>(request: ApiRequest<T>, options: SendOptions): Promise<ApiResponse<T>> {
   const fetchImpl = options.fetchImpl ?? fetch
   const route = routeTemplate(request.path)
   const failure = (init: Omit<ConstructorParameters<typeof ApiError>[0], 'method' | 'route'>) =>
@@ -199,19 +218,21 @@ export interface ApiClient {
  * Session-aware client. A GET is retried once after a successful refresh;
  * mutations are never replayed automatically after a 401.
  */
-export function createApiClient(options: { baseUrl: string; session: SessionAuth; fetchImpl?: typeof fetch }): ApiClient {
+export function createApiClient(options: { baseUrl: string; session: SessionAuth; fetchImpl?: typeof fetch; observe?: ActivityObserver }): ApiClient {
+  const send = <T>(request: ApiRequest<T>, accessToken: string | null) =>
+    sendRequest(request, { baseUrl: options.baseUrl, accessToken, fetchImpl: options.fetchImpl, observe: options.observe })
   return {
     async request<T>(request: ApiRequest<T>): Promise<ApiResponse<T>> {
       const token = request.auth === 'user' ? await options.session.getAccessToken() : null
       try {
-        return await sendRequest(request, { baseUrl: options.baseUrl, accessToken: token, fetchImpl: options.fetchImpl })
+        return await send(request, token)
       } catch (error) {
         const unauthorized = error instanceof ApiError && error.status === 401 && request.auth === 'user' && token
         if (!unauthorized) throw error
         const refreshed = await options.session.refreshAfterUnauthorized(token)
         if (!refreshed || request.method !== 'GET') throw error
         const next = await options.session.getAccessToken()
-        return sendRequest(request, { baseUrl: options.baseUrl, accessToken: next, fetchImpl: options.fetchImpl })
+        return send(request, next)
       }
     },
   }

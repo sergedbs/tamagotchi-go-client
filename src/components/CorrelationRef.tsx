@@ -3,7 +3,7 @@ import { Check, Copy } from 'lucide-react'
 import styles from './CorrelationRef.module.css'
 
 /** Shows a correlation ID with a copy action, the link to external service logs. */
-export function CorrelationRef({ id, label = 'Reference' }: { id: string; label?: string }) {
+export function CorrelationRef({ id, label = 'Reference', compact = false }: { id: string; label?: string; compact?: boolean }) {
   const [copied, setCopied] = useState(false)
   const copy = async () => {
     try {
@@ -17,7 +17,9 @@ export function CorrelationRef({ id, label = 'Reference' }: { id: string; label?
   return (
     <span className={styles.ref}>
       {label === 'Reference' && <span>Reference</span>}
-      <code className={styles.code}>{id}</code>
+      <code className={styles.code} title={compact ? id : undefined}>
+        {compact ? `…${id.slice(-12)}` : id}
+      </code>
       <button type="button" className={styles.copy} onClick={copy} aria-label={`Copy ${label.toLowerCase()}`}>
         {copied ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
       </button>

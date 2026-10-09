@@ -121,6 +121,7 @@
 }
 
 .tableWrap {
+  min-width: 0;
   overflow-x: auto;
   border-radius: var(--radius-sheet);
   background: var(--color-surface);

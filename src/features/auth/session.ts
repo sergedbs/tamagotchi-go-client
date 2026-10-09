@@ -1,4 +1,5 @@
 import { ApiError } from '../../api/errors.ts'
+import type { ActivityObserver } from '../../api/activity.ts'
 import { sendRequest, type SessionAuth } from '../../api/http.ts'
 import { tokensSchema, userSchema, type Tokens, type User } from './dto.ts'
 import { readTokenHints } from './token.ts'
@@ -29,11 +30,13 @@ export class SessionStore implements SessionAuth {
   private readonly listeners = new Set<Listener>()
   private readonly baseUrl: string
   private readonly fetchImpl: typeof fetch | undefined
+  private readonly observe: ActivityObserver | undefined
   private readonly now: () => number
 
-  constructor(options: { baseUrl: string; fetchImpl?: typeof fetch; now?: () => number }) {
+  constructor(options: { baseUrl: string; fetchImpl?: typeof fetch; observe?: ActivityObserver; now?: () => number }) {
     this.baseUrl = options.baseUrl
     this.fetchImpl = options.fetchImpl
+    this.observe = options.observe
     this.now = options.now ?? Date.now
   }
 
@@ -60,7 +63,7 @@ export class SessionStore implements SessionAuth {
 
   /** Login, then load identity from /users/me; token claims are hints only. */
   async login(input: { email: string; password: string; packageId: string }, signal?: AbortSignal): Promise<User> {
-    const options = { baseUrl: this.baseUrl, accessToken: null, fetchImpl: this.fetchImpl }
+    const options = { baseUrl: this.baseUrl, accessToken: null, fetchImpl: this.fetchImpl, observe: this.observe }
     const { data: tokens } = await sendRequest(
       {
         method: 'POST',
@@ -121,7 +124,7 @@ export class SessionStore implements SessionAuth {
         body: { refresh_token: current.refresh },
         parse: (value) => tokensSchema.parse(value),
       },
-      { baseUrl: this.baseUrl, accessToken: null, fetchImpl: this.fetchImpl },
+      { baseUrl: this.baseUrl, accessToken: null, fetchImpl: this.fetchImpl, observe: this.observe },
     )
       .then(({ data }) => {
         if (this.tokens !== current) return this.tokens !== null
@@ -153,7 +156,7 @@ export class SessionStore implements SessionAuth {
       try {
         await sendRequest(
           { method: 'POST', path: '/users/v1/auth/logout', auth: 'public', body: { refresh_token: current.refresh } },
-          { baseUrl: this.baseUrl, accessToken: null, fetchImpl: this.fetchImpl },
+          { baseUrl: this.baseUrl, accessToken: null, fetchImpl: this.fetchImpl, observe: this.observe },
         )
         revoked = true
       } catch {
