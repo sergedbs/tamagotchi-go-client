@@ -1,0 +1,199 @@
+.shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.skip {
+  position: absolute;
+  left: var(--space-3);
+  top: -100px;
+  z-index: 20;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface);
+  border-radius: var(--radius-control);
+  box-shadow: var(--shadow-hud);
+}
+
+.skip:focus {
+  top: var(--space-3);
+}
+
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: var(--space-2) var(--space-3) 0;
+  background: linear-gradient(var(--color-bg) 70%, transparent);
+}
+
+.rail {
+  max-width: calc(var(--content-max) + 2 * var(--space-4));
+  margin: 0 auto;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
+}
+
+.home {
+  display: inline-flex;
+  min-height: var(--touch-target);
+  align-items: center;
+  border-radius: var(--radius-control);
+  text-decoration: none;
+  margin-right: auto;
+}
+
+.railNav {
+  display: none;
+}
+
+.utilities {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.utilityLink,
+.railLink,
+.barLink {
+  text-decoration: none;
+  color: var(--color-ink-muted);
+  transition:
+    background-color var(--duration-control) var(--ease-out),
+    color var(--duration-control) var(--ease-out);
+}
+
+.utilityLink {
+  display: inline-grid;
+  place-items: center;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  border-radius: var(--radius-control);
+}
+
+.utilityLink:hover,
+.utilityLink[aria-current='page'] {
+  color: var(--color-ink);
+  background: var(--color-surface-sunken);
+}
+
+.main {
+  flex: 1;
+  outline: none;
+  padding-bottom: calc(var(--bottom-nav-height) + var(--space-5) + env(safe-area-inset-bottom));
+}
+
+/* Mobile: compact bottom bar, floating like a device edge. */
+.bottom {
+  position: fixed;
+  left: var(--space-2);
+  right: var(--space-2);
+  bottom: calc(var(--space-2) + env(safe-area-inset-bottom));
+  z-index: 10;
+  height: var(--bottom-nav-height);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: var(--space-1);
+  background: var(--color-surface);
+  border: var(--line) solid var(--color-line);
+  border-radius: var(--radius-sheet);
+  box-shadow: var(--shadow-hud);
+}
+
+.barLink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-radius: var(--radius-control);
+  font-size: var(--text-meta);
+  font-weight: 600;
+  min-width: 0;
+}
+
+.barLink span {
+  white-space: nowrap;
+}
+
+.barLink svg {
+  padding: 2px 12px;
+  box-sizing: content-box;
+  border-radius: 999px;
+  transition: background-color var(--duration-control) var(--ease-out);
+}
+
+.barLink[aria-current='page'] {
+  color: var(--color-ink);
+}
+
+.barLink[aria-current='page'] svg {
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.barLink:hover {
+  color: var(--color-ink);
+}
+
+/* Desktop: one compact floating rail at the top; no sidebar. */
+@media (min-width: 900px) {
+  .top {
+    padding: var(--space-3) var(--gutter) 0;
+  }
+
+  .rail {
+    max-width: var(--content-max);
+    min-height: var(--rail-height);
+    padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+    background: var(--color-surface);
+    border: var(--line) solid var(--color-line);
+    border-radius: var(--radius-sheet);
+    box-shadow: var(--shadow-hud);
+    gap: var(--space-5);
+  }
+
+  .home {
+    margin-right: 0;
+  }
+
+  .railNav {
+    display: flex;
+    gap: var(--space-1);
+    margin-right: auto;
+  }
+
+  .railLink {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--touch-target);
+    padding: 0 var(--space-3);
+    border-radius: var(--radius-control);
+    font-weight: 600;
+  }
+
+  .railLink:hover {
+    color: var(--color-ink);
+    background: var(--color-surface-sunken);
+  }
+
+  .railLink[aria-current='page'] {
+    color: var(--color-ink);
+    background: var(--color-primary-soft);
+  }
+
+  .railLink[aria-current='page'] svg {
+    color: var(--color-primary);
+  }
+
+  .main {
+    padding-bottom: var(--space-7);
+  }
+
+  .bottom {
+    display: none;
+  }
+}

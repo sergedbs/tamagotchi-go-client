@@ -1,0 +1,13 @@
+.page {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-5) var(--gutter);
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+}
+
+.lead {
+  color: var(--color-ink-muted);
+  max-width: 60ch;
+}
