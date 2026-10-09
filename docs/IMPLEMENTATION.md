@@ -371,7 +371,52 @@ puts a token, email, user ID and body through the transport), `npm run test:e2e`
 lint, typecheck, build. Rendered review with real traffic at 390x844 and 1440x900
 (rows stack as labelled cards below 640 px; no horizontal overflow).
 
-Next: slice 12 (packaging; Docker build and one local run are authorized).
+### Slice 12 - packaging and acceptance (complete)
+
+Commits cdb3397 (deploy), 4980cf9, 53b2576, e444f2e (README), aab639a (Vite no
+longer reloads pages when test reports are written), dd8595d, f14ea4e and
+da317bb (live-update failures keep the last battle or raid state), b21c1e7 (same
+for the inbox).
+
+- `deploy/Dockerfile`: `node:24.21.0-alpine3.24` runs `npm ci` and the full build
+  (typecheck included), then `caddy:2.11.7-alpine` serves `/srv` as a non-root
+  user on port 8080 with a `/healthz` process check.
+- `deploy/Caddyfile`: `/api` stripped once and proxied to the required
+  `GATEWAY_UPSTREAM` (read at start), bare or unknown API paths stay Problem JSON,
+  an unreachable upstream returns `502 upstream_unavailable` Problem JSON, SPA
+  fallback only outside `/api` and `/assets`, immutable caching for hashed bundles,
+  no-cache for the shell and `client-config.json`.
+- `deploy/compose.yaml`: project `tamagotchi-go-client`, loopback port 8080,
+  `host.docker.internal` upstream, read-only root, mounted read-only
+  `client-config.json` (`CLIENT_CONFIG` overrides the path).
+
+Acceptance (authorized local build and run, 2026-10-09): the image built from a
+clean `npm ci` on Node 24.21 (the local machine has Node 26). Against the running
+container: `/healthz` 200, `/api/health` and `/api/ready` from Gateway,
+`/api/users/v1/users/me` 401 Problem JSON, `/api` and unknown services 404 Problem
+JSON, deep links to `/creatures` and a raid ID serve the shell, a missing asset is
+404 (not HTML), hashed bundles immutable and compressed. Recreated once with a
+closed upstream: `/api/health` gave the 502 Problem while `/healthz` stayed 200.
+`E2E_BASE_URL=http://localhost:8080 npm run test:e2e:real`: 12 of 12 passed (and 12
+of 12 on the dev server). The container was then removed; the local image
+`tamagotchi-go-client:local` remains and nothing was published.
+
+Findings from the container run:
+
+- Provisioned package art is published for `public_client_origin`
+  (`http://localhost:5173`); from `:8080` the client correctly refuses cross-origin
+  plain-http art and shows the labelled fallback. The real care test asserts
+  whichever applies. Provision for the origin you serve, or use https assets.
+- Battle turns run on a short server timer; an unanswered turn ends the battle
+  for the other player. The real battle test accepts a server-ended battle.
+- Under heavy machine load the fake-clock delivery test exposed that a failed live
+  poll replaced the whole battle screen; failed refreshes now keep the last state
+  with a "Live updates paused" notice (battle, raid, inbox).
+
+Checks: lint, typecheck, `npm run test` (153), build, `npm run test:e2e` (73
+fixture tests), `npm run test:e2e:real` (12), `python3 tools/check_spec.py`.
+
+Next: final Playwright MCP review of all routes at 360, 390, 768 and 1440 px.
 
 ## Definition of done
 
