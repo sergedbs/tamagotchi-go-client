@@ -96,6 +96,18 @@ test.describe('fixture: notifications inbox', () => {
     await expect(page.getByText('leon wants to be friends')).toBeVisible()
   })
 
+  test('a failed refresh keeps the last list on screen', async ({ page, api }) => {
+    await page.clock.install()
+    let fail = false
+    api.set(inboxPath, (route) => (fail ? json(route, 503, problem(503, 'service_unavailable')) : json(route, 200, { items: [SEVEN[0]], next_cursor: null })))
+    await signIn(page, api, '/notifications')
+    await expect(page.getByText('leon wants to be friends')).toBeVisible()
+    fail = true
+    await page.clock.fastForward(15_500)
+    await expect(page.getByText('The inbox could not refresh.')).toBeVisible()
+    await expect(page.getByText('leon wants to be friends')).toBeVisible()
+  })
+
   test('an inbox failure is explained with a retry', async ({ page, api }) => {
     let fail = true
     api.set(inboxPath, (route) => (fail ? json(route, 503, problem(503, 'service_unavailable')) : json(route, 200, { items: [], next_cursor: null })))

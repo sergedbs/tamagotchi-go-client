@@ -103,9 +103,14 @@ export default function NotificationsPage() {
         </FormAlert>
       )}
 
+      {inbox.isError && inbox.data && (
+        <FormAlert title="The inbox could not refresh." tone="info" correlationId={isApiError(inbox.error) ? inbox.error.correlationId : null}>
+          {describeApiError(inbox.error)} Showing the last list; it retries while this page is open.
+        </FormAlert>
+      )}
       {inbox.isPending ? (
         <p className={styles.muted}>Loading notifications…</p>
-      ) : inbox.isError ? (
+      ) : inbox.isError && !inbox.data ? (
         <LoadProblem
           title="Notifications could not be loaded"
           message={describeApiError(inbox.error)}
