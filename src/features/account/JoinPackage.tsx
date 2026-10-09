@@ -25,7 +25,8 @@ export function JoinPackage({ user }: { user: User }) {
   const [packageId, setPackageId] = useState('')
   const [joined, setJoined] = useState<string | null>(null)
   const [waiting, setWaiting] = useState(false)
-  const collection = useCollection(user.user_id)
+  // Read only after a join, to notice the new starter.
+  const collection = useCollection(user.user_id, { enabled: joined !== null })
   const { primary, secondary } = flattenCollection(collection.data?.pages)
   const starter = joined ? [primary, ...secondary].find((creature) => creature?.origin_package_id === joined) : undefined
   const join = useCommand<User>({

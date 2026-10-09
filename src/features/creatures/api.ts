@@ -13,7 +13,7 @@ export const creatureKeys = {
 }
 
 /** Collection pages: primary from the first page, secondaries de-duplicated by id. */
-export function useCollection(userId: string, options: { pollMs?: number | false } = {}) {
+export function useCollection(userId: string, options: { pollMs?: number | false; enabled?: boolean } = {}) {
   const api = useApi()
   return useInfiniteQuery({
     queryKey: creatureKeys.collection(userId),
@@ -30,6 +30,7 @@ export function useCollection(userId: string, options: { pollMs?: number | false
         })
       ).data,
     getNextPageParam: (last) => last.next_cursor,
+    enabled: options.enabled ?? true,
     refetchInterval: options.pollMs ?? false,
     refetchIntervalInBackground: false,
   })
