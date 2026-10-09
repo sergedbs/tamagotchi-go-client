@@ -249,6 +249,7 @@ produce neutral wording/list navigation, never a forged route or app crash.
 | Browser push needs genuine Firebase/provider configuration | Inbox works; push optional and disabled until configured |
 | Gateway metrics and domain probes are infrastructure routes | Do not expose internal metrics/service hosts in ordinary player UI |
 | Gateway/Shared preparation PRs require review | Source specification is not proof those changes are published |
+| Live Registry (acceptance, 2026-10-09) refuses package PATCH and boss PUT without Idempotency-Key, though the table lists only If-Match | Client sends both; one key per logical edit, reused only by an explicit retry. Recheck when Registry is corrected |
 
 ## Examples
 
