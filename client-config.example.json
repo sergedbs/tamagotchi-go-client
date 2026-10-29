@@ -1,0 +1,20 @@
+{
+  "api_base": "/api",
+  "map_style_url": "https://tiles.openfreemap.org/styles/liberty",
+  "map_default_center": [28.8638, 47.0105],
+  "diagnostics_enabled": false,
+  "manual_location_enabled": false,
+  "allowed_socket_origins": ["ws://localhost:13004"],
+  "package_presentations": {},
+  "push": {
+    "firebase": {
+      "apiKey": "<firebase-web-api-key>",
+      "authDomain": "<project-id>.firebaseapp.com",
+      "projectId": "<project-id>",
+      "storageBucket": "<project-id>.firebasestorage.app",
+      "messagingSenderId": "<sender-id>",
+      "appId": "<firebase-web-app-id>"
+    },
+    "vapid_key": "<public-vapid-key-from-firebase-cloud-messaging-web-push-certificates>"
+  }
+}

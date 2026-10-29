@@ -1,11 +1,15 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
 import { LogOut } from 'lucide-react'
+import { useApi } from '../../api/apiContext.ts'
+import { useConfig } from '../../app/configContext.ts'
 import { Button } from '../../components/Button.tsx'
 import { CopyValue } from '../../components/CopyValue.tsx'
 import { usePublicPackages } from '../auth/packagesApi.ts'
 import { useAuthenticated, useSessionStore } from '../auth/sessionContext.ts'
 import { useDiagnosticsRing } from '../diagnostics/diagnosticsContext.ts'
+import { readOwner } from '../push/owner.ts'
+import { turnOffPush } from '../push/turnOff.ts'
 import { Devices } from './Devices.tsx'
 import { JoinPackage } from './JoinPackage.tsx'
 import { NotificationSettings } from './NotificationSettings.tsx'
@@ -13,8 +17,10 @@ import { Wallets } from './Wallets.tsx'
 import styles from './AccountPage.module.css'
 
 export default function AccountPage() {
-  const { user } = useAuthenticated()
+  const { user, packageId } = useAuthenticated()
   const store = useSessionStore()
+  const api = useApi()
+  const push = useConfig().push
   const packages = usePublicPackages()
   const [leaving, setLeaving] = useState(false)
   const diagnostics = useDiagnosticsRing() !== null
@@ -45,7 +51,7 @@ export default function AccountPage() {
         </div>
         <div className={styles.column}>
           <NotificationSettings userId={user.user_id} />
-          <Devices userId={user.user_id} nameOf={nameOf} />
+          <Devices userId={user.user_id} packageId={packageId} nameOf={nameOf} />
           <section aria-labelledby="session-heading" className={styles.section}>
             <h2 id="session-heading">Session</h2>
             <p className={styles.muted}>You stay signed in only while this tab is open. Reloading asks you to sign in again.</p>
@@ -55,6 +61,9 @@ export default function AccountPage() {
               busy={leaving}
               onClick={async () => {
                 setLeaving(true)
+                // The next player on this browser must not receive this account's pushes.
+                const owner = readOwner()
+                if (owner?.user_id === user.user_id) await turnOffPush(api, push, owner)
                 await store.logout()
               }}
             >

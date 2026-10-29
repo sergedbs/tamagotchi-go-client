@@ -79,7 +79,7 @@ an idempotent seed operation. Completed battles/raids stay completed.
     victory, timeout/cancellation and delivery statuses; never fabricate rows.
 11. Poll Notification history for real events, up to 15 seconds every 500 ms.
     Collect intended recipient and delivery evidence; a provider status is not
-    proof of a received device push. Guild invitation may remain blocked by UM.
+    proof of a received device push.
 12. Emit a redacted fixture manifest (IDs, labels, versions, scenario availability)
     and a separate private credentials/progress ledger. Stop visibly on failures.
 

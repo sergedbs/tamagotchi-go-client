@@ -13,7 +13,11 @@ export interface Player {
 /** Registers a synthetic player in its own browser context (separate identity). */
 export async function registerPlayer(browser: Browser, label: string, geolocation?: { latitude: number; longitude: number }, packageId = bootstrapPackageId()): Promise<Player> {
   const context = await browser.newContext(geolocation ? { geolocation: { ...geolocation, accuracy: 5 }, permissions: ['geolocation'] } : {})
-  const page = await context.newPage()
+  return registerOnPage(await context.newPage(), label, packageId)
+}
+
+/** Registers a synthetic player on a page of a context the caller owns. */
+export async function registerOnPage(page: Page, label: string, packageId = bootstrapPackageId()): Promise<Player> {
   const user = newSyntheticUser(runId(), label, packageId)
   await page.goto('/register')
   await page.getByLabel('Package').selectOption(user.packageId)
@@ -91,7 +95,7 @@ export async function formGuild(leader: Player, member: Player, name: string) {
   const invite = leader.page.waitForResponse((response) => /\/api\/guild\/v1\/guilds\/[^/]+\/invitations$/.test(response.url()))
   await leader.page.getByRole('button', { name: 'Send invitation' }).click()
   const status = (await invite).status()
-  expect(status, 'guild invitation (known UM relationship version gap can yield 502)').toBe(201)
+  expect(status, 'guild invitation').toBe(201)
   await goTo(member.page, 'Social')
   await member.page.getByRole('navigation', { name: 'Social' }).getByRole('link', { name: 'Guilds' }).click()
   await member.page.getByRole('button', { name: 'Accept' }).click()

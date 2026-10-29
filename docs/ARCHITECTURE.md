@@ -127,6 +127,7 @@ npm run fixtures -- --target ... --run-id ... --confirm-test-target
 | Setting | Where | Meaning |
 |---|---|---|
 | GATEWAY_UPSTREAM | Vite server .env.local / Caddy environment | Fixed server-side upstream, default http://127.0.0.1:3000 |
+| CLIENT_CONFIG | Vite server .env.local / compose environment | Optional ignored deployment file served as client-config.json |
 | PUBLIC_CLIENT_ORIGIN | fixture CLI setting | Browser-reachable asset origin; never container localhost |
 | api_base | public client-config.json | /api by default; no source edit required |
 | map_style_url | public config | https://tiles.openfreemap.org/styles/liberty |
@@ -135,7 +136,8 @@ npm run fixtures -- --target ... --run-id ... --confirm-test-target
 | manual_location_enabled | public config | false by default; true only for demo/test |
 | allowed_socket_origins | public config | Explicit browser-reachable Guild origins for this environment |
 | package_presentations | public config | Known package IDs/version mappings to local presentation keys |
-| push | public config, optional | Provider adapter configuration; disabled by default |
+| bundled_asset_origins | empty by default | Exact manifest origins whose `/assets/creatures/` paths are served by this client; useful for demo tunnels |
+| push | public config, optional | Firebase Web app configuration and public VAPID key; null (off) by default |
 
 Load and validate runtime config before auth; missing optional values have safe
 defaults. Public config contains no password, token, service secret or key. .env.example
@@ -156,6 +158,13 @@ Keep access and refresh tokens in memory; no localStorage/sessionStorage/Indexed
 credentials, cookies, URLs or persisted diagnostics. This intentionally trades
 reload persistence for a simple standalone browser client. If persistent login
 is required later, design it separately rather than silently persisting tokens.
+
+Browser push is the one persistent exception, and it holds no credential: the
+Firebase SDK keeps its own token store, and the client keeps only the owning
+player ID and device ID in localStorage, so logout removes the device and a
+different player signing in on the same browser releases the old subscription.
+Permission is requested only from an explicit Turn on action; the device token is
+never shown, logged or put into diagnostics.
 
 Decode expiry/roles only as UI hints; server verification remains authoritative.
 Refresh shortly before expiry via one shared in-flight promise. Rotate both tokens

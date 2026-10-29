@@ -37,6 +37,12 @@ export default tseslint.config(
     },
   },
   {
+    // The push owner record (player and device ID, no token) must survive a reload
+    // so logout and account switching can release the subscription.
+    files: ['src/features/push/owner.ts'],
+    rules: { 'no-restricted-syntax': 'off' },
+  },
+  {
     files: ['scripts/**/*.ts', 'tests/**/*.ts', '*.config.{ts,js}'],
     languageOptions: { globals: globals.node },
   },

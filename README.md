@@ -11,7 +11,8 @@ bosses and raid events. The interface is responsive from phones to desktops.
 - **Explore**: map of nearby players (MapLibre and OpenFreeMap) with a list fallback
 - **Social**: friends, guilds with roles and live guild chat
 - **Combat**: turn-based player battles and guild raids with leaderboards
-- **Account**: notifications inbox, wallets, preferences and package membership
+- **Account**: notifications inbox, optional browser push, wallets, preferences and
+  package membership
 - **Administration**: packages and configurations, bosses and raid occurrences
 - **Diagnostics**: optional, privacy-preserving request log for troubleshooting
 
@@ -34,6 +35,12 @@ npm ci
 cp .env.example .env.local   # set GATEWAY_UPSTREAM to your Gateway
 npm run dev                  # http://localhost:5173
 ```
+
+For a development tunnel, set `DEV_ALLOWED_HOSTS` in `.env.local` to its exact
+hostname (comma-separated for multiple tunnels), then restart Vite. If demo
+asset manifests point to a local client origin, add that exact origin to
+`bundled_asset_origins` in the public runtime config. Only bundled artwork paths
+under `/assets/creatures/` are resolved against the current client origin.
 
 The development server proxies `/api` to `GATEWAY_UPSTREAM`. Sessions are kept in
 memory only, so reloading the page asks you to sign in again.
@@ -58,7 +65,10 @@ memory only, so reloading the page asks you to sign in again.
 in `.env.local` for development or in the container environment in production.
 
 **Runtime.** `public/client-config.json` is loaded when the app starts and can be
-changed without rebuilding. It must contain public values only.
+changed without rebuilding. It must contain public values only. To use a
+deployment-specific file instead (for example one with push enabled), keep it in an
+ignored path and set `CLIENT_CONFIG` to it, in `.env.local` for development or in
+the compose environment. `client-config.example.json` shows every key.
 
 | Key | Purpose |
 | --- | --- |
@@ -68,6 +78,7 @@ changed without rebuilding. It must contain public values only.
 | `package_presentations` | Maps package IDs and config versions to bundled presentations |
 | `diagnostics_enabled` | Enables the diagnostics page |
 | `manual_location_enabled` | Allows typed coordinates, for testing only |
+| `push` | Firebase Web app configuration and public VAPID key; `null` keeps push off |
 
 ## Testing
 

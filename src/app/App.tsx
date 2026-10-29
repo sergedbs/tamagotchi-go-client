@@ -6,6 +6,7 @@ import { ConfigContext } from './configContext.ts'
 import { createQueryClient } from './queryClient.ts'
 import { AppRoutes } from './routes.tsx'
 import { SessionProvider } from '../features/auth/SessionProvider.tsx'
+import { PushBridge } from '../features/push/PushBridge.tsx'
 
 export function App({ config }: { config: ClientConfig }) {
   const [queryClient] = useState(createQueryClient)
@@ -15,6 +16,7 @@ export function App({ config }: { config: ClientConfig }) {
         <SessionProvider>
           <BrowserRouter>
             <AppRoutes />
+            <PushBridge />
           </BrowserRouter>
         </SessionProvider>
       </QueryClientProvider>
