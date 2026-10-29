@@ -107,7 +107,7 @@ test.describe('fixture: administration', () => {
     await config.getByLabel('Start from a bundled package').selectOption({ label: 'Grove Companions' })
     await config.getByRole('button', { name: 'Check draft' }).click()
     await expect(config.getByText(/Draft is valid: 3 stats, 3 care actions, starter Mossling/)).toBeVisible()
-    await expect(config.getByRole('figure', { name: 'lythbound/wolfren/green' }).locator('img')).toHaveAttribute('src', 'http://localhost:5173/assets/creatures/lythbound/wolfren/green.png')
+    await expect(config.getByRole('figure', { name: 'lythbound/wolfren/green' }).locator('img')).toHaveAttribute('src', new URL('/assets/creatures/lythbound/wolfren/green.png', page.url()).href)
     await config.getByRole('button', { name: 'Publish as v2' }).click()
     await expect(config.getByText('Published configuration v2.')).toBeVisible()
 
@@ -115,7 +115,7 @@ test.describe('fixture: administration', () => {
     expect(bodies[0]!.expected_package_revision).toBe(2)
     const definition = bodies[0]!.definition as { assets: { url: string }[]; starter: { name: string } }
     expect(definition.starter.name).toBe('Mossling')
-    expect(definition.assets[0]!.url).toBe('http://localhost:5173/assets/creatures/lythbound/wolfren/green.png')
+    expect(definition.assets[0]!.url).toBe(new URL('/assets/creatures/lythbound/wolfren/green.png', page.url()).href)
     expect(JSON.stringify(bodies[0])).not.toContain('presentation')
   })
 
