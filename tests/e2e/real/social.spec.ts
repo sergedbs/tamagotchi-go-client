@@ -34,6 +34,8 @@ test('real: friends form a guild and chat over the negotiated socket', async ({ 
   await expect(a.page.getByText('Sending…')).toHaveCount(0, { timeout: 10_000 })
   await expect(b.page.getByRole('log').getByText(text)).toHaveCount(1, { timeout: 10_000 })
 
+  await test.info().attach('real-guild-chat', { body: await a.page.screenshot(), contentType: 'image/png' })
+
   // The leader deletes the synthetic guild; the member's chat is refused afterwards.
   await a.page.getByRole('link', { name: 'Back to guild' }).click()
   await a.page.getByRole('button', { name: 'Delete guild' }).click()

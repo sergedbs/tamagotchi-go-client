@@ -595,3 +595,21 @@ Configured bundled_asset_origins resolves only bundled creature paths against
 the current app origin, preserving exact Registry manifests and HTTPS checks.
 This supports locally seeded artwork through a tunnel without database edits.
 Lint/typecheck,22 focused tests and build pass; real demo PNGs return200.
+
+## Chat relay recovery
+
+History reconciliation runs after socket readiness, every 15 seconds while chat
+is visible, and on focus. It follows the real `cursor` API back to the previous
+completed sync boundary, merges by message ID and does not move that boundary
+on partial failure. Each sync has a 10-second budget and a 20-page cap; errors are
+visible and older history remains available manually. Unmount/disconnect aborts
+the sync. Live messages do not advance the sync boundary, so they cannot hide
+messages missed during a broker gap. Server relay queues remain transient.
+
+Validation: lint/types/build pass. 193 unit tests pass, with the unchanged 80%
+line gate now at 84.58%. The pre-existing checkout reproduced 75.18%; command-hook
+checks now cover pending-submit suppression and exact-key explicit retry after an
+uncertain write. Chrome chat fixtures and the real two-user flow pass. A real
+broker-gap message appears once in the recipient client while its socket stays
+Live; the recovery screenshot was reviewed. One fixture expected port 5173 even
+on another test origin; it now checks the exact artwork URL on the page origin.

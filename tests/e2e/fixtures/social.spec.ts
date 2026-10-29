@@ -172,6 +172,42 @@ test.describe('fixture: guild chat protocol', () => {
     expect(tickets).toHaveLength(after)
   })
 
+  test('catches up missed relay messages while the socket stays open', async ({ page, api }) => {
+    test.setTimeout(45_000)
+    const message = (n: number) => ({ message_id: `message-${n}`, guild_id: GUILD, author_id: LEON,
+      client_message_id: `command-${n}`, content: `Recovered ${n}`, timestamp: `2026-10-09T12:00:0${n}.000Z` })
+    let gap = false
+    let older = 0
+    let reads = 0
+    api.set(`GET /users/v1/users/${LEON}`, (route) => json(route, 200, { user_id: LEON, username: 'leon' }))
+    api.set(`GET /guild/v1/guilds/${GUILD}/messages`, (route, url) => {
+      reads += 1
+      if (!gap) return json(route, 200, { items: [message(1)], next_cursor: null })
+      if (url.searchParams.get('cursor') === 'older') {
+        older += 1
+        return json(route, 200, { items: [message(2), message(1)], next_cursor: null })
+      }
+      return json(route, 200, { items: [message(4), message(3)], next_cursor: 'older' })
+    })
+    api.set('POST /gateway/v1/ws-negotiate', (route) => json(route, 200, {
+      url: `ws://localhost:13004/v1/guilds/${GUILD}/chat`, ticket: 'fixture-ticket', expires_at: later(),
+    }))
+    await page.routeWebSocket(`ws://localhost:13004/v1/guilds/${GUILD}/chat`, (ws) => {
+      ws.onMessage(() => ws.send(JSON.stringify({ type: 'ready', guild_id: GUILD,
+        user_id: ME.user_id, expires_at: later() })))
+    })
+    await signIn(page, api, `/guilds/${GUILD}/chat`)
+    await expect(page.getByRole('status').filter({ hasText: 'Live' })).toBeVisible()
+    await expect(page.getByRole('log').getByText('Recovered 1')).toHaveCount(1)
+    // Ensure initial sync completed before injecting a gap.
+    await expect.poll(() => reads).toBeGreaterThan(1)
+    gap = true
+    for (const n of [1, 2, 3, 4]) await expect(page.getByRole('log').getByText(`Recovered ${n}`, { exact: true })).toHaveCount(1, { timeout: 20_000 })
+    expect(older).toBeGreaterThan(0)
+    await page.bringToFront()
+    await expect(page.getByRole('log').getByText('Recovered 2', { exact: true })).toHaveCount(1)
+  })
+
   test('refuses a negotiated URL outside the allowed socket origins', async ({ page, api }) => {
     api.set('POST /gateway/v1/ws-negotiate', (route) =>
       json(route, 200, { url: `ws://evil.example.test/v1/guilds/${GUILD}/chat`, ticket: '01a12000-0000-7000-8000-000000000009', expires_at: new Date(Date.now() + 30_000).toISOString() }),

@@ -104,6 +104,10 @@ function GuildChat({ guildId }: { guildId: string }) {
         </FormAlert>
       )}
 
+      {chat.historyProblem && (
+        <FormAlert title="Chat history could not be refreshed.">{chat.historyProblem}</FormAlert>
+      )}
+
       <div ref={scroller} className={styles.messages} aria-label="Messages" role="log" aria-live="polite">
         {chat.history.hasNextPage && (
           <Button variant="quiet" busy={chat.history.isFetchingNextPage} onClick={() => void chat.history.fetchNextPage()} className={styles.older}>
