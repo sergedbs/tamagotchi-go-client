@@ -7,6 +7,7 @@ import { newUuidV7 } from '../../../api/uuid.ts'
 import { useConfig } from '../../../app/configContext.ts'
 import { LIST_LIMIT } from '../../social/api.ts'
 import { guildKeys } from '../api.ts'
+import { recoverHistory } from './historyRecovery.ts'
 import { chatReducer, initialChat } from './chatState.ts'
 import { chatPageSchema, CLOSE_NOT_MEMBER, CLOSE_TICKET_REFUSED, parseFrame, reconnectDelay, validateSocketUrl, wsTicketSchema } from './protocol.ts'
 
@@ -47,7 +48,48 @@ export function useGuildChat(userId: string, guildId: string) {
   useEffect(() => {
     if (history.data) dispatch({ type: 'history', items: history.data.pages.flatMap((page) => page.items) })
   }, [history.data])
-  const { refetch: refetchHistory } = history
+  const historyBoundary = useRef<string | null>(null)
+  const historyRequest = useRef<AbortController | null>(null)
+  const [historyProblem, setHistoryProblem] = useState<string | null>(null)
+  const syncHistory = useCallback(async () => {
+    if (historyRequest.current) return
+    const controller = new AbortController()
+    historyRequest.current = controller
+    const signal = AbortSignal.any([controller.signal, AbortSignal.timeout(10_000)])
+    try {
+      const result = await recoverHistory(async (cursor) => (
+        await api.request({
+          method: 'GET', path: apiPath`/guild/v1/guilds/${guildId}/messages`,
+          query: { limit: LIST_LIMIT, cursor }, auth: 'user',
+          parse: (value) => chatPageSchema.parse(value),
+          signal,
+        })
+      ).data, historyBoundary.current)
+      if (controller.signal.aborted) return
+      dispatch({ type: 'history', items: result.items })
+      historyBoundary.current = result.boundary
+      setHistoryProblem(null)
+    } catch (error) {
+      if (!controller.signal.aborted) setHistoryProblem(describeApiError(error))
+    } finally {
+      if (historyRequest.current === controller) historyRequest.current = null
+    }
+  }, [api, guildId])
+
+  useEffect(() => {
+    if (status !== 'ready') return
+    const sync = () => { if (document.visibilityState === 'visible') void syncHistory() }
+    sync()
+    const interval = window.setInterval(sync, 15_000)
+    window.addEventListener('focus', sync)
+    document.addEventListener('visibilitychange', sync)
+    return () => {
+      window.clearInterval(interval)
+      window.removeEventListener('focus', sync)
+      document.removeEventListener('visibilitychange', sync)
+      historyRequest.current?.abort()
+    }
+  }, [status, syncHistory])
 
   const clearTimers = () => {
     for (const timer of timers.current) window.clearTimeout(timer)
@@ -129,7 +171,6 @@ export function useGuildChat(userId: string, guildId: string) {
         setAttempt(0)
         setStatus('ready')
         setProblem(null)
-        void refetchHistory() // reconcile anything missed while away
       } else if (frame.type === 'ack') {
         dispatch({ type: 'ack', client_message_id: frame.client_message_id, message_id: frame.message_id, timestamp: frame.timestamp })
       } else if (frame.type === 'message') {
@@ -152,7 +193,7 @@ export function useGuildChat(userId: string, guildId: string) {
       }
       scheduleRetry('The chat connection dropped.')
     }
-  }, [api, config.allowed_socket_origins, guildId, refetchHistory])
+  }, [api, config.allowed_socket_origins, guildId])
 
   useEffect(() => {
     reconnectRef.current = () => void connect()
@@ -200,6 +241,7 @@ export function useGuildChat(userId: string, guildId: string) {
     state,
     status,
     problem,
+    historyProblem,
     attempt,
     history,
     send,
