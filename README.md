@@ -55,6 +55,7 @@ memory only, so reloading the page asks you to sign in again.
 | `npm run lint` | Lint with ESLint |
 | `npm run typecheck` | Type-check the project |
 | `npm run test` | Run unit tests (Vitest) |
+| `npm run test:coverage` | Run unit tests with the 80% line coverage gate (CI) |
 | `npm run test:e2e` | Run browser tests against mocked API responses |
 | `npm run test:e2e:real` | Run browser tests against a real backend (see below) |
 | `npm run fixtures` | Prepare test data through the API (see below) |
@@ -83,7 +84,7 @@ the compose environment. `client-config.example.json` shows every key.
 ## Testing
 
 ```sh
-npm run lint && npm run typecheck && npm run test && npm run build
+npm run lint && npm run typecheck && npm run test:coverage && npm run build
 npm run test:e2e
 ```
 

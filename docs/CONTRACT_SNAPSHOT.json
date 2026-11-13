@@ -1,13 +1,15 @@
 {
-  "snapshot_date": "2026-10-09",
-  "status": "local client planning package; no application runtime yet",
+  "snapshot_date": "2026-11-13",
+  "status": "implemented client; public catalogue alignment pending independent contract review",
   "source_revisions": {
     "shared": "046899ec0d0d63c42bacd0a5635a721e3585d8bb",
     "shared_review": "https://github.com/PAD-TEAM-9-2026/tamagotchi-go/pull/228",
     "gateway_runtime": "8b40c8b",
     "gateway_publication_branch": "846c5b6cbe1ab20b4f58afff782281ebe55cf4c5",
     "map_published_main": "6c013d7792cb37cd0108da83b967978a6045fe2c",
-    "raid_published_main": "dee2ca372c908e799c09f20715b41192ce208cb1"
+    "raid_published_main": "dee2ca372c908e799c09f20715b41192ce208cb1",
+    "broker_operation_catalogue_proposal": "d5cd62a3d34e1fba9c08f62fd861f8b338b8d05a",
+    "broker_operation_catalogue_review": "https://github.com/PAD-TEAM-9-2026/tamagotchi-go/pull/326"
   },
   "source_files": {
     "shared_README_sha256": "c54fb9b38e66065c9550bac2de8e7b21bf7b79b7769b019337cb3106b1d3f646",
@@ -19,7 +21,14 @@
     "VISUAL_GUIDELINES.md_sha256": "2f7492dc2bdcbce336cc2d9af36aa4e68a4a3242343e8b23964e5d2d25fb501a"
   },
   "payload_shape_count": 146,
-  "endpoint_count": 110,
+  "endpoint_refresh": {
+    "date": "2026-11-13",
+    "shared_catalogue": "4025b8e10e9eea0105ce29a949a938ca63888166",
+    "shared_catalogue_status": "unreviewed proposal on feat/raid-broker-contracts",
+    "operations_v1_sha256": "4746f3348b22b5dc9a65c3a67d7736ba5682434a56c30770e04bb97fa3807e6c",
+    "scope": "public catalogue operations, Gateway control routes and the negotiated Guild socket; Gateway refuses service-only routes as unknown, so they are omitted"
+  },
+  "endpoint_count": 90,
   "images": {
     "map": "sergedbs/map:2.0.0",
     "monster-raid": "sergedbs/monster-raid:2.0.0",
@@ -38,7 +47,7 @@
     "visual_direction": "modern handheld companion",
     "credentials": "memory only",
     "demo_data": "explicit API-based fixtures in dedicated test target",
-    "remote_repository": "not created"
+    "remote_repository": "sergedbs/tamagotchi-go-client"
   },
   "endpoints": [
     {
@@ -109,17 +118,9 @@
       "service": "User Management",
       "method": "POST",
       "path": "/users/v1/service-tokens",
-      "request": "ServiceTokenRequest, X-Service-Secret",
+      "request": "ServiceTokenRequest",
       "response": "200 ServiceToken",
-      "access": "service client secret or admin"
-    },
-    {
-      "service": "User Management",
-      "method": "GET",
-      "path": "/users/v1/jwks",
-      "request": "none",
-      "response": "200 Jwks",
-      "access": "public"
+      "access": "admin"
     },
     {
       "service": "User Management",
@@ -135,7 +136,7 @@
       "path": "/users/v1/users/{userId}",
       "request": "none",
       "response": "200 UserProfile",
-      "access": "user or service"
+      "access": "user"
     },
     {
       "service": "User Management",
@@ -148,26 +149,10 @@
     {
       "service": "User Management",
       "method": "GET",
-      "path": "/users/v1/internal/users/{userId}/membership",
-      "request": "none",
-      "response": "200 MembershipSnapshot",
-      "access": "service"
-    },
-    {
-      "service": "User Management",
-      "method": "GET",
       "path": "/users/v1/users/{userId}/relationships",
       "request": "query limit, cursor",
       "response": "200 RelationshipPage",
-      "access": "user or service"
-    },
-    {
-      "service": "User Management",
-      "method": "GET",
-      "path": "/users/v1/users/{userId}/relationship/{otherId}",
-      "request": "none",
-      "response": "200 Relationship",
-      "access": "service"
+      "access": "user"
     },
     {
       "service": "User Management",
@@ -231,7 +216,7 @@
       "path": "/users/v1/users/{userId}/currency/global",
       "request": "none",
       "response": "200 Wallet",
-      "access": "user or service"
+      "access": "user"
     },
     {
       "service": "User Management",
@@ -243,30 +228,6 @@
     },
     {
       "service": "User Management",
-      "method": "POST",
-      "path": "/users/v1/users/{userId}/currency/global/add",
-      "request": "Credit, Idempotency-Key",
-      "response": "200 CreditReceipt",
-      "access": "service"
-    },
-    {
-      "service": "User Management",
-      "method": "POST",
-      "path": "/users/v1/users/{userId}/currency/local/add",
-      "request": "LocalCredit, Idempotency-Key",
-      "response": "200 CreditReceipt",
-      "access": "service"
-    },
-    {
-      "service": "User Management",
-      "method": "POST",
-      "path": "/users/v1/internal/battle-settlements",
-      "request": "BattleSettlementInput, Idempotency-Key",
-      "response": "200 BattleSettlement",
-      "access": "service"
-    },
-    {
-      "service": "User Management",
       "method": "GET",
       "path": "/users/v1/users/me/boosts",
       "request": "query limit, cursor",
@@ -274,28 +235,12 @@
       "access": "user"
     },
     {
-      "service": "User Management",
-      "method": "POST",
-      "path": "/users/v1/internal/boost-consumptions",
-      "request": "ConsumeBoost, Idempotency-Key",
-      "response": "200 BoostReceipt",
-      "access": "service"
-    },
-    {
-      "service": "Tamagotchi",
-      "method": "POST",
-      "path": "/tamagotchi/v1/tamagotchis",
-      "request": "Mint, Idempotency-Key",
-      "response": "201 Tamagotchi",
-      "access": "service"
-    },
-    {
       "service": "Tamagotchi",
       "method": "GET",
       "path": "/tamagotchi/v1/tamagotchis/{id}",
       "request": "none",
       "response": "200 Tamagotchi",
-      "access": "user or service"
+      "access": "user"
     },
     {
       "service": "Tamagotchi",
@@ -315,27 +260,11 @@
     },
     {
       "service": "Tamagotchi",
-      "method": "POST",
-      "path": "/tamagotchi/v1/tamagotchis/{id}/xp",
-      "request": "XpInput, Idempotency-Key",
-      "response": "200 XpReceipt",
-      "access": "service"
-    },
-    {
-      "service": "Tamagotchi",
-      "method": "POST",
-      "path": "/tamagotchi/v1/tamagotchis/{id}/holders",
-      "request": "GrantAccessInput, Idempotency-Key",
-      "response": "200 AccessGrantReceipt",
-      "access": "service"
-    },
-    {
-      "service": "Tamagotchi",
       "method": "GET",
       "path": "/tamagotchi/v1/tamagotchis/{id}/holders",
       "request": "none",
       "response": "200 Holders",
-      "access": "user or service"
+      "access": "user"
     },
     {
       "service": "Tamagotchi",
@@ -351,7 +280,7 @@
       "path": "/tamagotchi/v1/users/{userId}/collection",
       "request": "query limit, cursor",
       "response": "200 Collection",
-      "access": "user or service"
+      "access": "user"
     },
     {
       "service": "Tamagotchi",
@@ -392,30 +321,6 @@
       "request": "none",
       "response": "200 TypeMatrix",
       "access": "public"
-    },
-    {
-      "service": "Tamagotchi",
-      "method": "POST",
-      "path": "/tamagotchi/v1/internal/engagements",
-      "request": "EngagementInput, Idempotency-Key",
-      "response": "201 Engagement",
-      "access": "service"
-    },
-    {
-      "service": "Tamagotchi",
-      "method": "GET",
-      "path": "/tamagotchi/v1/internal/engagements/{referenceId}",
-      "request": "none",
-      "response": "200 Engagement",
-      "access": "service"
-    },
-    {
-      "service": "Tamagotchi",
-      "method": "POST",
-      "path": "/tamagotchi/v1/internal/engagements/{referenceId}/release",
-      "request": "Idempotency-Key",
-      "response": "200 Engagement",
-      "access": "service"
     },
     {
       "service": "Battle",
@@ -495,7 +400,7 @@
       "path": "/guild/v1/guilds/{guildId}",
       "request": "none",
       "response": "200 Guild",
-      "access": "user or service"
+      "access": "user"
     },
     {
       "service": "Guild",
@@ -503,7 +408,7 @@
       "path": "/guild/v1/guilds/{guildId}/members",
       "request": "none",
       "response": "200 Members",
-      "access": "user or service"
+      "access": "user"
     },
     {
       "service": "Guild",
@@ -587,14 +492,6 @@
     },
     {
       "service": "Guild",
-      "method": "POST",
-      "path": "/guild/v1/guilds/{guildId}/chat-tickets",
-      "request": "none",
-      "response": "201 ChatTicket",
-      "access": "user"
-    },
-    {
-      "service": "Guild",
       "method": "GET",
       "path": "/guild/v1/guilds/{guildId}/chat",
       "request": "WebSocket upgrade",
@@ -644,58 +541,10 @@
     {
       "service": "Package Registry",
       "method": "GET",
-      "path": "/registry/v1/packages/{packageId}/stat-definitions",
-      "request": "query config_version",
-      "response": "200 StatDefinitions",
-      "access": "service"
-    },
-    {
-      "service": "Package Registry",
-      "method": "GET",
-      "path": "/registry/v1/packages/{packageId}/stat-bonuses",
-      "request": "query config_version",
-      "response": "200 Bonuses",
-      "access": "service"
-    },
-    {
-      "service": "Package Registry",
-      "method": "GET",
-      "path": "/registry/v1/packages/{packageId}/currency-rules",
-      "request": "query config_version",
-      "response": "200 CurrencyRules",
-      "access": "service"
-    },
-    {
-      "service": "Package Registry",
-      "method": "GET",
-      "path": "/registry/v1/packages/{packageId}/starter-pet",
-      "request": "query config_version",
-      "response": "200 StarterConfig",
-      "access": "service"
-    },
-    {
-      "service": "Package Registry",
-      "method": "GET",
       "path": "/registry/v1/packages/{packageId}/assets",
       "request": "query config_version",
       "response": "200 Assets",
       "access": "public"
-    },
-    {
-      "service": "Package Registry",
-      "method": "GET",
-      "path": "/registry/v1/packages/{packageId}/users",
-      "request": "query limit, cursor",
-      "response": "200 PackageMemberPage",
-      "access": "service"
-    },
-    {
-      "service": "Package Registry",
-      "method": "POST",
-      "path": "/registry/v1/packages/eligibility-check",
-      "request": "EligibilityInput",
-      "response": "200 Eligibility",
-      "access": "service"
     },
     {
       "service": "Package Registry",
@@ -719,7 +568,7 @@
       "path": "/registry/v1/bosses/{bossId}",
       "request": "query config_version",
       "response": "200 Boss",
-      "access": "user or service"
+      "access": "user"
     },
     {
       "service": "Package Registry",
@@ -751,7 +600,7 @@
       "path": "/registry/v1/raid-occurrences/{id}",
       "request": "none",
       "response": "200 Occurrence",
-      "access": "user or service"
+      "access": "user"
     },
     {
       "service": "Package Registry",
@@ -831,7 +680,7 @@
       "path": "/raid/v1/raids/{raidId}",
       "request": "none",
       "response": "200 Raid",
-      "access": "user or service"
+      "access": "user"
     },
     {
       "service": "Monster Raid",
@@ -847,7 +696,7 @@
       "path": "/raid/v1/raids/{raidId}/leaderboard",
       "request": "query limit, cursor",
       "response": "200 Leaderboard",
-      "access": "user or service"
+      "access": "user"
     },
     {
       "service": "Monster Raid",
@@ -921,5 +770,6 @@
       "response": "200 Preferences",
       "access": "user"
     }
-  ]
+  ],
+  "source_note": "Original bundled design-source hashes remain historical; broker_operation_catalogue_proposal identifies the current proposed public catalogue. Runtime acceptance is recorded separately."
 }

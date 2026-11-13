@@ -7,7 +7,9 @@ PR #228. Gateway runtime source: 8b40c8b; publication-only branch: 846c5b6.
 Map/Raid published 2.0.0, UM/Battle 2.0.1, Guild/Registry 2.0.3,
 Tamagotchi 2.0.4 and Notification 2.0.3 were the isolated acceptance candidates.
 Exact source/image provenance and field-reference hashes are in
-[CONTRACT_SNAPSHOT.json](CONTRACT_SNAPSHOT.json).
+[CONTRACT_SNAPSHOT.json](CONTRACT_SNAPSHOT.json). Its endpoint rows were
+rechecked on 2026-11-13 against the Shared operation catalogue at 4025b8e, an
+unreviewed proposal; see `endpoint_refresh` there.
 
 This is a dated compatibility contract, not automatic discovery of future APIs.
 The endpoint appendix below and [PAYLOADS.md](PAYLOADS.md) define requests and
@@ -155,7 +157,7 @@ by message_id. Keep list keys tied to server IDs, not array indexes.
 | 422 domain validation | Explain the domain refusal; preserve returned safe code |
 | 429 too_many_attempts | Wait per Retry-After; disable auth spam, no bypass |
 | 502 dependency_error/upstream_unavailable | Dependency unavailable/malformed response, keep retry/reconciliation honest |
-| 503 too_many_tasks | Busy, Retry-After generally 1s; no automatic mutation retry |
+| 503 too_many_tasks | Busy; show the Retry-After wait (Gateway sends 1 s); no automatic mutation retry |
 | 503 auth_keys_unavailable/gateway_keys_unavailable | Environment unavailable, do not erase account state as bad credentials |
 | 504 task_timeout | Operation may be uncertain; preserve key/body and offer reconciliation |
 | Abort/network failure | Keep distinctions between navigation cancellation and user-visible operation failure |
@@ -278,8 +280,9 @@ PrimarySelection ETag, not an arbitrary creature's ETag.
 
 The generated endpoint tables follow this section. Paths already include the
 Gateway prefix, but omit the client /api prefix. Shapes are linked by heading in
-PAYLOADS.md. Service-only rows are included for context and fixture constraints;
-they are not browser features. Only declared admin/user/public access is usable.
+PAYLOADS.md. Service-only rows remain as context from the earlier HTTP contract;
+they are not public catalogue operations, so Gateway refuses them as unknown
+routes. Only declared admin/user/public access is usable.
 
 ### Gateway endpoints
 
@@ -298,13 +301,12 @@ they are not browser features. Only declared admin/user/public access is usable.
 | `POST /users/v1/users/login` | [Login](PAYLOADS.md#login) | 200 [Tokens](PAYLOADS.md#tokens) | public |
 | `POST /users/v1/auth/refresh` | [Refresh](PAYLOADS.md#refresh) | 200 [Tokens](PAYLOADS.md#tokens) | public |
 | `POST /users/v1/auth/logout` | [Refresh](PAYLOADS.md#refresh) | 204 | public |
-| `POST /users/v1/service-tokens` | [ServiceTokenRequest](PAYLOADS.md#servicetokenrequest), X-Service-Secret | 200 [ServiceToken](PAYLOADS.md#servicetoken) | service client secret or admin |
-| `GET /users/v1/jwks` | none | 200 [Jwks](PAYLOADS.md#jwks) | public |
+| `POST /users/v1/service-tokens` | [ServiceTokenRequest](PAYLOADS.md#servicetokenrequest) | 200 [ServiceToken](PAYLOADS.md#servicetoken) | admin |
 | `GET /users/v1/users/me` | none | 200 [User](PAYLOADS.md#user) | user |
-| `GET /users/v1/users/{userId}` | none | 200 [UserProfile](PAYLOADS.md#userprofile) | user or service |
+| `GET /users/v1/users/{userId}` | none | 200 [UserProfile](PAYLOADS.md#userprofile) | user |
 | `POST /users/v1/users/me/packages` | [JoinPackage](PAYLOADS.md#joinpackage), Idempotency-Key | 200 [User](PAYLOADS.md#user) | user |
 | `GET /users/v1/internal/users/{userId}/membership` | none | 200 [MembershipSnapshot](PAYLOADS.md#membershipsnapshot) | service |
-| `GET /users/v1/users/{userId}/relationships` | query limit, cursor | 200 [RelationshipPage](PAYLOADS.md#relationshippage) | user or service |
+| `GET /users/v1/users/{userId}/relationships` | query limit, cursor | 200 [RelationshipPage](PAYLOADS.md#relationshippage) | user |
 | `GET /users/v1/users/{userId}/relationship/{otherId}` | none | 200 [Relationship](PAYLOADS.md#relationship) | service |
 | `POST /users/v1/friend-requests` | [FriendRequestInput](PAYLOADS.md#friendrequestinput), Idempotency-Key | 201 [FriendRequest](PAYLOADS.md#friendrequest) | user |
 | `GET /users/v1/friend-requests` | query limit, cursor | 200 [FriendRequestPage](PAYLOADS.md#friendrequestpage) | user |
@@ -313,7 +315,7 @@ they are not browser features. Only declared admin/user/public access is usable.
 | `DELETE /users/v1/users/{userId}/friends/{otherId}` | none | 204 | user |
 | `PUT /users/v1/users/{userId}/enemies/{otherId}` | none | 200 [Relationship](PAYLOADS.md#relationship) | user |
 | `DELETE /users/v1/users/{userId}/enemies/{otherId}` | none | 204 | user |
-| `GET /users/v1/users/{userId}/currency/global` | none | 200 [Wallet](PAYLOADS.md#wallet) | user or service |
+| `GET /users/v1/users/{userId}/currency/global` | none | 200 [Wallet](PAYLOADS.md#wallet) | user |
 | `GET /users/v1/users/{userId}/currency/local/{packageId}` | none | 200 [Wallet](PAYLOADS.md#wallet) | user |
 | `POST /users/v1/users/{userId}/currency/global/add` | [Credit](PAYLOADS.md#credit), Idempotency-Key | 200 [CreditReceipt](PAYLOADS.md#creditreceipt) | service |
 | `POST /users/v1/users/{userId}/currency/local/add` | [LocalCredit](PAYLOADS.md#localcredit), Idempotency-Key | 200 [CreditReceipt](PAYLOADS.md#creditreceipt) | service |
@@ -326,14 +328,14 @@ they are not browser features. Only declared admin/user/public access is usable.
 | Method/path | Request | Response | Access |
 |---|---|---|---|
 | `POST /tamagotchi/v1/tamagotchis` | [Mint](PAYLOADS.md#mint), Idempotency-Key | 201 [Tamagotchi](PAYLOADS.md#tamagotchi) | service |
-| `GET /tamagotchi/v1/tamagotchis/{id}` | none | 200 [Tamagotchi](PAYLOADS.md#tamagotchi) | user or service |
+| `GET /tamagotchi/v1/tamagotchis/{id}` | none | 200 [Tamagotchi](PAYLOADS.md#tamagotchi) | user |
 | `GET /tamagotchi/v1/tamagotchis` | query holder_id, package_id, type, limit, cursor | 200 [TamagotchiPage](PAYLOADS.md#tamagotchipage) | user |
 | `POST /tamagotchi/v1/tamagotchis/{id}/care` | [CareInput](PAYLOADS.md#careinput), Idempotency-Key | 200 [CareReceipt](PAYLOADS.md#carereceipt) | user |
 | `POST /tamagotchi/v1/tamagotchis/{id}/xp` | [XpInput](PAYLOADS.md#xpinput), Idempotency-Key | 200 [XpReceipt](PAYLOADS.md#xpreceipt) | service |
 | `POST /tamagotchi/v1/tamagotchis/{id}/holders` | [GrantAccessInput](PAYLOADS.md#grantaccessinput), Idempotency-Key | 200 [AccessGrantReceipt](PAYLOADS.md#accessgrantreceipt) | service |
-| `GET /tamagotchi/v1/tamagotchis/{id}/holders` | none | 200 [Holders](PAYLOADS.md#holders) | user or service |
+| `GET /tamagotchi/v1/tamagotchis/{id}/holders` | none | 200 [Holders](PAYLOADS.md#holders) | user |
 | `DELETE /tamagotchi/v1/tamagotchis/{id}/holders/{userId}` | If-Match | 204 | user |
-| `GET /tamagotchi/v1/users/{userId}/collection` | query limit, cursor | 200 [Collection](PAYLOADS.md#collection) | user or service |
+| `GET /tamagotchi/v1/users/{userId}/collection` | query limit, cursor | 200 [Collection](PAYLOADS.md#collection) | user |
 | `GET /tamagotchi/v1/users/{userId}/collection/primary` | none | 200 [PrimarySelection](PAYLOADS.md#primaryselection) | user |
 | `PUT /tamagotchi/v1/users/{userId}/collection/primary` | [PrimaryInput](PAYLOADS.md#primaryinput), If-Match | 200 [PrimarySelection](PAYLOADS.md#primaryselection) | user |
 | `DELETE /tamagotchi/v1/users/{userId}/collection/{id}` | If-Match | 204 | user |
@@ -361,8 +363,8 @@ they are not browser features. Only declared admin/user/public access is usable.
 |---|---|---|---|
 | `POST /guild/v1/guilds` | [GuildInput](PAYLOADS.md#guildinput), Idempotency-Key | 201 [Guild](PAYLOADS.md#guild) | user |
 | `GET /guild/v1/guilds` | query limit, cursor | 200 [GuildPage](PAYLOADS.md#guildpage) | user |
-| `GET /guild/v1/guilds/{guildId}` | none | 200 [Guild](PAYLOADS.md#guild) | user or service |
-| `GET /guild/v1/guilds/{guildId}/members` | none | 200 [Members](PAYLOADS.md#members) | user or service |
+| `GET /guild/v1/guilds/{guildId}` | none | 200 [Guild](PAYLOADS.md#guild) | user |
+| `GET /guild/v1/guilds/{guildId}/members` | none | 200 [Members](PAYLOADS.md#members) | user |
 | `POST /guild/v1/guilds/{guildId}/invitations` | [InvitationInput](PAYLOADS.md#invitationinput), Idempotency-Key | 201 [Invitation](PAYLOADS.md#invitation) | user |
 | `GET /guild/v1/invitations` | query limit, cursor | 200 [InvitationPage](PAYLOADS.md#invitationpage) | user |
 | `POST /guild/v1/guilds/{guildId}/invitations/{id}/accept` | Idempotency-Key | 200 [Invitation](PAYLOADS.md#invitation) | user |
@@ -373,7 +375,6 @@ they are not browser features. Only declared admin/user/public access is usable.
 | `POST /guild/v1/guilds/{guildId}/leadership` | [LeaderInput](PAYLOADS.md#leaderinput), Idempotency-Key | 200 [Guild](PAYLOADS.md#guild) | user |
 | `DELETE /guild/v1/guilds/{guildId}` | none | 204 | user |
 | `GET /guild/v1/guilds/{guildId}/messages` | query limit, cursor | 200 [ChatPage](PAYLOADS.md#chatpage) | user |
-| `POST /guild/v1/guilds/{guildId}/chat-tickets` | none | 201 [ChatTicket](PAYLOADS.md#chatticket) | user |
 | `GET /guild/v1/guilds/{guildId}/chat` | WebSocket upgrade | 101 | ticket in the first frame |
 
 ### Package Registry endpoints
@@ -394,11 +395,11 @@ they are not browser features. Only declared admin/user/public access is usable.
 | `POST /registry/v1/packages/eligibility-check` | [EligibilityInput](PAYLOADS.md#eligibilityinput) | 200 [Eligibility](PAYLOADS.md#eligibility) | service |
 | `POST /registry/v1/bosses` | [BossInput](PAYLOADS.md#bossinput), Idempotency-Key | 201 [Boss](PAYLOADS.md#boss) | admin |
 | `GET /registry/v1/bosses` | query limit, cursor | 200 [BossPage](PAYLOADS.md#bosspage) | admin |
-| `GET /registry/v1/bosses/{bossId}` | query config_version | 200 [Boss](PAYLOADS.md#boss) | user or service |
+| `GET /registry/v1/bosses/{bossId}` | query config_version | 200 [Boss](PAYLOADS.md#boss) | user |
 | `PUT /registry/v1/bosses/{bossId}` | [BossInput](PAYLOADS.md#bossinput), If-Match | 200 [Boss](PAYLOADS.md#boss) | admin |
 | `POST /registry/v1/raid-occurrences` | [OccurrenceInput](PAYLOADS.md#occurrenceinput), Idempotency-Key | 201 [Occurrence](PAYLOADS.md#occurrence) | admin |
 | `GET /registry/v1/raid-occurrences` | query limit, cursor | 200 [OccurrencePage](PAYLOADS.md#occurrencepage) | user |
-| `GET /registry/v1/raid-occurrences/{id}` | none | 200 [Occurrence](PAYLOADS.md#occurrence) | user or service |
+| `GET /registry/v1/raid-occurrences/{id}` | none | 200 [Occurrence](PAYLOADS.md#occurrence) | user |
 | `POST /registry/v1/raid-occurrences/{id}/activate` | Idempotency-Key | 200 [OccurrenceReceipt](PAYLOADS.md#occurrencereceipt) | admin |
 | `POST /registry/v1/raid-occurrences/{id}/deactivate` | Idempotency-Key | 200 [OccurrenceReceipt](PAYLOADS.md#occurrencereceipt) | admin |
 | `POST /registry/v1/raid-occurrences/{id}/cancel` | Idempotency-Key | 200 [OccurrenceReceipt](PAYLOADS.md#occurrencereceipt) | admin |
@@ -418,9 +419,9 @@ they are not browser features. Only declared admin/user/public access is usable.
 |---|---|---|---|
 | `POST /raid/v1/raids` | [RaidInput](PAYLOADS.md#raidinput), Idempotency-Key | 201 [Raid](PAYLOADS.md#raid) | user |
 | `GET /raid/v1/raids` | query guild_id, limit, cursor | 200 [RaidPage](PAYLOADS.md#raidpage) | user |
-| `GET /raid/v1/raids/{raidId}` | none | 200 [Raid](PAYLOADS.md#raid) | user or service |
+| `GET /raid/v1/raids/{raidId}` | none | 200 [Raid](PAYLOADS.md#raid) | user |
 | `POST /raid/v1/raids/{raidId}/attack` | [ActorInput](PAYLOADS.md#actorinput), Idempotency-Key | 200 [RaidAttack](PAYLOADS.md#raidattack) | user |
-| `GET /raid/v1/raids/{raidId}/leaderboard` | query limit, cursor | 200 [Leaderboard](PAYLOADS.md#leaderboard) | user or service |
+| `GET /raid/v1/raids/{raidId}/leaderboard` | query limit, cursor | 200 [Leaderboard](PAYLOADS.md#leaderboard) | user |
 | `DELETE /raid/v1/raids/{raidId}` | none | 204 | user |
 
 ### Notification endpoints

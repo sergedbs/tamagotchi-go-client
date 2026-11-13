@@ -4,7 +4,7 @@
   "map_default_center": [28.8638, 47.0105],
   "diagnostics_enabled": false,
   "manual_location_enabled": false,
-  "allowed_socket_origins": ["ws://localhost:13004"],
+  "allowed_socket_origins": ["ws://localhost:13004", "ws://localhost:3004"],
   "package_presentations": {},
   "push": {
     "firebase": {

@@ -197,7 +197,7 @@ function Encounter({ me, raid, stale }: { me: string; raid: Raid; stale: ReactNo
                     <p>
                       {isApiError(attack.error) && attack.error.code === 'creature_engaged'
                         ? 'Your primary is busy in a battle or another raid.'
-                        : isApiError(attack.error) && attack.error.retryAfterSeconds
+                        : isApiError(attack.error) && attack.error.retryAfterSeconds && attack.error.code !== 'too_many_tasks'
                           ? `${describeApiError(attack.error)} Try again in ${attack.error.retryAfterSeconds} s.`
                           : describeApiError(attack.error)}
                     </p>

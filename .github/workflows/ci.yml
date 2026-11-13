@@ -22,7 +22,7 @@ jobs:
       - run: python3 tools/check_spec.py
       - run: npm run lint
       - run: npm run typecheck
-      - run: npm run test
+      - run: npm run test:coverage
       - run: npm run build
       # Fixture browser tests only; real-target tests never run in CI.
       - run: npm run test:e2e

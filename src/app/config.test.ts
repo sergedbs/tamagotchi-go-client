@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
+import committedConfig from '../../public/client-config.json'
 import { ClientConfigError, loadClientConfig, parseClientConfig } from './config.ts'
 
 const PACKAGE_ID = '01a11d09-508b-7095-80e3-cb2c2db6eca5'
@@ -28,6 +29,10 @@ describe('parseClientConfig', () => {
     })
     expect(config.api_base).toBe('/api')
     expect(config.package_presentations[PACKAGE_ID]?.['1']).toBe('grove-companions')
+  })
+
+  it('allows the acceptance and Shared stack Guild sockets in the committed file', () => {
+    expect(parseClientConfig(committedConfig).allowed_socket_origins).toEqual(['ws://localhost:13004', 'ws://localhost:3004'])
   })
 
   it('accepts a public Firebase push configuration', () => {
