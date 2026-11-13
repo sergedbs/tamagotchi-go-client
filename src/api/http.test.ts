@@ -53,6 +53,18 @@ describe('sendRequest', () => {
     expect(describeApiError(error)).toBe('Too many attempts. Wait 7 s before trying again.')
   })
 
+  it('shows the Retry-After wait on a busy reply and keeps the general text without it', async () => {
+    const { fetch } = fakeFetch(
+      () => jsonResponse(503, problem(503, 'too_many_tasks'), { 'retry-after': '1' }),
+      () => jsonResponse(503, problem(503, 'too_many_tasks')),
+    )
+    const send = () => sendRequest({ method: 'GET', path: '/u', auth: 'user' }, { baseUrl: '', accessToken: 't', fetchImpl: fetch }).catch((e: unknown) => e)
+    const busy = await send()
+    expect(busy).toMatchObject({ kind: 'http', status: 503, code: 'too_many_tasks', retryAfterSeconds: 1 })
+    expect(describeApiError(busy)).toBe('The server is busy. Try again in 1 s.')
+    expect(describeApiError(await send())).toBe('The server is busy. Try again in a moment.')
+  })
+
   it('keeps an unknown future code readable', async () => {
     const { fetch } = fakeFetch(() => jsonResponse(422, problem(422, 'brand_new_rule')))
     const error = (await sendRequest({ method: 'POST', path: '/u', auth: 'user', body: {} }, { baseUrl: '', accessToken: 't', fetchImpl: fetch }).catch((e: unknown) => e)) as ApiError

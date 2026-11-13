@@ -106,7 +106,9 @@ export function describeApiError(error: unknown): string {
         ? `Too many attempts. Wait ${error.retryAfterSeconds} s before trying again.`
         : 'Too many attempts. Wait a moment before trying again.'
     case 'too_many_tasks':
-      return 'The server is busy. Try again in a moment.'
+      return error.retryAfterSeconds
+        ? `The server is busy. Try again in ${error.retryAfterSeconds} s.`
+        : 'The server is busy. Try again in a moment.'
     case 'auth_keys_unavailable':
     case 'gateway_keys_unavailable':
       return 'The sign-in service is temporarily unavailable. Your account is not affected.'

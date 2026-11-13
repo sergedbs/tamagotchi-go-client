@@ -155,7 +155,7 @@ by message_id. Keep list keys tied to server IDs, not array indexes.
 | 422 domain validation | Explain the domain refusal; preserve returned safe code |
 | 429 too_many_attempts | Wait per Retry-After; disable auth spam, no bypass |
 | 502 dependency_error/upstream_unavailable | Dependency unavailable/malformed response, keep retry/reconciliation honest |
-| 503 too_many_tasks | Busy, Retry-After generally 1s; no automatic mutation retry |
+| 503 too_many_tasks | Busy; show the Retry-After wait (Gateway sends 1 s); no automatic mutation retry |
 | 503 auth_keys_unavailable/gateway_keys_unavailable | Environment unavailable, do not erase account state as bad credentials |
 | 504 task_timeout | Operation may be uncertain; preserve key/body and offer reconciliation |
 | Abort/network failure | Keep distinctions between navigation cancellation and user-visible operation failure |
