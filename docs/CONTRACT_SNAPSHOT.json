@@ -47,7 +47,7 @@
     "visual_direction": "modern handheld companion",
     "credentials": "memory only",
     "demo_data": "explicit API-based fixtures in dedicated test target",
-    "remote_repository": "not created"
+    "remote_repository": "sergedbs/tamagotchi-go-client"
   },
   "endpoints": [
     {
@@ -770,5 +770,6 @@
       "response": "200 Preferences",
       "access": "user"
     }
-  ]
+  ],
+  "source_note": "Original bundled design-source hashes remain historical; broker_operation_catalogue_proposal identifies the current proposed public catalogue. Runtime acceptance is recorded separately."
 }
