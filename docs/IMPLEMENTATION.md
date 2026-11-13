@@ -613,3 +613,19 @@ uncertain write. Chrome chat fixtures and the real two-user flow pass. A real
 broker-gap message appears once in the recipient client while its socket stays
 Live; the recovery screenshot was reviewed. One fixture expected port 5173 even
 on another test origin; it now checks the exact artwork URL on the page origin.
+
+## Broker stack alignment (2026-11-13)
+
+- The committed runtime config allows Guild sockets from the published Shared
+  stack (`ws://localhost:3004`, Gateway 3000) besides acceptance
+  (`ws://localhost:13004`, Gateway 13000).
+- CI runs `npm run test:coverage`, so the 80% line gate now applies there.
+- 503 `too_many_tasks` shows the Retry-After wait ("Try again in 1 s.") when the
+  reply carries it and keeps the general text otherwise; the raid attack alert
+  does not repeat the wait.
+- CONTRACT_SNAPSHOT.json endpoint rows follow the Shared catalogue at 4025b8e
+  (public operations, 90 rows). Service-token issuance is admin only; service-only
+  routes, JWKS and chat tickets are no longer Gateway routes.
+
+Checks: lint, typecheck, 195 unit tests with 84.96% line coverage (gate 80%),
+build and `python3 tools/check_spec.py` pass.

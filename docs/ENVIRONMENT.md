@@ -21,10 +21,11 @@ This is process-health evidence, not a new end-to-end acceptance run.
 
 Use `GATEWAY_UPSTREAM=http://127.0.0.1:13000` in the client's ignored
 `.env.local`. The browser uses `/api` through the fixed Vite proxy, not direct
-service ports. The existing negotiated Guild socket origin is
-`ws://localhost:13004`; include it in `allowed_socket_origins`. Use localhost
-consistently for browser rehearsal. A containerized client proxy must use a
-reachable backend address instead of its own loopback.
+service ports. Negotiation returns Guild sockets on `ws://localhost:13004` here
+and on `ws://localhost:3004` on the published Shared stack, whose Gateway is
+`http://127.0.0.1:3000`. The committed `allowed_socket_origins` allows both. Use
+localhost consistently for browser rehearsal. A containerized client proxy must
+use a reachable backend address instead of its own loopback.
 
 ## Existing state and operator handoff
 
