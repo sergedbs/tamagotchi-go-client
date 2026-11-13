@@ -27,7 +27,7 @@ export function StarterPending({ waiting, onCheck, checking }: StarterPendingPro
         <p>
           {waiting
             ? 'The server creates your first companion right after sign-up. This usually takes a few seconds.'
-            : 'It can take a little longer when the server is busy. Nothing is lost — check again in a moment.'}
+            : 'It can take a little longer when the server is busy. Nothing is lost. Check again in a moment.'}
         </p>
         {!waiting && (
           <Button variant="primary" onClick={onCheck} busy={checking}>

@@ -6,18 +6,14 @@ Reuse the existing isolated `tamagotchi-go-acceptance` Docker Compose project.
 Do not create another backend stack just for the client. The client remains a
 separate application; it does not own backend databases or infrastructure.
 
-Inventory checked on 2026-10-09: all nine services, PostgreSQL/PostGIS and RabbitMQ
-are running and healthy. The provisioning container completed successfully.
-This is process-health evidence, not a new end-to-end acceptance run.
+The retained acceptance project uses the custom Message Broker, service-owned
+PostgreSQL databases, Discovery and the monitoring stack. RabbitMQ is stopped;
+its retained volume is kept for the operator's explicit disposal decision.
 
-| Component | Current image |
-|---|---|
-| Gateway | tamagotchi-go-local/gateway:acceptance-8b40c8b |
-| User Management / Battle | patriciamoraru/user-management:2.0.1 / patriciamoraru/battle:2.0.1 |
-| Guild / Registry | mihaelacatan/guild-service:2.0.3 / mihaelacatan/package-registry-service:2.0.3 |
-| Tamagotchi / Notification | victoriamutruc/tamagotchi:2.0.4 / victoriamutruc/notification:2.0.3 |
-| Map / Monster Raid | sergedbs/map:2.0.0 / sergedbs/monster-raid:2.0.0 |
-| Database / broker | postgis/postgis:17-3.6-alpine / rabbitmq:4.1-management-alpine |
+Exact source cuts and image identities are private operator evidence, not a
+portable client dependency. Obtain the current Gateway and socket addresses from
+the operator rather than relying on an old image inventory. A healthy container
+alone does not establish end-to-end acceptance.
 
 Use `GATEWAY_UPSTREAM=http://127.0.0.1:13000` in the client's ignored
 `.env.local`. The browser uses `/api` through the fixed Vite proxy, not direct
@@ -32,7 +28,7 @@ use a reachable backend address instead of its own loopback.
 In this workspace, the private environment lives at
 `../validation/.private/acceptance/`, relative to the client checkout:
 
-- `compose.json`: resolved Compose configuration containing private settings.
+- `broker-candidate/compose.integration.json`: current private resolved configuration.
 - `settings.env` and mounted key files: existing runtime credentials and keys.
 - `fixtures.json`: recorded package and Alice/Bob/Carol account state.
 
@@ -53,7 +49,7 @@ Container management remains an operator responsibility.
 Read-only checks from this checkout:
 
 ```sh
-docker compose -f ../validation/.private/acceptance/compose.json ps
+docker compose -f ../validation/.private/acceptance/broker-candidate/compose.integration.json ps
 curl --fail --silent --show-error http://127.0.0.1:13000/health
 curl --fail --silent --show-error http://127.0.0.1:13000/ready
 ```
@@ -66,7 +62,7 @@ If stopped, the operator may restart the exact retained environment after runtim
 authorization:
 
 ```sh
-docker compose -f ../validation/.private/acceptance/compose.json up -d --wait
+docker compose -f ../validation/.private/acceptance/broker-candidate/compose.integration.json up -d --wait
 ```
 
 Review image availability and configuration before running this command. It may
