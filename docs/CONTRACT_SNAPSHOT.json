@@ -1,13 +1,15 @@
 {
-  "snapshot_date": "2026-10-09",
-  "status": "local client planning package; no application runtime yet",
+  "snapshot_date": "2026-11-13",
+  "status": "implemented client; public catalogue alignment pending independent contract review",
   "source_revisions": {
     "shared": "046899ec0d0d63c42bacd0a5635a721e3585d8bb",
     "shared_review": "https://github.com/PAD-TEAM-9-2026/tamagotchi-go/pull/228",
     "gateway_runtime": "8b40c8b",
     "gateway_publication_branch": "846c5b6cbe1ab20b4f58afff782281ebe55cf4c5",
     "map_published_main": "6c013d7792cb37cd0108da83b967978a6045fe2c",
-    "raid_published_main": "dee2ca372c908e799c09f20715b41192ce208cb1"
+    "raid_published_main": "dee2ca372c908e799c09f20715b41192ce208cb1",
+    "broker_operation_catalogue_proposal": "d5cd62a3d34e1fba9c08f62fd861f8b338b8d05a",
+    "broker_operation_catalogue_review": "https://github.com/PAD-TEAM-9-2026/tamagotchi-go/pull/326"
   },
   "source_files": {
     "shared_README_sha256": "c54fb9b38e66065c9550bac2de8e7b21bf7b79b7769b019337cb3106b1d3f646",
